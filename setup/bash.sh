@@ -10,6 +10,7 @@ if ! [ -x "$(command -v node)" ]; then
 fi
 
 # Installer Node.js
+curl -sL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt-get install nodejs -y
 
 # Vérifier si npm est installé
