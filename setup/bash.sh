@@ -19,9 +19,6 @@ if ! [ -x "$(command -v npm)" ]; then
   exit 1
 fi
 
-# Installer PM2
-sudo npm install pm2@latest -g
-
 # Vérifier si Git est installé
 if ! [ -x "$(command -v git)" ]; then
   echo "Erreur : Git n'est pas installé sur le système."
