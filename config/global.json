@@ -1,0 +1,26 @@
+{
+    "api": {
+        "host": "localhost",
+        "port": 5051
+    },
+    "server": {
+        "name": "Dashium",
+        "host": "localhost",
+        "port": 5050
+    },
+    "docker": {
+        "IDgenerator": 10,
+        "images": [
+            {
+                "name": "Ubuntu Latest",
+                "type": "linux",
+                "value": "ubuntu:latest"
+            },
+            {
+                "name": "Windows 20H2",
+                "type": "windows",
+                "value": "mcr.microsoft.com/windows:ltsc2019"
+            }
+        ]
+    }
+}

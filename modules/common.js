@@ -1,0 +1,135 @@
+const global = require('../config/global.json');
+const fs = require('fs');
+const path = require('path');
+
+const currentDate = replaceAll(new Date().toISOString(), ':', '-');
+const logFile = createLogFile(`logs/${currentDate}.txt`);
+
+function mkdir(path) {
+    fs.mkdir(path, { recursive: true }, (err) => {
+        if (err) {
+            logFile.log(`Erreur lors de la création du répertoire ${path} : ${err}`, 'error', 'common');
+        } else {
+            logFile.log(`Répertoire créé : ${path}`, 'info', 'common');
+        }
+    });
+}
+
+function rmdir(dirPath) {
+    if (fs.existsSync(dirPath)) {
+        fs.readdirSync(dirPath).forEach((file) => {
+            const filePath = path.join(dirPath, file);
+
+            if (fs.lstatSync(filePath).isDirectory()) {
+                rmdir(filePath);
+            } else {
+                fs.unlinkSync(filePath);
+            }
+        });
+
+        fs.rmdirSync(dirPath);
+        logFile.log(`Répertoire "${dirPath}" supprimé`, 'warn', 'common');
+    }
+}
+
+function copyDir(src, dest) {
+    // Créer le répertoire de destination s'il n'existe pas encore
+    if (!fs.existsSync(dest)) {
+        fs.mkdirSync(dest);
+    }
+
+    // Récupérer les fichiers et sous-répertoires du répertoire source
+    const files = fs.readdirSync(src);
+
+    // Parcourir chaque fichier et sous-répertoire
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const srcPath = path.join(src, file);
+        const destPath = path.join(dest, file);
+
+        // Vérifier si le fichier est un répertoire
+        if (fs.statSync(srcPath).isDirectory()) {
+            // Si c'est le cas, copier le répertoire de manière récursive
+            copyDir(srcPath, destPath);
+        } else {
+            // Si c'est un fichier, le copier simplement dans le répertoire de destination
+            fs.copyFileSync(srcPath, destPath);
+        }
+    }
+    logFile.log(`Répertoire "${src}" copier`, 'warn', 'common');
+}
+
+function createLogFile(filePath) {
+    const stream = fs.createWriteStream(filePath, { flags: 'a' });
+
+    function log(msg, type, module) {
+        const colorMap = {
+            'info': '\x1b[34m',
+            'sucess': '\x1b[32m',
+            'warn': '\x1b[33m',
+            'error': '\x1b[31m'
+        };
+
+        const timestamp = new Date().toISOString();
+        const color = colorMap[type] || colorMap['info'];
+        const resetColor = '\x1b[0m';
+        const logMsg = `[${timestamp}] [${module.toUpperCase()}] ${msg}`;
+
+        console.log(`${color}${logMsg}${resetColor}`);
+        stream.write(`[${type.toUpperCase()}] ${logMsg}\n`);
+    }
+
+    return { log };
+}
+
+function replaceAll(str, find, replace) {
+    return str.replace(new RegExp(find, 'g'), replace);
+}
+
+function getUrlLastPath(url) {
+    const parts = url.split('/');
+    return parts[parts.length - 1];
+}
+
+function getDomains(url) {
+    const parts = url.split('/');
+    if (parts.length > 2 && parts[0].startsWith('http')) {
+        return parts[2];
+    } else {
+        return null;
+    }
+}
+
+function generateRandomString(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+
+function formatJsonToArray(jsonObj) {
+    const formattedProjects = [];
+    Object.keys(jsonObj).forEach((key) => {
+        formattedProjects.push(jsonObj[key]);
+    });
+    return formattedProjects;
+}
+
+module.exports = {
+    global,
+    mkdir,
+    rmdir,
+    copyDir,
+    log: (msg, from) => { logFile.log(msg, 'info', from); },
+    sucess: (msg, from) => { logFile.log(msg, 'sucess', from); },
+    error: (msg, from) => { logFile.log(msg, 'error', from); },
+    warn: (msg, from) => { logFile.log(msg, 'warn', from); },
+    replaceAll,
+    getUrlLastPath,
+    getDomains,
+    generateRandomString,
+    formatJsonToArray
+}
