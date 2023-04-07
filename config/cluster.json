@@ -1,14 +1,2 @@
 {
-  "0": {
-    "name": "Local Cluster #1",
-    "id": 0,
-    "alias": "default",
-    "path": "./clusters/cluster"
-  },
-  "1": {
-    "name": "Local Cluster #2",
-    "id": 1,
-    "alias": "default1",
-    "path": "./clusters/cluster2"
-  }
 }

@@ -33,7 +33,7 @@ fi
 sudo apt-get install docker.io -y
 
 # Cloner le dépôt Dashium
-sudo git clone https://github.com/Dashium/Dashium /dashium
+sudo git clone https://github.com/Dashium/new /dashium
 
 # Exécuter le script de configuration de Dashium
 cd /dashium
