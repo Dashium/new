@@ -31,8 +31,8 @@ const Sidebar = () => {
 
     const { loading, error, data } = useQuery(GET_LINKS);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error :(</p>;
+    // if (loading) return <p>Loading...</p>;
+    // if (error) return <p>Error :(</p>;
     console.log(data);
 
     // const links = data;

@@ -1,89 +1,73 @@
 const { exec } = require('child_process');
-const path = require('path');
+const fs = require('fs');
 
-function runDockerCommand(command, options) {
+function runDockerCommand(command, options, logFile = './logs.txt') {
     return new Promise((resolve, reject) => {
-        exec(`docker ${command}`, options, (error, stdout, stderr) => {
-            if (error) {
-                reject(error);
+        const commandProcess = exec(`docker ${command}`, options);
+
+        let logs = '';
+
+        commandProcess.stdout.on('data', (data) => {
+            logs += data;
+            process.stdout.write(data);
+            if (logFile !== '') {
+                fs.appendFileSync(logFile, data);
+            }
+        });
+
+        commandProcess.stderr.on('data', (data) => {
+            logs += data;
+            process.stderr.write(data);
+            if (logFile !== '') {
+                fs.appendFileSync(logFile, data);
+            }
+        });
+
+        commandProcess.on('close', (code) => {
+            if (code === 0) {
+                resolve(logs.trim());
             } else {
-                resolve(stdout.trim());
+                reject(new Error(`Command failed with exit code ${code}`));
             }
         });
     });
 }
 
-async function buildDockerImage(tag, dockerfilePath, contextPath) {
-    await runDockerCommand(`build -t ${tag} ${dockerfilePath}`, { cwd: contextPath });
+async function downloadDockerImage(imageName) {
+    const imagesList = await runDockerCommand('image ls');
+    if (!imagesList.includes(imageName)) {
+        await runDockerCommand(`pull ${imageName}`);
+    }
 }
 
-async function dockerCreate(containerName, imageTag, localPath) {
-    // récupérer le chemin absolu du répertoire local
-    const absolutePath = path.resolve(localPath);
-
-    // créer le conteneur
-    const containerId = await runDockerCommand(`create --name ${containerName} ${imageTag} ${absolutePath}`);
-
-    // retourner l'ID du conteneur créé
-    return containerId;
+async function createDockerContainer(containerName, hostPort, containerPort, sshPort, imageName, repoDir) {
+    if(hostPort == null){
+        hostPort = 3000;
+    }
+    if(containerPort == null){
+        containerPort = 3000;
+    }
+    const containersList = await runDockerCommand('ps -a');
+    if (!containersList.includes(containerName)) {
+        await runDockerCommand(`create --name ${containerName} -it -v ${process.cwd()}/new:/app -p ${hostPort}:${containerPort} -p ${sshPort}:22 -w /app ${imageName} bash`, { cwd: repoDir });
+    }
 }
 
-async function runDockerContainer(containerName, image, options = '') {
-    await runDockerCommand(`run --name ${containerName} ${options} ${image}`);
+async function startDockerContainer(containerName) {
+    await runDockerCommand(`start ${containerName}`);
 }
 
-async function stopDockerContainer(containerName) {
-    await runDockerCommand(`stop ${containerName}`);
+async function runCommandInContainer(containerName, command) {
+    await runDockerCommand(`exec ${containerName} sh -c "${command}"`);
 }
 
 async function removeDockerContainer(containerName) {
-    await runDockerCommand(`rm ${containerName}`);
-}
-
-async function removeDockerImage(imageName) {
-    await runDockerCommand(`rmi ${imageName}`);
-}
-
-async function listDockerContainers() {
-    const output = await runDockerCommand('ps');
-    return output.split('\n').slice(1).map(line => line.trim().split(/\s{2,}/));
-}
-
-async function listDockerImages() {
-    const output = await runDockerCommand('images');
-    return output.split('\n').slice(1).map(line => line.trim().split(/\s{2,}/));
-}
-
-async function pullDockerImage(imageName) {
-    await runDockerCommand(`pull ${imageName}`);
-}
-
-async function pushDockerImage(imageName) {
-    await runDockerCommand(`push ${imageName}`);
-}
-
-async function executeCommandInDockerContainer(containerName, command) {
-    await runDockerCommand(`exec ${containerName} ${command}`);
-}
-
-async function getDockerContainerLogs(containerName) {
-    return await runDockerCommand(`logs ${containerName}`);
-}
-
-async function inspectDockerContainer(containerName) {
-    return await runDockerCommand(`inspect ${containerName}`);
-}
-
-async function inspectDockerImage(imageName) {
-    return await runDockerCommand(`inspect ${imageName}`);
-}
-
-async function manageDockerNetwork(command, options) {
-    await runDockerCommand(`network ${command} ${options}`);
-}
-
-async function runDockerComposeCommand(command, options) {
-    await runDockerCommand(`compose ${command} ${options}`);
+    try {
+        await runDockerCommand(`rm ${containerName}`);
+        console.log(`Docker container '${containerName}' has been removed.`);
+    } catch (error) {
+        console.error(`Failed to remove Docker container '${containerName}'. Error: ${error.message}`);
+    }
 }
 
 function monitorDocker(containerName) {
@@ -104,22 +88,50 @@ function monitorDocker(containerName) {
     });
 }
 
+async function use(lang, containerName) {
+    switch (lang) {
+        case 'ubuntu':
+            await runCommandInContainer(containerName, "apt-get update && apt-get install -y curl wget sudo");
+            break;
+        case 'nodejs':
+            await runCommandInContainer(containerName, "apt-get update && apt-get install -y curl wget");
+            await runCommandInContainer(containerName, 'curl -sL https://deb.nodesource.com/setup_lts.x | sudo -E bash -');
+            await runCommandInContainer(containerName, 'sudo apt install nodejs -y');
+            // await runCommandInContainer(containerName, 'sudo apt install npm -y');
+            break;
+        default:
+            console.log('none');
+    }
+}
+
+// async function main() {
+//     const repoUrl = 'https://github.com/Dashium/demo_project';
+//     const repoDir = 'new';
+//     const imageName = 'ubuntu:latest';
+//     const containerName = 'test8';
+//     const portBinder = "3000:3000";
+
+//     // await downloadGithubRepo(repoUrl, repoDir);
+//     await downloadDockerImage(imageName);
+//     await createDockerContainer(containerName, 3000, 3000, 38, imageName, repoDir);
+//     await startDockerContainer(containerName);
+//     await use('ubuntu', containerName);
+//     await use('nodejs', containerName);
+//     // await bindPorts(containerName, 3000, 3000);
+//     await runCommandInContainer(containerName, 'npm install');
+//     await runCommandInContainer(containerName, 'npm run test');
+
+//     monitorDocker(containerName);
+// }
+
+// main().catch(error => console.error(error));
+
 module.exports = {
-    buildDockerImage,
-    runDockerContainer,
-    stopDockerContainer,
-    removeDockerContainer,
-    removeDockerImage,
-    listDockerContainers,
-    listDockerImages,
-    pullDockerImage,
-    pushDockerImage,
-    executeCommandInDockerContainer,
-    getDockerContainerLogs,
-    inspectDockerContainer,
-    inspectDockerImage,
-    manageDockerNetwork,
-    runDockerComposeCommand,
+    downloadDockerImage,
+    createDockerContainer,
+    startDockerContainer,
+    use,
+    runCommandInContainer,
     monitorDocker,
-    dockerCreate
+    removeDockerContainer
 }

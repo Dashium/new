@@ -9,6 +9,8 @@ const Headers = () => {
                 <link rel="shortcut icon" href="/favicon.ico" />
                 <link rel="stylesheet" href="/css/fontawesome/css/all.min.css" />
                 <link rel="stylesheet" href="/css/sidebar.css" />
+                <link rel="stylesheet" href="/css/monitor.css" />
+                <link rel="stylesheet" href="/css/terminal.css" />
             </Head>
         </div>
     );
