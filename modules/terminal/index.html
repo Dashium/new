@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Console SSH</title>
+        <script src="/socket.io/socket.io.js"></script>
+        <style>
+            body{
+                color: #fff;
+                font-size: 14px;
+            }
+            #scroll-btn {
+                position: fixed;
+                right: 20px;
+                bottom: 20px;
+                z-index: 9999;
+                opacity: 0.5;
+                cursor: pointer;
+            }
+            #scroll-btn:hover {
+                opacity: 1;
+            }
+            #scroll-btn.active{
+                background-color: green;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="output"></div>
+        <form>
+            <input type="text" id="input" autocomplete="off">
+            <button type="submit">Envoyer</button>
+            <button id="scroll-btn" class="active">Auto-Scroll</button>
+        </form>
+        <script>
+            const socket = io();
+            var scroller = true;
+
+            // Affichage des messages de la console SSH
+            socket.on('output', (data) => {
+                const output = document.getElementById('output');
+                if(data.data == null){return;}
+                if (data.type === 'output') {
+                    output.innerHTML += '<div>' + data.data + "</div>";
+                } else {
+                    output.innerHTML += '<div style="color: red;">' + data.data + "</div>";
+                }
+                if(scroller == true){
+                    scrollToBottom();
+                }
+            });
+
+            // Exécution d'une commande lors de la soumission du formulaire
+            const form = document.querySelector('form');
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const input = document.getElementById('input');
+                const command = input.value;
+                input.value = '';
+                const containerName = document.location.pathname;
+
+                // Envoi de la commande au serveur
+                socket.emit('command', containerName, command);
+            });
+
+            const scrollBtn = document.querySelector('#scroll-btn');
+            scrollBtn.addEventListener('click', () => {
+                scroller = !scroller;
+                scrollBtn.classList.toggle('active', scroller);
+                if(scroller == true){scrollToBottom();}
+            });
+            
+            function scrollToBottom() {
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+        </script>
+    </body>
+</html>
