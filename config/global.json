@@ -8,6 +8,10 @@
         "host": "localhost",
         "port": 5050
     },
+    "ssh": {
+        "host": "localhost",
+        "port": 3200
+    },
     "docker": {
         "IDgenerator": 10,
         "images": [
