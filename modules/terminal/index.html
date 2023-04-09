@@ -1,78 +1,184 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>Console SSH</title>
-        <script src="/socket.io/socket.io.js"></script>
-        <style>
-            body{
-                color: #fff;
-                font-size: 14px;
-            }
-            #scroll-btn {
-                position: fixed;
-                right: 20px;
-                bottom: 20px;
-                z-index: 9999;
-                opacity: 0.5;
-                cursor: pointer;
-            }
-            #scroll-btn:hover {
-                opacity: 1;
-            }
-            #scroll-btn.active{
-                background-color: green;
-            }
-        </style>
-    </head>
-    <body>
-        <div id="output"></div>
-        <form>
-            <input type="text" id="input" autocomplete="off">
-            <button type="submit">Envoyer</button>
-            <button id="scroll-btn" class="active">Auto-Scroll</button>
-        </form>
-        <script>
-            const socket = io();
-            var scroller = true;
 
-            // Affichage des messages de la console SSH
-            socket.on('output', (data) => {
-                const output = document.getElementById('output');
-                if(data.data == null){return;}
-                if (data.type === 'output') {
-                    output.innerHTML += '<div>' + data.data + "</div>";
-                } else {
-                    output.innerHTML += '<div style="color: red;">' + data.data + "</div>";
+<head>
+    <meta charset="utf-8">
+    <title>Console SSH</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="/node_modules/xterm/css/xterm.css" />
+    <script src="/node_modules/xterm/lib/xterm.js"></script>
+    <style>
+        body {
+            color: #fff;
+            font-size: 14px;
+        }
+
+        #scroll-btn {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            z-index: 9999;
+            opacity: 0.5;
+            cursor: pointer;
+        }
+
+        #scroll-btn:hover {
+            opacity: 1;
+        }
+
+        #scroll-btn.active {
+            background-color: green;
+        }
+
+        #terminal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="terminal"></div>
+    <script>
+        var baseTheme = {
+            foreground: '#F8F8F8',
+            background: '#2D2E2C',
+            selection: '#5DA5D533',
+            black: '#1E1E1D',
+            brightBlack: '#262625',
+            red: '#CE5C5C',
+            brightRed: '#FF7272',
+            green: '#5BCC5B',
+            brightGreen: '#72FF72',
+            yellow: '#CCCC5B',
+            brightYellow: '#FFFF72',
+            blue: '#5D5DD3',
+            brightBlue: '#7279FF',
+            magenta: '#BC5ED1',
+            brightMagenta: '#E572FF',
+            cyan: '#5DA5D5',
+            brightCyan: '#72F0FF',
+            white: '#F8F8F8',
+            brightWhite: '#FFFFFF'
+        };
+        var isBaseTheme = true;
+
+        var term = new window.Terminal({
+            fontFamily: '"Cascadia Code", Menlo, monospace',
+            theme: baseTheme,
+            cursorBlink: true,
+            allowProposedApi: true
+        });
+        term.open(document.querySelector('#terminal'));
+
+        var isWebglEnabled = false;
+        try {
+            const webgl = new window.WebglAddon.WebglAddon();
+            term.loadAddon(webgl);
+            isWebglEnabled = true;
+        } catch (e) {
+            console.warn('WebGL addon threw an exception during load', e);
+        }
+
+        // Cancel wheel events from scrolling the page if the terminal has scrollback
+        document.querySelector('.xterm').addEventListener('wheel', e => {
+            if (term.buffer.active.baseY > 0) {
+                e.preventDefault();
+            }
+        });
+
+        function runFakeTerminal() {
+            if (term._initialized) {
+                return;
+            }
+
+            term._initialized = true;
+
+            term.prompt = () => {
+                term.write('\r\n$ ');
+            };
+
+            term.writeln([
+                "|-----------------------------------------------|",
+                "|   _____            _     _                    |",
+                "|  |  __ \\          | |   (_)                   |",
+                "|  | |  | | __ _ ___| |__  _ _   _ _ __ ___     |",
+                "|  | |  | |/ _\\` / __| '_ \\| | | | | '_ \` _ \\   |",
+                "|  | |__| | (_| \\__ \\ | | | | |_| | | | | | |   |",
+                "|  |_____/ \\__,_|___/_| |_|_|\\__,_|_| |_| |_|   |",
+                "|-----------------------------------------------|",
+                "|            © Tai Studio 2021/2023             |",
+                "|-----------------------------------------------|"
+            ].join('\n\r'));
+
+            prompt(term);
+
+            term.onData(e => {
+                switch (e) {
+                    case '\u0003': // Ctrl+C
+                        term.write('^C');
+                        prompt(term);
+                        break;
+                    case '\r': // Enter
+                        runCommand(term, command);
+                        command = '';
+                        break;
+                    case '\u007F': // Backspace (DEL)
+                        // Do not delete the prompt
+                        if (term._core.buffer.x > 2) {
+                            term.write('\b \b');
+                            if (command.length > 0) {
+                                command = command.substr(0, command.length - 1);
+                            }
+                        }
+                        break;
+                    default: // Print all other characters for demo
+                        if (e >= String.fromCharCode(0x20) && e <= String.fromCharCode(0x7E) || e >= '\u00a0') {
+                            command += e;
+                            term.write(e);
+                        }
                 }
-                if(scroller == true){
-                    scrollToBottom();
+            });
+        }
+
+        function prompt(term) {
+            command = '';
+            term.write('\r\n$ ');
+        }
+
+        var command = '';
+
+        function runCommand(term, text) {
+            const containerName = document.location.pathname;
+
+            // Envoi de la commande au serveur
+            socket.emit('command', containerName, text);
+            term.write('\r\n');
+        }
+
+        runFakeTerminal();
+    </script>
+    <script>
+        const socket = io();
+
+        socket.on('output', (data) => {
+            if (data == null) { return; }
+            if(data.type != null){
+                if(data.type == 'error'){
+                    term.write(data.data);
                 }
-            });
-
-            // Exécution d'une commande lors de la soumission du formulaire
-            const form = document.querySelector('form');
-            form.addEventListener('submit', (event) => {
-                event.preventDefault();
-                const input = document.getElementById('input');
-                const command = input.value;
-                input.value = '';
-                const containerName = document.location.pathname;
-
-                // Envoi de la commande au serveur
-                socket.emit('command', containerName, command);
-            });
-
-            const scrollBtn = document.querySelector('#scroll-btn');
-            scrollBtn.addEventListener('click', () => {
-                scroller = !scroller;
-                scrollBtn.classList.toggle('active', scroller);
-                if(scroller == true){scrollToBottom();}
-            });
-            
-            function scrollToBottom() {
-                window.scrollTo(0, document.body.scrollHeight);
+                prompt(term);
             }
-        </script>
-    </body>
+            else{
+                term.write(data);
+                term.write('\r\n');
+            }
+        });
+    </script>
+</body>
+
 </html>

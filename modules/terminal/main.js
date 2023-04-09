@@ -2,63 +2,29 @@ const express = require('express');
 const http = require('http');
 const { exec } = require('child_process');
 const fs = require('fs');
+const path = require('path');
 const io = require('socket.io');
+const common = require('../common');
+const docker = require('../ci/docker');
 
 const app = express();
 const server = http.createServer(app);
 const socket = io(server);
 
-// Fonction pour exécuter les commandes Docker
-function runDockerCommand(command, options, logFile = './logs.txt', client) {
-    return new Promise((resolve, reject) => {
-        const commandProcess = exec(`docker ${command}`, options);
-
-        let logs = '';
-
-        commandProcess.stdout.on('data', (data) => {
-            logs += data;
-            process.stdout.write(data);
-            const output = {
-                type: 'output',
-                data: data,
-            };
-            client.emit('output', output);
-            // if (logFile !== '') {
-            //     fs.appendFileSync(logFile, data);
-            // }
-        });
-
-        commandProcess.stderr.on('data', (data) => {
-            logs += data;
-            process.stderr.write(data);
-            const output = {
-                type: 'error',
-                data: data,
-            };
-            client.emit('output', output);
-            // if (logFile !== '') {
-            //     fs.appendFileSync(logFile, data);
-            // }
-        });
-
-        commandProcess.on('close', (code) => {
-            if (code === 0) {
-                resolve(logs.trim());
-            } else {
-                reject(new Error(`Command failed with exit code ${code}`));
-            }
-        });
-    });
-}
-
-async function runCommandInContainer(containerName, command, client) {
-    await runDockerCommand(`exec ${containerName} sh -c "${command}"`, null, null, client);
-}
-
 // Route pour afficher la page d'accueil
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
+
+// START IMPORT TERMINAL
+app.get('/node_modules/xterm/css/xterm.css', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../node_modules/xterm/css/xterm.css'))
+});
+
+app.get('/node_modules/xterm/lib/xterm.js', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../node_modules/xterm/lib/xterm.js'))
+});
+// END IMPORT TERMINAL
 
 app.get('/:filename', (req, res) => {
     res.sendFile(__dirname + '/index.html');
@@ -66,7 +32,7 @@ app.get('/:filename', (req, res) => {
 
 // Connexion d'un client WebSocket
 socket.on('connection', (client) => {
-    console.log('Client connected');
+    common.log('Client connected', 'Terminal');
 
     // Affichage des messages de la console SSH
     function logOutput(data) {
@@ -89,7 +55,7 @@ socket.on('connection', (client) => {
     // Exécution d'une commande Docker
     client.on('command', async (containerName, command) => {
         try {
-            const output = await runCommandInContainer(containerName, command, client);
+            const output = await docker.runCommandInContainer(containerName, command, client);
             logOutput(output);
         } catch (err) {
             logError(err.message);
@@ -98,12 +64,12 @@ socket.on('connection', (client) => {
 
     // Déconnexion d'un client WebSocket
     client.on('disconnect', () => {
-        console.log('Client disconnected');
+        common.log('Client disconnected', 'Terminal');
     });
 });
 
 // Démarrage du serveur
-const port = 3200;
+const port = common.global.ssh.port;
 server.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+    common.sucess(`Terminal server listening on port ${port}`, 'Terminal');
 });
