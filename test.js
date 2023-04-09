@@ -41,16 +41,10 @@ async function downloadDockerImage(imageName) {
     }
 }
 
-async function createDockerContainer(containerName, hostPort, containerPort, sshPort, imageName, repoDir) {
-    if(hostPort == null){
-        hostPort = 3000;
-    }
-    if(containerPort == null){
-        containerPort = 3000;
-    }
+async function createDockerContainer(containerName, portBinder, imageName, repoDir) {
     const containersList = await runDockerCommand('ps -a');
     if (!containersList.includes(containerName)) {
-        await runDockerCommand(`create --name ${containerName} -it -v ${process.cwd()}/new:/app -p ${hostPort}:${containerPort} -p ${sshPort}:22 -w /app ${imageName} bash`, { cwd: repoDir });
+        await runDockerCommand(`create --name ${containerName} -it -v ${process.cwd()}/new:/app ${portBinder} -w /app ${imageName} bash`, { cwd: repoDir });
     }
 }
 
@@ -80,11 +74,28 @@ function monitorDocker(containerName) {
     });
 }
 
+async function bindPort(host, container){
+    return `-p ${host}:${container} `;
+}
+
+async function bindPorts(list){
+    let tmp = '';
+    for (const element of list) {
+        tmp += await bindPort(element['host'], element['container']);
+    }
+    tmp = tmp.slice(0, -1);
+    return tmp;
+}
+
 async function use(lang, containerName) {
     switch (lang) {
-        case 'ubuntu':
-            await runCommandInContainer(containerName, "apt-get update && apt-get install -y curl wget sudo");
+        case 'dashium':
+            await runCommandInContainer(containerName, "apt-get update && apt-get install -y curl wget sudo nano");
             await runCommandInContainer(containerName, "apt-get install -y openssh-server");
+            await runCommandInContainer(containerName, "apt-get install -y git");
+            await runCommandInContainer(containerName, "git clone https://github.com/Dashium/web_ssh_server dashium_ssh");
+            await use('nodejs', containerName);
+            // await runCommandInContainer(containerName, 'cd dashium_ssh && npm install && npm start');
             break;
         case 'nodejs':
             await runCommandInContainer(containerName, "apt-get update && apt-get install -y curl wget");
@@ -101,16 +112,20 @@ async function main() {
     const repoUrl = 'https://github.com/Dashium/demo_project';
     const repoDir = 'new';
     const imageName = 'ubuntu:latest';
-    const containerName = 'test8';
-    const portBinder = "3000:3000";
+    const containerName = 'test9';
 
-    await clone.clone(repoUrl, repoDir);
+    const ports = await bindPorts([
+        {host: 3001, container: 3000},
+        {host: 50, container: 50},
+        {host: 300, container: 22},
+    ]);
+
+    // await clone.clone(repoUrl, repoDir);
     await downloadDockerImage(imageName);
-    await createDockerContainer(containerName, 3001, 3000, 38, imageName, repoDir);
+    await createDockerContainer(containerName, ports, imageName, repoDir);
     await startDockerContainer(containerName);
-    await use('ubuntu', containerName);
+    await use('dashium', containerName);
     await use('nodejs', containerName);
-    // await bindPorts(containerName, 3000, 3000);
     await runCommandInContainer(containerName, 'npm install');
     await runCommandInContainer(containerName, 'npm run test');
 
