@@ -58,7 +58,7 @@ async function createDockerContainer(containerName, hostPort, containerPort, ssh
     }
     const containersList = await runDockerCommand('ps -a');
     if (!containersList.includes(containerName)) {
-        await runDockerCommand(`create --name ${containerName} -it -v ${process.cwd()}/new:/app -p ${hostPort}:${containerPort} -p ${sshPort}:22 -w /app ${imageName} bash`, { cwd: repoDir });
+        await runDockerCommand(`create --name ${containerName} -it -v ${process.cwd()}/${repoDir}:/app -p ${hostPort}:${containerPort} -p ${sshPort}:22 -w /app ${imageName} bash`, { cwd: repoDir });
     }
 }
 
