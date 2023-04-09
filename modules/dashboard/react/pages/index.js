@@ -27,7 +27,7 @@ const App = () => {
                 <Headers></Headers>
                 <Background />
 
-                <Sidebar></Sidebar>
+                {/* <Sidebar></Sidebar> */}
 
                 <div style={{
                     position: 'absolute',
@@ -36,7 +36,7 @@ const App = () => {
                     width: 'calc(100% - 240px - 4%)'
                 }}>
                     {/* <Monitor></Monitor> */}
-                    <TerminalSSH sshPort={38}></TerminalSSH>
+                    <TerminalSSH containerName={'test9'}></TerminalSSH>
                 </div>
 
             </div>
