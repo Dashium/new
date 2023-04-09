@@ -1,7 +1,10 @@
 const { exec } = require('child_process');
 const fs = require('fs');
 
-function runDockerCommand(command, options, logFile = './logs.txt') {
+function runDockerCommand(command, options, logFile = './logs/logs.txt', client) {
+    if(logFile == null){
+        logFile = './logs/logs.txt';
+    }
     return new Promise((resolve, reject) => {
         const commandProcess = exec(`docker ${command}`, options);
 
@@ -10,6 +13,9 @@ function runDockerCommand(command, options, logFile = './logs.txt') {
         commandProcess.stdout.on('data', (data) => {
             logs += data;
             process.stdout.write(data);
+            if(client != null){
+                client.emit('output', data);
+            }
             if (logFile !== '') {
                 fs.appendFileSync(logFile, data);
             }
@@ -18,6 +24,9 @@ function runDockerCommand(command, options, logFile = './logs.txt') {
         commandProcess.stderr.on('data', (data) => {
             logs += data;
             process.stderr.write(data);
+            if(client != null){
+                client.emit('output', data);
+            }
             if (logFile !== '') {
                 fs.appendFileSync(logFile, data);
             }
@@ -57,8 +66,8 @@ async function startDockerContainer(containerName) {
     await runDockerCommand(`start ${containerName}`);
 }
 
-async function runCommandInContainer(containerName, command) {
-    await runDockerCommand(`exec ${containerName} sh -c "${command}"`);
+async function runCommandInContainer(containerName, command, client) {
+    await runDockerCommand(`exec ${containerName} sh -c "${command}"`, null, null, client);
 }
 
 async function removeDockerContainer(containerName) {
