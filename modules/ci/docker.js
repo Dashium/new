@@ -97,16 +97,35 @@ function monitorDocker(containerName) {
     });
 }
 
+async function bindPort(host, container){
+    return `-p ${host}:${container} `;
+}
+
+async function bindPorts(list){
+    let tmp = '';
+    for (const element of list) {
+        tmp += await bindPort(element['host'], element['container']);
+    }
+    tmp = tmp.slice(0, -1);
+    return tmp;
+}
+
 async function use(lang, containerName) {
     switch (lang) {
-        case 'ubuntu':
-            await runCommandInContainer(containerName, "apt-get update && apt-get install -y curl wget sudo");
+        case 'dashium':
+            await runCommandInContainer(containerName, "apt-get update && apt-get install -y curl wget sudo nano");
+            await runCommandInContainer(containerName, "apt-get install -y git");
             break;
         case 'nodejs':
             await runCommandInContainer(containerName, "apt-get update && apt-get install -y curl wget");
             await runCommandInContainer(containerName, 'curl -sL https://deb.nodesource.com/setup_lts.x | sudo -E bash -');
             await runCommandInContainer(containerName, 'sudo apt install nodejs -y');
-            // await runCommandInContainer(containerName, 'sudo apt install npm -y');
+            break;
+        case 'minecraft_server':
+            await runCommandInContainer(containerName, 'sudo apt install default-jre');
+            await runCommandInContainer(containerName, 'mkdir minecraft_server');
+            await runCommandInContainer(containerName, 'cd minecraft_server && wget https://piston-data.mojang.com/v1/objects/8f3112a1049751cc472ec13e397eade5336ca7ae/server.jar');
+            await runCommandInContainer(containerName, 'cd minecraft_server && java -Xmx1024M -Xms1024M -jar server.jar nogui')
             break;
         default:
             console.log('none');
@@ -142,5 +161,6 @@ module.exports = {
     use,
     runCommandInContainer,
     monitorDocker,
-    removeDockerContainer
+    removeDockerContainer,
+    bindPorts
 }
