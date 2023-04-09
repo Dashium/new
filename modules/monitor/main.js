@@ -26,7 +26,7 @@ function getContainerStats(containerName, socketId) {
         process.stderr.on('data', (data) => {
             console.error(`Error: ${data}`);
             // Envoyer un message d'erreur au client via le socket correspondant
-            io.to(socketId).emit('data', common.replaceAll("{'cpuUsage':'Off', 'memoryUsage':'Off', 'networkIn':'Off / Off'}", "'", '"'))
+            io.to(socketId).emit('data', common.replaceAll("{'cpuUsage':'OFF', 'memoryUsage':'OFF', 'networkIn':'OFF / OFF'}", "'", '"'))
             resolve(data);
         });
 
@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
             getContainerStats(containerName, socket.id);
         } catch (error) {
             console.log(error);
-            io.to(socket.id).emit('data', "{'cpuUsage':'Off', 'memoryUsage':'Off', 'networkIn':'Off / Off'}")
+            io.to(socket.id).emit('data', "{'cpuUsage':'OFF', 'memoryUsage':'OFF', 'networkIn':'OFF / OFF'}")
         }
     });
     // Écouter l'événement 'disconnect' pour arrêter la surveillance du conteneur associé au socketId de l'utilisateur

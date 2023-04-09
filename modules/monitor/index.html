@@ -7,6 +7,13 @@
         <title>Dashium | Monitor</title>
         <script src="/socket.io/socket.io.js"></script>
         <style>
+            body{
+                overflow: hidden;
+                user-select: none;
+                -moz-user-select: none;
+                -webkit-user-select: none;
+            }
+
             .monitor-container {
                 display: flex;
                 flex-direction: row;
@@ -36,22 +43,22 @@
         </style>
     </head>
     <body>
-        <div className="monitor-container">
-            <div className="monitor-item">
+        <div class="monitor-container">
+            <div class="monitor-item">
                 <span>CPU Usage:</span>
-                <span id="cpu">? %</span>
+                <span id="cpu">OFF</span>
             </div>
-            <div className="monitor-item">
+            <div class="monitor-item">
                 <span>Memory Usage:</span>
-                <span id="mem">? MB</span>
+                <span id="mem">OFF</span>
             </div>
-            <div className="monitor-item">
+            <div class="monitor-item">
                 <span>Network In:</span>
-                <span id="netin">? KB/s</span>
+                <span id="netin">OFF</span>
             </div>
-            <div className="monitor-item">
+            <div class="monitor-item">
                 <span>Network Out:</span>
-                <span id="netout">? KB/s</span>
+                <span id="netout">OFF</span>
             </div>
         </div>
         <script>
