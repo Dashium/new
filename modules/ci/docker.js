@@ -80,7 +80,9 @@ async function removeDockerContainer(containerName) {
 }
 
 function monitorDocker(containerName) {
-    const cmd = `docker stats ${containerName} --format "{{.Name}}: CPU {{.CPUPerc}}, MEM {{.MemUsage}}, NET I/O {{.NetIO}}"`
+    var format = "{{.Name}}: CPU {{.CPUPerc}}, MEM {{.MemUsage}}, NET I/O {{.NetIO}}";
+    // var format = `{"cpuUsage": {{.CPUPerc}},"memoryUsage": {{.MemUsage}},"networkIn": {{.NetIO}}}`;
+    const cmd = `docker stats ${containerName} --format "${format}"`
 
     const process = exec(cmd);
 

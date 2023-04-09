@@ -12,6 +12,10 @@
         "host": "localhost",
         "port": 3200
     },
+    "monitor": {
+        "host": "localhost",
+        "port": 3300
+    },
     "docker": {
         "IDgenerator": 10,
         "images": [

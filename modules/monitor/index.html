@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dashium | Monitor</title>
+        <script src="/socket.io/socket.io.js"></script>
+        <style>
+            .monitor-container {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+                align-items: center;
+                background-color: #ffffffbb;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+                border-radius: 10px;
+                padding: 20px;
+            }
+
+            .monitor-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .monitor-item span:first-child {
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+
+            .monitor-item span:last-child {
+                font-size: 24px;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <div className="monitor-container">
+            <div className="monitor-item">
+                <span>CPU Usage:</span>
+                <span id="cpu">? %</span>
+            </div>
+            <div className="monitor-item">
+                <span>Memory Usage:</span>
+                <span id="mem">? MB</span>
+            </div>
+            <div className="monitor-item">
+                <span>Network In:</span>
+                <span id="netin">? KB/s</span>
+            </div>
+            <div className="monitor-item">
+                <span>Network Out:</span>
+                <span id="netout">? KB/s</span>
+            </div>
+        </div>
+        <script>
+            const socket = io();
+            function handleData(data) {
+                if(data.startsWith('Error response from daemon: No such container: ') == true){
+                    data = "{'cpuUsage':'Off', 'memoryUsage':'Off', 'networkIn':'Off / Off'}";
+                }
+                if(data.startsWith('{') == false){return;}
+                console.log(data);
+                data = JSON.parse(data);
+                const cpuElement = document.getElementById('cpu');
+                const memoryElement = document.getElementById('mem');
+                const networkInElement = document.getElementById('netin')
+                const networkOutElement = document.getElementById('netout');
+                cpuElement.textContent = data.cpuUsage;
+                memoryElement.textContent = data.memoryUsage;
+                networkInElement.textContent = data.networkIn.split('/')[0];
+                networkOutElement.textContent = data.networkIn.split('/')[1];
+            }
+
+            function handleConnect() {
+                const containerName = document.location.pathname;
+                socket.emit('monitor', containerName);
+            }
+
+            socket.on('data', handleData);
+
+            socket.on('connect', handleConnect);
+        </script>
+    </body>
+</html>

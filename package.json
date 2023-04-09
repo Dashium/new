@@ -10,6 +10,7 @@
     "start:export": "next export ./modules/dashboard/react",
     "start:dashium": "npm-run-all --parallel dashium:*",
     "dashium:terminal": "node ./modules/terminal/main.js",
+    "dashium:monitor": "node ./modules/monitor/main.js",
     "dashium:dashboard": "next start ./modules/dashboard/react",
     "dashium2:dashboard": "node ./modules/dashboard/dashboard.js",
     "setup": "node ./setup/main.js",

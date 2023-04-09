@@ -35,7 +35,7 @@ const App = () => {
                     right: '2%',
                     width: 'calc(100% - 240px - 4%)'
                 }}>
-                    {/* <Monitor></Monitor> */}
+                    <Monitor></Monitor>
                     <TerminalSSH containerName={'test9'}></TerminalSSH>
                 </div>
 
