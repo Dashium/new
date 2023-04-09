@@ -44,7 +44,7 @@ async function downloadDockerImage(imageName) {
 async function createDockerContainer(containerName, portBinder, imageName, repoDir) {
     const containersList = await runDockerCommand('ps -a');
     if (!containersList.includes(containerName)) {
-        await runDockerCommand(`create --name ${containerName} -it -v ${process.cwd()}/new:/app ${portBinder} -w /app ${imageName} bash`, { cwd: repoDir });
+        await runDockerCommand(`create --name ${containerName} -it -v ${process.cwd()}/${repoDir}:/app ${portBinder} -w /app ${imageName} bash`, { cwd: repoDir });
     }
 }
 
@@ -91,17 +91,22 @@ async function use(lang, containerName) {
     switch (lang) {
         case 'dashium':
             await runCommandInContainer(containerName, "apt-get update && apt-get install -y curl wget sudo nano");
-            await runCommandInContainer(containerName, "apt-get install -y openssh-server");
             await runCommandInContainer(containerName, "apt-get install -y git");
-            await runCommandInContainer(containerName, "git clone https://github.com/Dashium/web_ssh_server dashium_ssh");
-            await use('nodejs', containerName);
-            // await runCommandInContainer(containerName, 'cd dashium_ssh && npm install && npm start');
             break;
         case 'nodejs':
             await runCommandInContainer(containerName, "apt-get update && apt-get install -y curl wget");
             await runCommandInContainer(containerName, 'curl -sL https://deb.nodesource.com/setup_lts.x | sudo -E bash -');
             await runCommandInContainer(containerName, 'sudo apt install nodejs -y');
-            // await runCommandInContainer(containerName, 'sudo apt install npm -y');
+            break;
+        case 'minecraft_server':
+            await runCommandInContainer(containerName, 'sudo apt install openjdk-17-jre-headless -y');
+            await runCommandInContainer(containerName, 'sudo apt install ufw -y');
+            await runCommandInContainer(containerName, 'sudo ufw allow 25565');
+            await runCommandInContainer(containerName, 'mkdir minecraft_server');
+            await runCommandInContainer(containerName, 'cd minecraft_server && wget https://piston-data.mojang.com/v1/objects/8f3112a1049751cc472ec13e397eade5336ca7ae/server.jar');
+            await runCommandInContainer(containerName, 'cd minecraft_server && sudo java -Xms1G -Xmx2G -jar server.jar nogui');
+            await runCommandInContainer(containerName, "cd minecraft_server && sudo sed -i 's/false/true/g' eula.txt");
+            await runCommandInContainer(containerName, 'cd minecraft_server && sudo java -Xms1G -Xmx2G -jar server.jar nogui');
             break;
         default:
             console.log('none');
