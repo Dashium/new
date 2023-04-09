@@ -11,7 +11,8 @@ const socket = io(server);
 
 // Route pour afficher la page d'accueil
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    // res.sendFile(__dirname + '/index.html');
+    res.redirect(`http://${common.global.server.host}:${common.global.server.port}`);
 });
 
 // START IMPORT TERMINAL
