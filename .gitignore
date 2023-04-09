@@ -1,6 +1,7 @@
 # DASHIUM
 clusters
 logs
+modules/dashboard/react/out
 
 # REACT
 .next
