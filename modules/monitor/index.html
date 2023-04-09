@@ -57,10 +57,10 @@
         <script>
             const socket = io();
             function handleData(data) {
-                if(data.startsWith('Error response from daemon: No such container: ') == true){
+                if (data.startsWith('Error response from daemon: No such container: ') == true) {
                     data = "{'cpuUsage':'Off', 'memoryUsage':'Off', 'networkIn':'Off / Off'}";
                 }
-                if(data.startsWith('{') == false){return;}
+                if (data.startsWith('{') == false) { return; }
                 console.log(data);
                 data = JSON.parse(data);
                 const cpuElement = document.getElementById('cpu');
