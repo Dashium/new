@@ -45,6 +45,7 @@ async function createDockerContainer(containerName, portBinder, imageName, repoD
     const containersList = await runDockerCommand('ps -a');
     if (!containersList.includes(containerName)) {
         await runDockerCommand(`create --name ${containerName} -it -v ${process.cwd()}/${repoDir}:/app ${portBinder} -w /app ${imageName} bash`, { cwd: repoDir });
+        await runDockerCommand(` docker update --restart unless-stopped ${containerName}`);
     }
 }
 
