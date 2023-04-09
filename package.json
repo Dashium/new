@@ -6,7 +6,12 @@
   "scripts": {
     "start": "npm-run-all start:*",
     "start:infos": "node ./modules/infos.js",
-    "start:dashboard": "node ./modules/dashboard/dashboard.js",
+    "start:build": "next build ./modules/dashboard/react",
+    "start:export": "next export ./modules/dashboard/react",
+    "start:dashium": "npm-run-all --parallel dashium:*",
+    "dashium:terminal": "node ./modules/terminal/main.js",
+    "dashium:dashboard": "next start ./modules/dashboard/react",
+    "dashium2:dashboard": "node ./modules/dashboard/dashboard.js",
     "setup": "node ./setup/main.js",
     "dev": "next dev ./modules/dashboard/react",
     "build": "next build ./modules/dashboard/react",
@@ -37,9 +42,6 @@
     "express-graphql": "^0.12.0",
     "graphql": "^15.8.0",
     "http": "^0.0.1-security",
-    "mongodb": "^5.2.0",
-    "mongoose": "^7.0.3",
-    "net": "^1.0.2",
     "next": "^13.1.6",
     "node-docker-api": "^1.1.22",
     "npm-run-all": "^4.1.5",
@@ -47,7 +49,9 @@
     "react-helmet": "^6.1.0",
     "react-json-pretty": "^2.2.0",
     "simple-git": "^3.17.0",
-    "socket.io": "^4.6.1"
+    "socket.io": "^4.6.1",
+    "xterm": "^5.1.0",
+    "xterm-addon-fit": "^0.7.0"
   },
   "eslintConfig": {
     "extends": [
