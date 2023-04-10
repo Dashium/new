@@ -2,9 +2,9 @@ const project = require('./projets/main');
 const cluster = require('./cluster/main');
 
 module.exports = {
-    getProjectWithCluster: function(IDorName) { return project.getProjectWithCluster(IDorName) },
-    getAllProjects: function() { return project.getProjectAll() },
-    getProject: function(IDorName) { return project.getProject(IDorName) },
-    getAllCluster: function() { return cluster.getAllCluster() },
-    getCluster: function(IDorName) { return cluster.getCluster(IDorName) }
+    getProjectWithCluster: async function(IDorName) { return await project.getProjectWithCluster(IDorName); },
+    getAllProjects: async function() { return await project.getProjectAll(); },
+    getProject: async function(IDorName) { return await project.getProject(IDorName); },
+    getAllCluster: async function() { return await cluster.getAllCluster(); },
+    getCluster: async function(IDorName) { return await cluster.getCluster(IDorName); }
 }
