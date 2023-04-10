@@ -1,11 +1,11 @@
 const common = require('../common');
 const github = require('./github');
 
-function cloneRepo(url, dest){
+async function cloneRepo(url, dest){
     switch (common.getDomains(url)){
         case 'github.com':
             url = common.replaceAll(url, 'https://github.com/', '');
-            github.gitClone(url, dest);
+            await github.gitClone(url, dest);
             common.log(`repo ${url} clonned !`, 'clone');
             break;
         default:

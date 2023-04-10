@@ -110,10 +110,9 @@ async function createProject(name, cluster, repo) {
     })
     .then(async (id) => {
         var base = await getProjectDirs(id);
-        common.mkdir(base.ci);
-        common.mkdir(base.repo);
-        common.mkdir(base.logs);
-        clone.clone(repo, base.repo);
+        await common.mkdir(base.ci);
+        await common.mkdir(base.repo);
+        await common.mkdir(base.logs);
     })
     .catch((err) => {
         console.log(err);

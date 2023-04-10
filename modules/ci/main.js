@@ -3,12 +3,15 @@ const common = require('../common');
 const project = require('../projets/main');
 const npm = require('./npm');
 
+const clone = require('../clone/main');
 const docker = require('./docker');
 
 const { exec } = require('child_process');
 
-function getCIScript(id) {
-    var current = project.getProject(id);
+async function getCIScript(id) {
+    var current = await project.getProject(id);
+    current.ci = JSON.parse(current.ci);
+    common.log(`get ci #${id} project`, 'ci');
     return current.ci;
 }
 
@@ -47,21 +50,36 @@ function runTasks(tasks, cipath, logpath) {
         });
 }
 
-function runCI(id) {
-    var current = project.getProjectDirs(id);
+async function runCI(id) {
+    var current = await project.getProjectDirs(id);
+    var currentProject = await project.getProject(id);
 
     if (fs.existsSync(current.ci)) {
-        common.rmdir(current.ci);
-        common.mkdir(current.ci);
+        await common.rmdir(current.ci);
+        await common.mkdir(current.ci);
     }
 
-    common.copyDir(current.repo, current.ci);
+    await clone.clone(currentProject.repo, current.repo);
 
-    var ciScript = getCIScript(id);
+    await common.copyDir(current.repo, current.ci);
 
-    runTasks(ciScript, current.ci, current.logs);
+    var ciScript = await getCIScript(id);
 
-    docker.buildDockerImage()
+    const ports = await docker.bindPorts([
+        {host: 3001, container: 3000},
+        {host: 50, container: 50},
+        {host: 300, container: 22},
+    ]);
+
+    const containerName = currentProject.dockerID;
+
+    await docker.createDockerContainer(containerName, ports, 'ubuntu:latest', current.ci);
+    await docker.startDockerContainer(containerName);
+    await docker.use('dashium', containerName);
+    await docker.use('nodejs', containerName);
+    await docker.runCommandInContainer(containerName, 'npm install');
+
+    // runTasks(ciScript, current.ci, current.logs);
 }
 
 module.exports = {
