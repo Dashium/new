@@ -17,6 +17,7 @@
     "setup": "npm-run-all setup:*",
     "setup:infos": "node ./modules/infos.js",
     "setup:setup": "node ./setup/main.js",
+    "uninstall": "node ./setup/uninstaller.js",
     "dev": "next dev ./modules/dashboard/react",
     "build": "next build ./modules/dashboard/react",
     "startr": "next start ./modules/dashboard/react",
