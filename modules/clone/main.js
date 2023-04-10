@@ -8,7 +8,7 @@ function cloneRepo(url, dest){
             github.gitClone(url, dest);
             break;
         default:
-            common.error('repo not found !');
+            common.error('repo not found !', 'clone');
     }
 }
 
@@ -19,7 +19,7 @@ function fetchRepo(url, dest){
             github.gitFetch(url, dest);
             break;
         default:
-            common.error('repo not found !');
+            common.error('repo not found !', 'clone');
     }
 }
 
