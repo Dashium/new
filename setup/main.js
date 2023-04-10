@@ -2,74 +2,78 @@ const common = require('../modules/common');
 const cluster = require('../modules/cluster/main');
 const projet = require('../modules/projets/main');
 const ci = require('../modules/ci/main');
+const dbModule = require('../modules/bdd/main');
 
 common.mkdir('logs');
 
-// CREATE DEFAULT CLUSTER
-cluster.createCluster('Local Cluster #1', 'default', './clusters/cluster');
+async function init() {
+    try {
+        // START CREATE BDD
+        const db = await dbModule.createDatabase('dashium');
+        await dbModule.createTable(db, 'users',
+            [
+                'id INTEGER PRIMARY KEY',
+                'name TEXT',
+                'age INTEGER'
+            ]
+        );
+        await dbModule.createTable(db, 'global',
+            [
+                'id INTEGER PRIMARY KEY',
+                'name TEXT',
+                'age INTEGER'
+            ]
+        );
+        await dbModule.createTable(db, 'clusters',
+            [
+                'id INTEGER PRIMARY KEY',
+                'name TEXT',
+                'alias TEXT',
+                'path TEXT'
+            ]
+        );
+        await dbModule.createTable(db, 'projects',
+            [
+                'id INTEGER PRIMARY KEY',
+                'name TEXT',
+                'alias TEXT',
+                'cluster INTEGER',
+                'repo TEXT',
+                'path TEXT',
+                'ci TEXT',
+                'dockerID TEXT',
+                'dockerImage TEXT'
+            ]
+        );
+        // END CREATE BDD
 
-// CREATE DEFAULT PROJET
-var projectData = projet.createProject('Demo Dashium', 'default', 'Local Cluster #1', 'https://github.com/Dashium/demo_project');
-projet.setCIScript(projectData.id, [
-    {
-      "name": "Node installer",
-      "mode": "npm",
-      "run": "npm install"
-    },
-    {
-      "name": "Node run",
-      "mode": "npm",
-      "run": "npm test"
+        // CREATE DEFAULT CLUSTER
+        await cluster.createCluster('Local Cluster #1', 'default', './clusters/cluster');
+
+        // CREATE DEFAULT PROJET
+        var {alias} = await projet.createProject('Demo Dashium', 1, 'https://github.com/Dashium/demo_project');
+        var current = await projet.getProject(alias);
+        await projet.setCIScript(current.id, [
+            {
+                "name": "Node installer",
+                "mode": "npm",
+                "run": "npm install"
+            },
+            {
+                "name": "Node run",
+                "mode": "npm",
+                "run": "npm test"
+            }
+        ]);
+        await projet.setDockerImage(current.id, 'ubuntu:latest');
+
+        await ci.runCI(current.id);
+
+        common.log('installation finish !', 'setup');
+        common.log('please run: `npm start`', 'setup');
+
+    } catch (error) {
+        console.error(error);
     }
-]);
-
-// ci.runCI(projectData.id);
-
-setTimeout(() => {
-    common.log('installation finish !', 'setup');
-    common.log('please run: `npm start`', 'setup');
-    setTimeout(() => {
-        process.exit(0);
-    }, 100);
-}, 500);
-
-
-// async function runSetup() {
-//     // Créer le dossier logs
-//     await common.mkdir('logs');
-
-//     // Créer le cluster par défaut
-//     await cluster.createCluster('Local Cluster #1', 'default', './clusters/cluster');
-
-//     // Créer le projet par défaut
-//     var projectData = await projet.createProject('Demo Dashium', 'default', 'Local Cluster #1', 'https://github.com/Dashium/demo_project');
-//     await projet.setCIScript(projectData.id, [
-//         {
-//             "name": "Node installer",
-//             "mode": "npm",
-//             "run": "npm install"
-//         },
-//         {
-//             "name": "Node run",
-//             "mode": "npm",
-//             "run": "npm test"
-//         }
-//     ]);
-
-//     // Exécuter le script CI
-//     await ci.runCI(projectData.id)
-//         .then(() => {
-//             common.log('Installation finish !', 'setup');
-//             common.log('Please run: `npm start`', 'setup');
-//             // Attendre 100ms avant de terminer le processus
-//             setTimeout(() => {
-//                 process.exit(0);
-//             }, 100);
-//         })
-//         .catch((error) => {
-//             common.error(`Error during CI script execution: ${error}`, 'setup');
-//             // Terminer le processus avec une erreur
-//             process.exit(1);
-//         });
-// }
-// runSetup();
+}
+init();
