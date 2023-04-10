@@ -49,17 +49,11 @@ async function downloadDockerImage(imageName) {
     }
 }
 
-async function createDockerContainer(containerName, hostPort, containerPort, sshPort, imageName, repoDir) {
-    if(hostPort == null){
-        hostPort = 3000;
-    }
-    if(containerPort == null){
-        containerPort = 3000;
-    }
+async function createDockerContainer(containerName, portBinder, imageName, repoDir) {
     const containersList = await runDockerCommand('ps -a');
     if (!containersList.includes(containerName)) {
-        await runDockerCommand(`create --name ${containerName} -it -v ${process.cwd()}/${repoDir}:/app -p ${hostPort}:${containerPort} -p ${sshPort}:22 -w /app ${imageName} bash`, { cwd: repoDir });
-        await runDockerCommand(` docker update --restart unless-stopped ${containerName}`);
+        await runDockerCommand(`create --name ${containerName} -it -v ${process.cwd()}/${repoDir}:/app ${portBinder} -w /app ${imageName} bash`, { cwd: repoDir });
+        // await runDockerCommand(` docker update --restart unless-stopped ${containerName}`);
     }
 }
 
