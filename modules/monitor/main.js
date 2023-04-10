@@ -24,14 +24,14 @@ function getContainerStats(containerName, socketId) {
         });
 
         process.stderr.on('data', (data) => {
-            console.error(`Error: ${data}`);
+            common.error(`Error: ${data}`, 'monitor');
             // Envoyer un message d'erreur au client via le socket correspondant
             io.to(socketId).emit('data', common.replaceAll("{'cpuUsage':'OFF', 'memoryUsage':'OFF', 'networkIn':'OFF / OFF'}", "'", '"'))
             resolve(data);
         });
 
         process.on('close', (code) => {
-            console.log(`Child process exited with code ${code}`);
+            common.error(`Child process exited with code ${code}`, 'monitor');
             resolve(logs.trim());
         });
     });
@@ -48,32 +48,32 @@ app.get('/:container', (req, res) => {
 
 // Écouter l'événement 'monitor' pour recevoir le nom du container à surveiller
 io.on('connection', (socket) => {
-    console.log('Client connected');
+    common.log('Client connected', 'monitor');
 
     socket.on('monitor', (containerName) => {
-        console.log(`Monitoring container "${containerName}"`);
+        common.log(`Monitoring container "${containerName}"`, 'monitor');
         // Stocker les informations du conteneur surveillé associé au socketId de l'utilisateur
         monitoredContainers[socket.id] = containerName;
         try {
             getContainerStats(containerName, socket.id);
         } catch (error) {
-            console.log(error);
+            common.error(error, 'monitor');
             io.to(socket.id).emit('data', "{'cpuUsage':'OFF', 'memoryUsage':'OFF', 'networkIn':'OFF / OFF'}")
         }
     });
     // Écouter l'événement 'disconnect' pour arrêter la surveillance du conteneur associé au socketId de l'utilisateur
     socket.on('disconnect', () => {
-        console.log('Client disconnected');
+        common.log('Client disconnected', 'monitor');
         const containerName = monitoredContainers[socket.id];
         if (containerName) {
-            console.log(`Stopping monitoring of container "${containerName}"`);
+            common.log(`Stopping monitoring of container "${containerName}"`, 'monitor');
             // Arrêter la surveillance du conteneur
             // En envoyant un signal SIGINT à la commande 'docker stats'
             exec(`pkill -f "docker stats ${containerName}"`, (error, stdout, stderr) => {
                 if (error) {
-                    console.error(`Error stopping monitoring of container "${containerName}": ${error}`);
+                    common.error(`Error stopping monitoring of container "${containerName}": ${error}`, 'monitor');
                 }
-                console.log(`Monitoring of container "${containerName}" stopped`);
+                common.log(`Monitoring of container "${containerName}" stopped`, 'monitor');
             });
             delete monitoredContainers[socket.id];
         }
@@ -81,5 +81,5 @@ io.on('connection', (socket) => {
 });
 
 server.listen(common.global.monitor.port, () => {
-    console.log(`Server listening on port ${common.global.monitor.port}`);
+    common.sucess(`Server listening on port ${common.global.monitor.port}`, 'monitor');
 });
