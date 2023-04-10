@@ -18,6 +18,11 @@
     "setup:infos": "node ./modules/infos.js",
     "setup:setup": "node ./setup/main.js",
     "uninstall": "node ./setup/uninstaller.js",
+
+    "omg": "npm-run-all --continue-on-error omg:*",
+    "omg:u": "npm run uninstall",
+    "omg:s": "npm run setup",
+
     "dev": "next dev ./modules/dashboard/react",
     "build": "next build ./modules/dashboard/react",
     "startr": "next start ./modules/dashboard/react",
