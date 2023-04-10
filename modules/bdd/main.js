@@ -1,4 +1,5 @@
 const sqlite3 = require('sqlite3').verbose();
+const common = require('../common');
 
 // Fonction pour créer la base de données
 function createDatabase(dbName) {
@@ -7,7 +8,7 @@ function createDatabase(dbName) {
             if (err) {
                 reject(err.message);
             }
-            console.log(`Database ${dbName} created`);
+            common.sucess(`Database ${dbName} created`, 'bdd');
             resolve(db);
         });
     });
@@ -19,7 +20,7 @@ function loadDatabase(dbName) {
             if (err) {
                 reject(err.message);
             }
-            console.log(`Database ${dbName} loaded`);
+            common.sucess(`Database ${dbName} loaded`, 'bdd');
             resolve(db);
         });
     });
@@ -34,7 +35,7 @@ function createTable(db, tableName, columns) {
             if (err) {
                 reject(err.message);
             }
-            console.log(`Table ${tableName} created`);
+            common.sucess(`Table ${tableName} created`, 'bdd');
             resolve();
         });
     });
@@ -51,7 +52,7 @@ function insertRow(db, tableName, data) {
             if (err) {
                 reject(err.message);
             }
-            console.log(`Row inserted into ${tableName} with id ${this.lastID}`);
+            common.log(`Row inserted into ${tableName} with id ${this.lastID}`, 'bdd');
             resolve(this.lastID);
         });
     });
@@ -66,10 +67,10 @@ function selectRows(db, tableName, columns = '*', where = '1', params = []) {
                 reject(err.message);
             }
             if(rows == null){
-                console.log(`${rows} rows selected from ${tableName}`);
+                common.log(`${rows} rows selected from ${tableName}`, 'bdd');
             }
             else{
-                console.log(`${rows.length} rows selected from ${tableName}`);
+                common.log(`${rows.length} rows selected from ${tableName}`, 'bdd');
             }
             resolve(rows);
         });
@@ -84,7 +85,7 @@ function deleteRows(db, tableName, where = '1', params = []) {
             if (err) {
                 reject(err.message);
             }
-            console.log(`${this.changes} rows deleted from ${tableName}`);
+            common.warn(`${this.changes} rows deleted from ${tableName}`, 'bdd');
             resolve(this.changes);
         });
     });
@@ -101,7 +102,7 @@ function updateRows(db, tableName, data, where = '1', params = []) {
             if (err) {
                 reject(err.message);
             }
-            console.log(`${this.changes} rows updated in ${tableName}`);
+            common.log(`${this.changes} rows updated in ${tableName}`, 'bdd');
             resolve(this.changes);
         });
     });
