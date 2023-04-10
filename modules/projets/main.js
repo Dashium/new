@@ -130,7 +130,6 @@ async function removeProject(id) {
         common.error(`Erreur : Aucun project avec l'ID ${id} n'a été trouvé`, 'project');
         return null;
     }
-    console.log(project[0]);
 
     var projectID = await clusters.getCluster(project[0].cluster);
     
@@ -148,35 +147,20 @@ async function removeProject(id) {
     return project;
 }
 
-function setCIScript(id, ciScript){
-    const project = Object.values(projects).find((project) => project.id === id);
+async function setCIScript(id, ciScript){
+    var db = await dbModule.loadDatabase('dashium');
+    const project = await dbModule.selectRows(db, 'projects', '*', 'id = ?', [id]);
 
-    if (!project) {
+    if (project.length == 0) {
         common.error(`Erreur : Aucun project avec l'ID ${id} n'a été trouvé`, 'project');
         return null;
     }
-    
-    projects[project.id].ci = ciScript;
 
-    common.sucess(`Project "${project.name}" supprimé`, 'project');
-    saveProject();
+    await dbModule.updateRows(db, 'projects', { ci: JSON.stringify(ciScript) }, 'id = ?', [id]);
+
+    common.sucess(`Project "${project[0].name}" supprimé`, 'project');
+
     return project;
-}
-
-async function saveProject(data) {
-    console.log(data);
-    fs.writeFileSync(projectPath, JSON.stringify(projects, null, 2));
-
-    var db = await dbModule.loadDatabase('dashium');
-    await dbModule.insertRow(db, 'projects', {
-        'name': data.name,
-        'alias': data.alias,
-        'cluster_id': data.cluster_id,
-        'repo': data.repo,
-        'path': data.path,
-        'ci': data.ci,
-        'dockerID': data.dockerID,
-    });
 }
 
 module.exports = {
