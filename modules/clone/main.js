@@ -6,6 +6,7 @@ function cloneRepo(url, dest){
         case 'github.com':
             url = common.replaceAll(url, 'https://github.com/', '');
             github.gitClone(url, dest);
+            common.log(`repo ${url} clonned !`, 'clone');
             break;
         default:
             common.error('repo not found !', 'clone');
