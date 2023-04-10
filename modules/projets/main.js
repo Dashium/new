@@ -5,7 +5,9 @@ const dbModule = require('../bdd/main');
 function getProjectByID(projectID) {
     return new Promise(async (resolve, reject) => {
         const db = await dbModule.loadDatabase('dashium');
-        const [entry] = await dbModule.selectRows(db, 'projects', '*', 'id = ?', [projectID]);
+        var [entry] = await dbModule.selectRows(db, 'projects', '*', 'id = ?', [projectID]);
+            entry.ci = JSON.parse(entry.ci);
+            entry.docker = JSON.parse(entry.docker);
         resolve(entry);
     });
 }
@@ -13,7 +15,9 @@ function getProjectByID(projectID) {
 function getProjectByName(projectName) {
     return new Promise(async (resolve, reject) => {
         const db = await dbModule.loadDatabase('dashium');
-        const [entry] = await dbModule.selectRows(db, 'projects', '*', 'alias = ?', [projectName]);
+        var [entry] = await dbModule.selectRows(db, 'projects', '*', 'alias = ?', [projectName]);
+            entry.ci = JSON.parse(entry.ci);
+            entry.docker = JSON.parse(entry.docker);
         resolve(entry);
     });
 }
@@ -49,7 +53,11 @@ async function getProjectWithCluster(projectID){
 function getProjectAll(){
     return new Promise(async (resolve, reject) => {
         const db = await dbModule.loadDatabase('dashium');
-        const entries = await dbModule.selectRows(db, 'projects');
+        var entries = await dbModule.selectRows(db, 'projects');
+            entries.forEach(proj => {
+                proj.ci = JSON.parse(proj.ci);
+                proj.docker = JSON.parse(proj.docker);
+            });
         resolve(entries);
     });
 }
@@ -80,7 +88,10 @@ async function createProject(name, cluster, repo) {
         repo,
         path: common.getUrlLastPath(repo),
         ci: [],
-        dockerID: common.generateRandomString(common.global.docker.IDgenerator),
+        docker: {
+            dockerID: common.generateRandomString(common.global.docker.IDgenerator),
+            dockerImage: 'ubuntu:latest',
+        },
     };
 
     await dbModule.insertRow(db, 'projects', {
@@ -89,8 +100,8 @@ async function createProject(name, cluster, repo) {
         'cluster': newproject.cluster,
         'repo': newproject.repo,
         'path': newproject.path,
-        'ci': newproject.ci,
-        'dockerID': newproject.dockerID,
+        'ci': JSON.stringify(newproject.ci),
+        'docker': JSON.stringify(newproject.docker),
     })
     .then(async (id) => {
         var base = await getProjectDirs(id);
