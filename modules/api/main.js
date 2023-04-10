@@ -29,6 +29,7 @@ app.get('/projects', async (req, res) => {
         var entries = await db.selectRows(bdd, 'projects');
         entries.forEach(proj => {
             proj.ci = JSON.parse(proj.ci);
+            proj.docker = JSON.parse(proj.docker);
         });
         res.json(entries);
     } catch (error) {
@@ -46,6 +47,7 @@ app.get('/projects/:id', async (req, res) => {
             res.status(404).json({ error: 'Entry not found' });
         } else {
             entry.ci = JSON.parse(entry.ci);
+            entry.docker = JSON.parse(entry.docker);
             res.json(entry);
         }
     } catch (error) {
