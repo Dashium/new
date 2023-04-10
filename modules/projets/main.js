@@ -130,20 +130,34 @@ async function removeProject(id) {
     return project;
 }
 
-async function setCIScript(id, ciScript){
+async function updateProjet(id, data){
     var db = await dbModule.loadDatabase('dashium');
     const project = await dbModule.selectRows(db, 'projects', '*', 'id = ?', [id]);
-
+    
     if (project.length == 0) {
         common.error(`Erreur : Aucun project avec l'ID ${id} n'a été trouvé`, 'project');
         return null;
     }
 
-    await dbModule.updateRows(db, 'projects', { ci: JSON.stringify(ciScript) }, 'id = ?', [id]);
-
-    common.sucess(`Project "${project[0].name}" supprimé`, 'project');
+    await dbModule.updateRows(db, 'projects', data, 'id = ?', [id]);
 
     return project;
+}
+
+async function setCIScript(id, ciScript){
+    var project = await updateProjet(id, { ci: JSON.stringify(ciScript) });
+
+    common.sucess(`CI "${project[0].name}" mis a jour !`, 'project');
+
+    return id;
+}
+
+async function setDockerImage(id, image){
+    var project = await updateProjet(id, { dockerImage: image });
+
+    common.sucess(`Docker Image "${project[0].name}" mis a jour !`, 'project');
+
+    return id;
 }
 
 module.exports = {
@@ -154,6 +168,7 @@ module.exports = {
     getProjectByName,
     getProjectWithCluster,
     setCIScript,
+    setDockerImage,
     createProject,
     removeProject
 }
