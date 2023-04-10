@@ -41,8 +41,7 @@ async function init() {
                 'repo TEXT',
                 'path TEXT',
                 'ci TEXT',
-                'dockerID TEXT',
-                'dockerImage TEXT'
+                'docker TEXT'
             ]
         );
         // END CREATE BDD
