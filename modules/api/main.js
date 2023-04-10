@@ -26,7 +26,10 @@ app.post('/projects', async (req, res) => {
 // Route pour récupérer toutes les entrées de la base de données
 app.get('/projects', async (req, res) => {
     try {
-        const entries = await db.selectRows(bdd, 'projects');
+        var entries = await db.selectRows(bdd, 'projects');
+        entries.forEach(proj => {
+            proj.ci = JSON.parse(proj.ci);
+        });
         res.json(entries);
     } catch (error) {
         common.error(error, 'api');
@@ -38,10 +41,11 @@ app.get('/projects', async (req, res) => {
 app.get('/projects/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const [entry] = await db.selectRows(bdd, 'projects', '*', 'id = ?', [id]);
+        var [entry] = await db.selectRows(bdd, 'projects', '*', 'id = ?', [id]);
         if (!entry) {
             res.status(404).json({ error: 'Entry not found' });
         } else {
+            entry.ci = JSON.parse(entry.ci);
             res.json(entry);
         }
     } catch (error) {
