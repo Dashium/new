@@ -1,22 +1,6 @@
 const common = require('../common');
 const clusters = require('../cluster/main');
-const clone = require('../clone/main');
 const dbModule = require('../bdd/main');
-const fs = require('fs');
-const path = require('path');
-
-const projectPath = path.join(__dirname, '../../config/projects.json');
-var projects = require(projectPath);
-
-// fs.watch(projectPath, () => {
-//     try {
-//         const data = fs.readFileSync(projectPath);
-//         projects = JSON.parse(data);
-//         common.log(`project chargé`, 'project');
-//     } catch (err) {
-//         common.error(`Erreur lors du chargement du project : ${err}`, 'project');
-//     }
-// });
 
 function getProjectByID(projectID) {
     return new Promise(async (resolve, reject) => {
