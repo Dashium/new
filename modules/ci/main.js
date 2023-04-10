@@ -7,7 +7,6 @@ const docker = require('./docker');
 
 async function getCIScript(id) {
     var current = await project.getProject(id);
-    current.ci = JSON.parse(current.ci);
     common.log(`get ci #${id} project`, 'ci');
     return current.ci;
 }
@@ -51,7 +50,7 @@ async function runCI(id) {
         { host: 300, container: 22 },
     ]);
 
-    const containerName = currentProject.dockerID;
+    const containerName = currentProject.docker.dockerID;
 
     await docker.createDockerContainer(containerName, ports, 'ubuntu:latest', current.ci);
     await docker.startDockerContainer(containerName);
