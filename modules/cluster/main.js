@@ -1,36 +1,20 @@
 const common = require('../common');
-const fs = require('fs');
-const path = require('path');
-
-const clusterPath = path.join(__dirname, '../../config/cluster.json');
-var clusters = require(clusterPath);
-
-fs.watch(clusterPath, () => {
-    try {
-        const data = fs.readFileSync(clusterPath);
-        clusters = JSON.parse(data);
-        common.log(`Cluster chargé`, 'cluster');
-    } catch (err) {
-        common.error(`Erreur lors du chargement du cluster : ${err}`, 'cluster');
-    }
-});
+const dbModule = require('../bdd/main');
 
 function getClusterByID(ClusterID) {
-    for (const key in clusters) {
-        if (clusters[key].id === ClusterID) {
-            return clusters[key];
-        }
-    }
-    return null;
+    return new Promise(async (resolve, reject) => {
+        const db = await dbModule.loadDatabase('dashium');
+        const [entry] = await dbModule.selectRows(db, 'clusters', '*', 'id = ?', [ClusterID]);
+        resolve(entry);
+    });
 }
 
 function getClusterByName(ClusterName) {
-    for (const key in clusters) {
-        if (clusters[key].name === ClusterName) {
-            return clusters[key];
-        }
-    }
-    return null;
+    return new Promise(async (resolve, reject) => {
+        const db = await dbModule.loadDatabase('dashium');
+        const [entry] = await dbModule.selectRows(db, 'projects', '*', 'name = ?', [ClusterName]);
+        resolve(entry);
+    });
 }
 
 function getCluster(clusterIDorName) {
@@ -44,51 +28,66 @@ function getCluster(clusterIDorName) {
 }
 
 function getAllCluster(){
-    return common.formatJsonToArray(clusters);
+    return new Promise(async (resolve, reject) => {
+        const db = await dbModule.loadDatabase('dashium');
+        const entries = await dbModule.selectRows(db, 'clusters');
+        resolve(entries);
+    });
 }
 
-function createCluster(name, alias, path) {
-    const pathInUse = Object.values(clusters).some((cluster) => cluster.path === path);
+async function createCluster(name, alias, path) {
+    var db = await dbModule.loadDatabase('dashium');
+    const pathInUse = await dbModule.selectRows(db, 'clusters', '*', 'path = ?', [path]);
 
-    if (pathInUse) {
+    if (pathInUse.length > 0) {
         common.error(`Erreur : Le chemin ${path} est déjà utilisé par un autre cluster`, 'cluster');
         return null;
     }
 
-    const id = Object.keys(clusters).length;
     const newCluster = {
         name,
-        id,
         alias,
         path
     };
-    clusters[id] = newCluster;
     
     common.mkdir(`${path}/`);
 
     common.sucess(`Cluster "${name}" crée`, 'cluster');
-    saveCluster();
+    
+    await dbModule.insertRow(db, 'clusters', {
+        'name': newCluster.name,
+        'alias': newCluster.alias,
+        'path': newCluster.path,
+    });
     return newCluster;
 }
 
-function removeCluster(id) {
-    const cluster = Object.values(clusters).find((cluster) => cluster.id === id);
+async function removeCluster(id) {
+    var db = await dbModule.loadDatabase('dashium');
+    const cluster = await dbModule.selectRows(db, 'clusters', '*', 'id = ?', [id]);
 
-    if (!cluster) {
+    if (cluster == null) {
+        common.error(`Erreur : Il n'y a aucun cluster dans la BDD`, 'cluster');
+        return null;
+    }
+    if (cluster.length == 0) {
         common.error(`Erreur : Aucun cluster avec l'ID ${id} n'a été trouvé`, 'cluster');
         return null;
     }
 
-    common.rmdir(cluster.path);
+    const projects = await dbModule.selectRows(db, 'projects', '*', 'cluster = ?', [id]);
+    if(projects.length > 0){
+        common.error('this cluster has been used !', 'cluster');
+        return;
+    }
 
-    delete clusters[cluster.id];
-    common.sucess(`Cluster "${cluster.name}" supprimé`, 'cluster');
-    saveCluster();
+    common.rmdir(cluster[0].path);
+
+    await dbModule.deleteRows(db, 'clusters', 'id = ?', [id]);
+
+    common.sucess(`Cluster "${cluster[0].name}" supprimé`, 'cluster');
+
     return cluster;
-}
-
-function saveCluster() {
-    fs.writeFileSync(clusterPath, JSON.stringify(clusters, null, 2));
 }
 
 module.exports = {

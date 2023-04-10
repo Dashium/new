@@ -1,38 +1,37 @@
 const common = require('../common');
 const clusters = require('../cluster/main');
 const clone = require('../clone/main');
+const dbModule = require('../bdd/main');
 const fs = require('fs');
 const path = require('path');
 
 const projectPath = path.join(__dirname, '../../config/projects.json');
 var projects = require(projectPath);
 
-fs.watch(projectPath, () => {
-    try {
-        const data = fs.readFileSync(projectPath);
-        projects = JSON.parse(data);
-        common.log(`project chargé`, 'project');
-    } catch (err) {
-        common.error(`Erreur lors du chargement du project : ${err}`, 'project');
-    }
-});
+// fs.watch(projectPath, () => {
+//     try {
+//         const data = fs.readFileSync(projectPath);
+//         projects = JSON.parse(data);
+//         common.log(`project chargé`, 'project');
+//     } catch (err) {
+//         common.error(`Erreur lors du chargement du project : ${err}`, 'project');
+//     }
+// });
 
 function getProjectByID(projectID) {
-    for (const key in projects) {
-        if (projects[key].id === projectID) {
-            return projects[key];
-        }
-    }
-    return null;
+    return new Promise(async (resolve, reject) => {
+        const db = await dbModule.loadDatabase('dashium');
+        const [entry] = await dbModule.selectRows(db, 'projects', '*', 'id = ?', [projectID]);
+        resolve(entry);
+    });
 }
 
 function getProjectByName(projectName) {
-    for (const key in projects) {
-        if (projects[key].name === projectName) {
-            return projects[key];
-        }
-    }
-    return null;
+    return new Promise(async (resolve, reject) => {
+        const db = await dbModule.loadDatabase('dashium');
+        const [entry] = await dbModule.selectRows(db, 'projects', '*', 'alias = ?', [projectName]);
+        resolve(entry);
+    });
 }
 
 function getProject(projectIDorName) {
@@ -45,8 +44,8 @@ function getProject(projectIDorName) {
     }
 }
 
-function getProjectDirs(id){
-    var current = getProjectWithCluster(id);
+async function getProjectDirs(id){
+    var current = await getProjectWithCluster(id);
     var currentPathRepo = `${current.cluster.path}/${current.path}`;
     return {
         repo: `${currentPathRepo}/repo`,
@@ -55,67 +54,97 @@ function getProjectDirs(id){
     };
 }
 
-function getProjectWithCluster(projectID){
-    let current = getProject(projectID);
+async function getProjectWithCluster(projectID){
+    let current = await getProject(projectID);
     if(typeof current.cluster == 'number'){
-        current.cluster = clusters.getCluster(current.cluster);
+        current.cluster = await clusters.getCluster(current.cluster);
     }
     return current;
 }
 
 function getProjectAll(){
-    return common.formatJsonToArray(projects);
+    return new Promise(async (resolve, reject) => {
+        const db = await dbModule.loadDatabase('dashium');
+        const entries = await dbModule.selectRows(db, 'projects');
+        resolve(entries);
+    });
 }
 
-function createProject(name, alias, cluster, repo) {
-    const repoInUse = Object.values(projects).some((project) => project.repo === repo);
+async function createProject(name, alias, cluster, repo) {
+    var db = await dbModule.loadDatabase('dashium');
+    const repoInUse = await dbModule.selectRows(db, 'projects', '*', 'repo = ?', [repo]);
 
-    if (repoInUse) {
+    if (repoInUse.length > 0) {
         common.error(`Erreur : Le chemin ${repo} est déjà utilisé par un autre project`, 'project');
         return null;
     }
 
-    var clusterID = clusters.getCluster(cluster);
+    var clusterID = await (await clusters.getCluster(cluster));
     if (clusterID == null) {
+        common.error(`Erreur : Il n'y a aucun cluster dans la BDD`, 'project');
+        return null;
+    }
+    if (clusterID.length == 0) {
         common.error(`Erreur : Le cluster ${cluster} n'existe pas`, 'project');
         return null;
     }
 
-    const id = Object.keys(projects).length;
     const newproject = {
         name,
-        id,
-        alias,
+        alias: common.generateRandomString(common.global.alias.generator),
         cluster: clusterID.id,
         repo,
         path: common.getUrlLastPath(repo),
         ci: [],
         dockerID: common.generateRandomString(common.global.docker.IDgenerator),
     };
-    projects[id] = newproject;
-    saveProject();
-    var base = getProjectDirs(id);
-    common.mkdir(base.ci);
-    common.mkdir(base.logs);
-    clone.clone(repo, base.repo);
+
+    await dbModule.insertRow(db, 'projects', {
+        'name': newproject.name,
+        'alias': newproject.alias,
+        'cluster': newproject.cluster,
+        'repo': newproject.repo,
+        'path': newproject.path,
+        'ci': newproject.ci,
+        'dockerID': newproject.dockerID,
+    })
+    .then(async (id) => {
+        var base = await getProjectDirs(id);
+        common.mkdir(base.ci);
+        common.mkdir(base.repo);
+        common.mkdir(base.logs);
+        clone.clone(repo, base.repo);
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+
     return newproject;
 }
 
-function removeProject(id) {
-    const project = Object.values(projects).find((project) => project.id === id);
+async function removeProject(id) {
+    var db = await dbModule.loadDatabase('dashium');
+    const project = await dbModule.selectRows(db, 'projects', '*', 'id = ?', [id]);
 
-    if (!project) {
+    if (project.length == 0) {
         common.error(`Erreur : Aucun project avec l'ID ${id} n'a été trouvé`, 'project');
         return null;
     }
+    console.log(project[0]);
 
-    var clusterID = clusters.getCluster(project.cluster);
+    var projectID = await clusters.getCluster(project[0].cluster);
+    
+    if(projectID == null){
+        common.error('project id is not found !', 'project')
+        return false;
+    }
 
-    common.rmdir(`${clusterID.path}/${project.path}`);
+    common.rmdir(`${projectID.path}/${project[0].path}`);
 
-    delete projects[project.id];
-    common.sucess(`Project "${project.name}" supprimé`, 'project');
-    saveProject();
+    await dbModule.deleteRows(db, 'projects', 'id = ?', [id]);
+
+    common.sucess(`Project "${project[0].name}" supprimé`, 'project');
+
     return project;
 }
 
@@ -134,8 +163,20 @@ function setCIScript(id, ciScript){
     return project;
 }
 
-function saveProject() {
+async function saveProject(data) {
+    console.log(data);
     fs.writeFileSync(projectPath, JSON.stringify(projects, null, 2));
+
+    var db = await dbModule.loadDatabase('dashium');
+    await dbModule.insertRow(db, 'projects', {
+        'name': data.name,
+        'alias': data.alias,
+        'cluster_id': data.cluster_id,
+        'repo': data.repo,
+        'path': data.path,
+        'ci': data.ci,
+        'dockerID': data.dockerID,
+    });
 }
 
 module.exports = {
