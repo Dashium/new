@@ -32,6 +32,18 @@ function rmdir(dirPath) {
     }
 }
 
+function rmfile(filePath) {
+    if (fs.existsSync(filePath)) {
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                logFile.log(`Erreur: ${err}`, 'error', 'common');
+            } else {
+                logFile.log(`Fichier "${filePath}" supprimé`, 'warn', 'common');
+            }
+        });
+    }
+}
+
 function copyDir(src, dest) {
     // Créer le répertoire de destination s'il n'existe pas encore
     if (!fs.existsSync(dest)) {
@@ -122,6 +134,7 @@ module.exports = {
     global,
     mkdir,
     rmdir,
+    rmfile,
     copyDir,
     log: (msg, from) => { logFile.log(msg, 'info', from); },
     sucess: (msg, from) => { logFile.log(msg, 'sucess', from); },
