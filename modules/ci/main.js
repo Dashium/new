@@ -1,12 +1,9 @@
 const fs = require('fs');
 const common = require('../common');
 const project = require('../projets/main');
-const npm = require('./npm');
 
 const clone = require('../clone/main');
 const docker = require('./docker');
-
-const { exec } = require('child_process');
 
 async function getCIScript(id) {
     var current = await project.getProject(id);
@@ -15,42 +12,25 @@ async function getCIScript(id) {
     return current.ci;
 }
 
-function runTasks(tasks, cipath, logpath) {
-    tasks.reduce((previousPromise, task) => {
-        return previousPromise.then(() => {
+async function runTasks(tasks, containerName, logpath) {
+    try {
+        for (const task of tasks) {
             common.log(`Starting task "${task.name}"...`, 'ci');
-            return new Promise((resolve, reject) => {
-                switch (task.mode) {
-                    case 'npm':
-                        exec(task.run, { cwd: cipath }, (error, stdout, stderr) => {
-                            if (error) {
-                                common.error(`Error running task "${task.name}": ${error}`, 'ci');
-                                reject(error);
-                            } else {
-                                common.sucess(`Task "${task.name}" finished successfully.`, 'ci');
-                                resolve();
-                            }
-                            fs.writeFile(`${logpath}/logs.txt`, stdout, (err) => {
-                                if (err) throw err;
-                            });
-                        });
-                        break;
-                    default:
-                        common.error('No task mode detected!', 'ci');
-                        reject(new Error('No task mode detected!'));
-                }
-            });
-        });
-    }, Promise.resolve())
-        .then(() => {
-            common.sucess('All tasks finished successfully!', 'ci');
-        })
-        .catch((err) => {
-            common.error(`Error running tasks:${err}`, 'ci');
-        });
+            if (!task.mode) {
+                common.error('No task mode detected!', 'ci');
+                return;
+            }
+            await docker.runCommandInContainer(containerName, task.run, logpath);
+            common.sucess(`Task "${task.name}" finished successfully.`, 'ci');
+        }
+        common.success('All tasks finished successfully!', 'ci');
+    } catch (error) {
+        common.error(`Error running tasks: ${error}`, 'ci');
+    }
 }
 
 async function runCI(id) {
+    const currentDate = common.replaceAll(new Date().toISOString(), ':', '-');
     var current = await project.getProjectDirs(id);
     var currentProject = await project.getProject(id);
 
@@ -66,9 +46,9 @@ async function runCI(id) {
     var ciScript = await getCIScript(id);
 
     const ports = await docker.bindPorts([
-        {host: 3001, container: 3000},
-        {host: 50, container: 50},
-        {host: 300, container: 22},
+        { host: 3001, container: 3000 },
+        { host: 50, container: 50 },
+        { host: 300, container: 22 },
     ]);
 
     const containerName = currentProject.dockerID;
@@ -77,9 +57,8 @@ async function runCI(id) {
     await docker.startDockerContainer(containerName);
     await docker.use('dashium', containerName);
     await docker.use('nodejs', containerName);
-    await docker.runCommandInContainer(containerName, 'npm install');
 
-    // runTasks(ciScript, current.ci, current.logs);
+    await runTasks(ciScript, containerName, `${current.logs}/${currentDate}.txt`);
 }
 
 module.exports = {
