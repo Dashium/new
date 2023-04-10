@@ -61,8 +61,8 @@ async function startDockerContainer(containerName) {
     await runDockerCommand(`start ${containerName}`);
 }
 
-async function runCommandInContainer(containerName, command, client) {
-    await runDockerCommand(`exec ${containerName} sh -c "${command}"`, null, null, client);
+async function runCommandInContainer(containerName, command, logpath, client) {
+    await runDockerCommand(`exec ${containerName} sh -c "${command}"`, null, logpath, client);
 }
 
 async function removeDockerContainer(containerName) {
@@ -133,6 +133,11 @@ async function use(lang, containerName) {
     }
 }
 
+async function getDockerNameByID(id){
+    var name = await runDockerCommand(`ps -a --filter "id=${id}" --format "{{.Names}}"`);
+    return name;
+}
+
 // async function main() {
 //     const repoUrl = 'https://github.com/Dashium/demo_project';
 //     const repoDir = 'new';
@@ -163,5 +168,6 @@ module.exports = {
     runCommandInContainer,
     monitorDocker,
     removeDockerContainer,
-    bindPorts
+    bindPorts,
+    getDockerNameByID
 }
