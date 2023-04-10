@@ -70,7 +70,7 @@ function getProjectAll(){
     });
 }
 
-async function createProject(name, alias, cluster, repo) {
+async function createProject(name, cluster, repo) {
     var db = await dbModule.loadDatabase('dashium');
     const repoInUse = await dbModule.selectRows(db, 'projects', '*', 'repo = ?', [repo]);
 
