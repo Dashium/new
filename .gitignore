@@ -2,6 +2,8 @@
 clusters
 logs
 modules/dashboard/react/out
+*.db
+*.sqlite
 
 # REACT
 .next
