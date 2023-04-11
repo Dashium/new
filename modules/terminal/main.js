@@ -29,6 +29,10 @@ app.get('/node_modules/xterm/lib/xterm.js.map', (req, res) => {
 });
 // END IMPORT TERMINAL
 
+app.get('/favicon.ico', (req, res) => {
+    res.sendFile(path.join(__dirname, '../dashboard/public/favicon.ico'));
+});
+
 app.get('/:filename', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });

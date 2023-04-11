@@ -4,6 +4,7 @@ const io = require('socket.io')(server);
 const { exec } = require('child_process');
 const docker = require('../ci/docker');
 const common = require('../common');
+const path = require('path');
 
 // Déclaration d'un objet pour stocker les informations des conteneurs surveillés
 const monitoredContainers = {};
@@ -41,9 +42,13 @@ app.get('/', (req, res) => {
     res.redirect(`http://${common.global.server.host}:${common.global.server.port}`);
 });
 
+app.get('/favicon.ico', (req, res) => {
+    res.sendFile(path.join(__dirname, '../dashboard/public/favicon.ico'));
+});
+
 // Route pour envoyer la page HTML avec le client socket.io
 app.get('/:container', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(path.join(__dirname, '/index.html'));
 });
 
 // Écouter l'événement 'monitor' pour recevoir le nom du container à surveiller
