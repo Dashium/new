@@ -3,8 +3,29 @@ const cluster = require('../modules/cluster/main');
 const projet = require('../modules/projets/main');
 const ci = require('../modules/ci/main');
 const dbModule = require('../modules/bdd/main');
+const fs = require('fs');
 
 common.mkdir('logs');
+
+function replaceLocalhost(jsonObj, newHost) {
+    for (const key in jsonObj) {
+        if (typeof jsonObj[key] === 'object') {
+            replaceLocalhost(jsonObj[key], newHost);
+        } else if (typeof jsonObj[key] === 'string' && jsonObj[key].includes('replaceHERE')) {
+            jsonObj[key] = jsonObj[key].replace(/replaceHERE/g, newHost);
+        }
+    }
+    return jsonObj;
+}
+
+if(common.global.api.host == "replaceHERE"){
+    var tmp = fs.readFileSync('./config/global.json');
+        tmp = JSON.parse(tmp);
+    
+        tmp = replaceLocalhost(tmp, common.getHostname());
+    
+    fs.writeFileSync('./config/global.json', JSON.stringify(tmp, null, 2));
+}
 
 async function init() {
     try {
@@ -50,7 +71,7 @@ async function init() {
         await cluster.createCluster('Local Cluster #1', 'default', './clusters/cluster');
 
         // CREATE DEFAULT PROJET
-        var {alias} = await projet.createProject('Demo Dashium', 1, 'https://github.com/Dashium/demo_project');
+        var { alias } = await projet.createProject('Demo Dashium', 1, 'https://github.com/Dashium/demo_project');
         var current = await projet.getProject(alias);
         await projet.setCIScript(current.id, [
             {

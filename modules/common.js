@@ -2,9 +2,14 @@ const global = require('../config/global.json');
 const fs = require('fs');
 const path = require('path');
 const net = require('net');
+const os = require('os');
 
 const currentDate = replaceAll(new Date().toISOString(), ':', '-');
 const logFile = createLogFile(`logs/${currentDate}.txt`);
+
+function getHostname() {
+  return os.hostname();
+}
 
 function mkdir(path) {
     fs.mkdir(path, { recursive: true }, (err) => {
@@ -208,5 +213,6 @@ module.exports = {
     removeValueFromArray,
     isPortInUse,
     findAvailablePort,
-    isHostPortUsed
+    isHostPortUsed,
+    getHostname
 }

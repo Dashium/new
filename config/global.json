@@ -3,24 +3,24 @@
         "generator": 30
     },
     "api": {
-        "host": "localhost",
+        "host": "replaceHERE",
         "port": 5051
     },
     "server": {
         "name": "Dashium",
-        "host": "localhost",
+        "host": "replaceHERE",
         "port": 3000
     },
     "ssh": {
-        "host": "localhost",
+        "host": "replaceHERE",
         "port": 3200
     },
     "socket": {
-        "host": "localhost",
+        "host": "replaceHERE",
         "port": 3400
     },
     "monitor": {
-        "host": "localhost",
+        "host": "replaceHERE",
         "port": 3300
     },
     "docker": {
