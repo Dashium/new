@@ -68,7 +68,6 @@
                     data = "{'cpuUsage':'Off', 'memoryUsage':'Off', 'networkIn':'Off / Off'}";
                 }
                 if (data.startsWith('{') == false) { return; }
-                console.log(data);
                 data = JSON.parse(data);
                 const cpuElement = document.getElementById('cpu');
                 const memoryElement = document.getElementById('mem');
