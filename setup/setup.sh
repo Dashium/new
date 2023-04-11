@@ -8,8 +8,8 @@ sudo apt install curl -y
 if ! [ -x "$(command -v npm)" ]; then
   echo "NPM n'est pas installé. Installation en cours..."
   curl -sL https://deb.nodesource.com/setup_19.x | sudo -E bash -
-  sudo apt install nodejs
-  sudo apt install build-essential
+  sudo apt install nodejs -y
+  sudo apt install build-essential -y
 fi
 
 # Installer Git
