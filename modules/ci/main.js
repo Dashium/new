@@ -55,8 +55,8 @@ async function runCI(id) {
     await docker.downloadDockerImage(currentProject.docker.image);
     await docker.createDockerContainer(containerName, ports, currentProject.docker.image, current.ci);
     await docker.startDockerContainer(containerName);
-    await docker.use('dashium', containerName);
-    await docker.use('nodejs', containerName);
+    await docker.use('dashium', containerName, `${current.logs}/${currentDate}.txt`);
+    await docker.use('nodejs', containerName, `${current.logs}/${currentDate}.txt`);
 
     await runTasks(ciScript, containerName, `${current.logs}/${currentDate}.txt`);
 }

@@ -107,26 +107,26 @@ async function bindPorts(list){
     return tmp;
 }
 
-async function use(lang, containerName) {
+async function use(lang, containerName, logpath) {
     switch (lang) {
         case 'dashium':
-            await runCommandInContainer(containerName, "apt-get update && apt-get install -y curl wget sudo nano");
-            await runCommandInContainer(containerName, "apt-get install -y git");
+            await runCommandInContainer(containerName, "apt-get update && apt-get install -y curl wget sudo nano", logpath);
+            await runCommandInContainer(containerName, "apt-get install -y git", logpath);
             break;
         case 'nodejs':
-            await runCommandInContainer(containerName, "apt-get update && apt-get install -y curl wget");
-            await runCommandInContainer(containerName, 'curl -sL https://deb.nodesource.com/setup_lts.x | sudo -E bash -');
-            await runCommandInContainer(containerName, 'sudo apt install nodejs -y');
+            await runCommandInContainer(containerName, "apt-get update && apt-get install -y curl wget", logpath);
+            await runCommandInContainer(containerName, 'curl -sL https://deb.nodesource.com/setup_lts.x | sudo -E bash -', logpath);
+            await runCommandInContainer(containerName, 'sudo apt install nodejs -y', logpath);
             break;
         case 'minecraft_server':
-            await runCommandInContainer(containerName, 'sudo apt install openjdk-17-jre-headless -y');
-            await runCommandInContainer(containerName, 'sudo apt install ufw -y');
-            await runCommandInContainer(containerName, 'sudo ufw allow 25565');
-            await runCommandInContainer(containerName, 'mkdir minecraft_server');
-            await runCommandInContainer(containerName, 'cd minecraft_server && wget https://piston-data.mojang.com/v1/objects/8f3112a1049751cc472ec13e397eade5336ca7ae/server.jar');
-            await runCommandInContainer(containerName, 'cd minecraft_server && sudo java -Xms1G -Xmx2G -jar server.jar nogui');
-            await runCommandInContainer(containerName, "cd minecraft_server && sudo sed -i 's/false/true/g' eula.txt");
-            await runCommandInContainer(containerName, 'cd minecraft_server && sudo java -Xms1G -Xmx2G -jar server.jar nogui');
+            await runCommandInContainer(containerName, 'sudo apt install openjdk-17-jre-headless -y', logpath);
+            await runCommandInContainer(containerName, 'sudo apt install ufw -y', logpath);
+            await runCommandInContainer(containerName, 'sudo ufw allow 25565', logpath);
+            await runCommandInContainer(containerName, 'mkdir minecraft_server', logpath);
+            await runCommandInContainer(containerName, 'cd minecraft_server && wget https://piston-data.mojang.com/v1/objects/8f3112a1049751cc472ec13e397eade5336ca7ae/server.jar', logpath);
+            await runCommandInContainer(containerName, 'cd minecraft_server && sudo java -Xms1G -Xmx2G -jar server.jar nogui', logpath);
+            await runCommandInContainer(containerName, "cd minecraft_server && sudo sed -i 's/false/true/g' eula.txt", logpath);
+            await runCommandInContainer(containerName, 'cd minecraft_server && sudo java -Xms1G -Xmx2G -jar server.jar nogui', logpath);
             break;
         default:
             console.log('none');
