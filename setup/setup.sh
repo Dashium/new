@@ -4,9 +4,13 @@
 sudo apt-get update && sudo apt-get upgrade -y
 sudo apt install curl -y
 
-# Installer Node.js
-sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-source ~/.bashrc && sudo nvm install v16.18.0 && sudo nvm use v16.18.0
+# Vérifier si NVM est installé
+if ! [ -x "$(command -v npm)" ]; then
+  echo "NPM n'est pas installé. Installation en cours..."
+  curl -sL https://deb.nodesource.com/setup_19.x | sudo -E bash -
+  sudo apt install nodejs
+  sudo apt install build-essential
+fi
 
 # Installer Git
 sudo apt install git -y

@@ -1,14 +1,6 @@
 #!/bin/bash
 
-sudo nvm uninstall v16.18.0
-rm -rf ~/.nvm
-rm -rf ~/.npm
-rm -rf ~/.bower
-sed -i '/NVM_DIR/d' ~/.bashrc
-sed -i '/bash_completion/d' ~/.bashrc
-source ~/.bashrc
-sudo rm -rf $NVM_DIR
-sudo apt purge nvm -y
+sudo apt purge build-essential -y
 sudo apt purge nodejs -y
 sudo apt purge npm -y
 sudo apt purge git -y
