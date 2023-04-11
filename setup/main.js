@@ -22,7 +22,7 @@ if(common.global.api.host == "replaceHERE"){
     var tmp = fs.readFileSync('./config/global.json');
         tmp = JSON.parse(tmp);
     
-        tmp = replaceLocalhost(tmp, common.getHostname());
+        tmp = replaceLocalhost(tmp, `${common.getHostname()}.local`);
     
     fs.writeFileSync('./config/global.json', JSON.stringify(tmp, null, 2));
 }
