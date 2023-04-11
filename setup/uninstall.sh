@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo nvm uninstall v16.18.0#!/bin/bash
+sudo nvm uninstall v16.18.0
 rm -rf ~/.nvm
 rm -rf ~/.npm
 rm -rf ~/.bower
