@@ -54,7 +54,7 @@ socket.on('connection', (client) => {
     // Exécution d'une commande Docker
     client.on('command', async (containerName, command) => {
         try {
-            const output = await docker.runCommandInContainer(containerName, command, client);
+            const output = await docker.runCommandInContainer(containerName, command, null, client);
             logOutput(output);
         } catch (err) {
             logError(err.message);

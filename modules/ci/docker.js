@@ -1,7 +1,7 @@
 const { exec } = require('child_process');
 const fs = require('fs');
 
-function runDockerCommand(command, options, logFile = './logs/logs.txt', client) {
+function runDockerCommand(command, options, logFile, client) {
     if(logFile == null){
         logFile = './logs/logs.txt';
     }
@@ -62,7 +62,7 @@ async function startDockerContainer(containerName) {
 }
 
 async function runCommandInContainer(containerName, command, logpath, client) {
-    if (logpath !== '') {
+    if (logpath != null) {
         fs.appendFileSync(logpath, `\n$ ${command} \n\n`);
     }
     await runDockerCommand(`exec ${containerName} sh -c "${command}"`, null, logpath, client);
