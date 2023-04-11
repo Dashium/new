@@ -62,6 +62,9 @@ async function startDockerContainer(containerName) {
 }
 
 async function runCommandInContainer(containerName, command, logpath, client) {
+    if (logpath !== '') {
+        fs.appendFileSync(logpath, `$ ${command} \n`);
+    }
     await runDockerCommand(`exec ${containerName} sh -c "${command}"`, null, logpath, client);
 }
 
