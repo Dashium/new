@@ -6,7 +6,7 @@ sudo apt install curl -y
 
 # Installer Node.js
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-source ~/.bashrc && nvm install v16.18.0 && nvm use v16.18.0
+source ~/.bashrc && sudo nvm install v16.18.0 && sudo nvm use v16.18.0
 
 # Installer Git
 sudo apt install git -y
@@ -29,11 +29,19 @@ if ! [ -x "$(command -v git)" ]; then
   exit 1
 fi
 
-# Installer Docker
-sudo apt-get install docker.io -y
+# Installer Docker si ce n'est pas déjà fait
+if ! [ -x "$(command -v docker)" ]; then
+  sudo apt-get install docker.io -y
+fi
 
 # Cloner le dépôt Dashium
 sudo git clone https://github.com/Dashium/new /dashium
+
+# Vérifier si le clonage du dépôt s'est bien déroulé
+if [ ! -d "/dashium" ]; then
+  echo "Erreur : le clonage du dépôt Dashium a échoué."
+  exit 1
+fi
 
 # Exécuter le script de configuration de Dashium
 cd /dashium
