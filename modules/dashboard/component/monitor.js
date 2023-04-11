@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-var config = require('../../../../config/global.json');
+var config = require('../../../config/global.json');
 
 const Monitor = ({ containerName }) => {
     // const [cpuUsage, setCpuUsage] = useState('OFF');

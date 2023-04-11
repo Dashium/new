@@ -6,13 +6,13 @@
   "scripts": {
     "start": "npm-run-all start:*",
     "start:infos": "node ./modules/infos.js",
-    "start:build": "next build ./modules/dashboard/react",
-    "start:export": "next export ./modules/dashboard/react",
+    "start:build": "next build ./modules/dashboard/",
+    "start:export": "next export ./modules/dashboard/",
     "start:dashium": "npm-run-all --parallel dashium:*",
     "dashium:api": "node ./modules/api/main.js",
     "dashium:terminal": "node ./modules/terminal/main.js",
     "dashium:monitor": "node ./modules/monitor/main.js",
-    "dashium:dashboard": "next start ./modules/dashboard/react",
+    "dashium:dashboard": "next start ./modules/dashboard/",
     "dashium2:dashboard": "node ./modules/dashboard/dashboard.js",
     "setup": "npm-run-all setup:*",
     "setup:infos": "node ./modules/infos.js",
@@ -23,11 +23,11 @@
     "omg:u": "npm run uninstall",
     "omg:s": "npm run setup",
 
-    "dev": "next dev ./modules/dashboard/react",
-    "build": "next build ./modules/dashboard/react",
-    "startr": "next start ./modules/dashboard/react",
-    "lint": "next lint ./modules/dashboard/react",
-    "export": "next export ./modules/dashboard/react"
+    "dev": "next dev ./modules/dashboard",
+    "build": "next build ./modules/dashboard",
+    "startr": "next start ./modules/dashboard",
+    "lint": "next lint ./modules/dashboard",
+    "export": "next export ./modules/dashboard"
   },
   "keywords": [
     "gestionnaire",
