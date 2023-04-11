@@ -81,7 +81,7 @@
             }
 
             function handleConnect() {
-                const containerName = document.location.pathname;
+                const containerName = document.location.pathname.replace('/', '');
                 socket.emit('monitor', containerName);
             }
 
