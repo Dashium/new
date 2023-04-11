@@ -52,6 +52,7 @@ fi
 # Exécuter le script de configuration de Dashium
 cd /dashium
 sudo npm install
+npx next telemetry disable
 sudo npm run setup
 
 for i in {1..50}; do
