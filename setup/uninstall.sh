@@ -2,6 +2,8 @@
 
 sudo nvm uninstall v16.18.0#!/bin/bash
 rm -rf ~/.nvm
+rm -rf ~/.npm
+rm -rf ~/.bower
 sed -i '/NVM_DIR/d' ~/.bashrc
 sed -i '/bash_completion/d' ~/.bashrc
 source ~/.bashrc
