@@ -10,6 +10,10 @@ app.get('/', (req, res) => {
     res.redirect(`http://${common.global.server.host}:${common.global.server.port}`);
 });
 
+app.get('/favicon.ico', (req, res) => {
+    res.sendFile(path.join(__dirname, '../dashboard/public/favicon.ico'));
+});
+
 // START PROJECT
 // Route pour créer une nouvelle entrée dans la base de données
 app.post('/projects', async (req, res) => {
