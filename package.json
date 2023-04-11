@@ -18,11 +18,9 @@
     "setup:infos": "node ./modules/infos.js",
     "setup:setup": "node ./setup/main.js",
     "uninstall": "node ./setup/uninstaller.js",
-
     "omg": "npm-run-all --continue-on-error omg:*",
     "omg:u": "npm run uninstall",
     "omg:s": "npm run setup",
-
     "dev": "next dev ./modules/dashboard",
     "build": "next build ./modules/dashboard",
     "startr": "next start ./modules/dashboard",
@@ -46,6 +44,7 @@
     "express": "^4.18.2",
     "next": "^13.3.0",
     "npm-run-all": "^4.1.5",
+    "react-icons": "^4.8.0",
     "simple-git": "^3.17.0",
     "socket.io": "^4.6.1",
     "sqlite3": "^5.1.6",

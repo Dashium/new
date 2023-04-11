@@ -11,6 +11,7 @@ const Headers = () => {
                 <link rel="stylesheet" href="/css/sidebar.css" />
                 <link rel="stylesheet" href="/css/monitor.css" />
                 <link rel="stylesheet" href="/css/terminal.css" />
+                <link rel="stylesheet" href="/css/navbar.css" />
             </Head>
         </div>
     );

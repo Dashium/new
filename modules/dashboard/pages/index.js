@@ -4,6 +4,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client
 import Headers from '../component/header';
 import Background from '../component/background';
 import Sidebar from '../component/sidebar';
+import Navbar from '../component/navbar';
 
 import Monitor from '../component/monitor';
 import TerminalSSH from '../component/terminal';
@@ -38,6 +39,8 @@ const App = () => {
                     <Monitor containerName={'test9'}></Monitor>
                     <TerminalSSH containerName={'test9'}></TerminalSSH>
                 </div>
+
+                <Navbar></Navbar>
 
             </div>
         </ApolloProvider>
