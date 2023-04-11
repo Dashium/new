@@ -23,6 +23,10 @@ app.get('/node_modules/xterm/css/xterm.css', (req, res) => {
 app.get('/node_modules/xterm/lib/xterm.js', (req, res) => {
     res.sendFile(path.join(__dirname, '../../node_modules/xterm/lib/xterm.js'))
 });
+
+app.get('/node_modules/xterm/lib/xterm.js.map', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../node_modules/xterm/lib/xterm.js.map'))
+});
 // END IMPORT TERMINAL
 
 app.get('/:filename', (req, res) => {
