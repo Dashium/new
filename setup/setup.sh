@@ -5,7 +5,7 @@ sudo apt-get update && sudo apt-get upgrade -y
 sudo apt install curl -y
 
 # Installer Node.js
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+sudo curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 source ~/.bashrc && sudo nvm install v16.18.0 && sudo nvm use v16.18.0
 
 # Installer Git

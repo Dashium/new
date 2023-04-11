@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo nvm uninstall v16.18.0
+sudo rm -rf $NVM_DIR
 sudo apt purge nvm -y
 sudo apt purge nodejs -y
 sudo apt purge npm -y
