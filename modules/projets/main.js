@@ -150,6 +150,16 @@ async function updateProjet(id, data){
         return null;
     }
 
+    if(data.docker != null){
+        var current = JSON.parse(project[0].docker);
+        var newParams = Object.keys(data.docker);
+            newParams.forEach((val) => {
+                current[val] = data.docker[val];
+            });
+        data = {};
+        data.docker = JSON.stringify(current);
+    }
+
     await dbModule.updateRows(db, 'projects', data, 'id = ?', [id]);
 
     return project;
@@ -164,7 +174,7 @@ async function setCIScript(id, ciScript){
 }
 
 async function setDockerImage(id, image){
-    var project = await updateProjet(id, { dockerImage: image });
+    var project = await updateProjet(id, { docker: {image: image} });
 
     common.sucess(`Docker Image "${project[0].name}" mis a jour !`, 'project');
 
