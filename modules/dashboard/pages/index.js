@@ -39,7 +39,6 @@ const App = () => {
                     top: '2%',
                     left: '2%',
                     right: '2%',
-                    bottom: '2%',
                     width: '100%'
                 }}>
                     <Monitor containerName={'o7vZWjYh31'}></Monitor>
