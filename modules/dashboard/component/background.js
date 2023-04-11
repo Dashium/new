@@ -8,7 +8,9 @@ const Background = () => {
             background: 'linear-gradient(100deg, #0e044b, #6901df)',
             height: '100vh',
             width: '100%'
-        }} />
+        }}>
+            <img src='./themes/desktop/0.png' alt='Background' />
+        </div>
     );
 };
 

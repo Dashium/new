@@ -5,13 +5,12 @@ const Headers = () => {
     return (
         <div>
             <Head>
-                <title>Mon titre de page</title>
+                <title>Dashium | Tai Studio</title>
                 <link rel="shortcut icon" href="/favicon.ico" />
-                <link rel="stylesheet" href="/css/fontawesome/css/all.min.css" />
-                <link rel="stylesheet" href="/css/sidebar.css" />
+                {/* <link rel="stylesheet" href="/css/sidebar.css" />
                 <link rel="stylesheet" href="/css/monitor.css" />
                 <link rel="stylesheet" href="/css/terminal.css" />
-                <link rel="stylesheet" href="/css/navbar.css" />
+                <link rel="stylesheet" href="/css/navbar.css" /> */}
             </Head>
         </div>
     );

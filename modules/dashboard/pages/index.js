@@ -35,7 +35,7 @@ const App = () => {
                 {/* <Sidebar></Sidebar> */}
 
                 <div style={{
-                    position: 'absolute',
+                    position: 'relative',
                     top: '2%',
                     left: '2%',
                     right: '2%',
