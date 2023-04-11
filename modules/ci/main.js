@@ -52,7 +52,8 @@ async function runCI(id) {
 
     const containerName = currentProject.docker.dockerID;
 
-    await docker.createDockerContainer(containerName, ports, 'ubuntu:latest', current.ci);
+    await docker.downloadDockerImage(currentProject.docker.image);
+    await docker.createDockerContainer(containerName, ports, currentProject.docker.image, current.ci);
     await docker.startDockerContainer(containerName);
     await docker.use('dashium', containerName);
     await docker.use('nodejs', containerName);
