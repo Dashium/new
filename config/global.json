@@ -15,12 +15,20 @@
         "host": "localhost",
         "port": 3200
     },
+    "socket": {
+        "host": "localhost",
+        "port": 3400
+    },
     "monitor": {
         "host": "localhost",
         "port": 3300
     },
     "docker": {
         "IDgenerator": 10,
+        "ports": {
+            "start": 2000,
+            "end": 6000
+        },
         "images": [
             {
                 "name": "Ubuntu Latest",

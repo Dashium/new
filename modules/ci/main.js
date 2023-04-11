@@ -59,11 +59,13 @@ async function runCI(id) {
 
     var ciScript = await getCIScript(id);
 
-    const ports = await docker.bindPorts([
-        { host: 3001, container: 3000 },
-        { host: 50, container: 50 },
-        { host: 300, container: 22 },
-    ]);
+    var containerHost = await project.getProjectPorts(id, 'container');
+        containerHost = await project.Portfinder(3000, containerHost);
+
+    if(typeof currentProject.docker.ports != 'object'){currentProject.docker.ports = [];}
+    currentProject.docker.ports.push({host: common.global.socket.port, container: containerHost})
+
+    const ports = await docker.bindPorts(currentProject.docker.ports);
 
     const containerName = currentProject.docker.dockerID;
 

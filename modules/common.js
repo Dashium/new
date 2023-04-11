@@ -1,6 +1,7 @@
 const global = require('../config/global.json');
 const fs = require('fs');
 const path = require('path');
+const net = require('net');
 
 const currentDate = replaceAll(new Date().toISOString(), ':', '-');
 const logFile = createLogFile(`logs/${currentDate}.txt`);
@@ -134,6 +135,61 @@ function removeValueFromArray(array, value) {
     return array.filter((item) => item !== value);
 }
 
+function isPortInUse(port) {
+    return new Promise((resolve, reject) => {
+        const server = net.createServer((socket) => {
+            socket.write('Echo server\r\n');
+            socket.pipe(socket);
+        });
+
+        server.listen(port, '127.0.0.1');
+        server.on('error', (err) => {
+            if (err.code === 'EADDRINUSE') {
+                resolve(true);
+            } else {
+                reject(err);
+            }
+        });
+        server.on('listening', () => {
+            server.close();
+            resolve(false);
+        });
+    });
+}
+
+function findAvailablePort(startPort = 3000, endPort = 3999) {
+    return new Promise((resolve, reject) => {
+        let port = startPort;
+        const testNextPort = () => {
+            if (port > endPort) {
+                reject(new Error(`No available port found in range ${startPort}-${endPort}`));
+                return;
+            }
+            const tester = net.createServer()
+                .once('error', () => {
+                    port++;
+                    tester.close();
+                    testNextPort();
+                })
+                .once('listening', () => {
+                    tester.close();
+                    resolve(port);
+                })
+                .listen(port, 'localhost');
+        };
+        testNextPort();
+    });
+}
+
+function isHostPortUsed(hostPort, portsConfig) {
+    for (let port of portsConfig) {
+        if (port === hostPort) {
+            return true;
+        }
+    }
+    return false;
+}
+
 module.exports = {
     global,
     mkdir,
@@ -149,5 +205,8 @@ module.exports = {
     getDomains,
     generateRandomString,
     formatJsonToArray,
-    removeValueFromArray
+    removeValueFromArray,
+    isPortInUse,
+    findAvailablePort,
+    isHostPortUsed
 }

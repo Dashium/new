@@ -62,6 +62,34 @@ function getProjectAll(){
     });
 }
 
+async function getProjectAllPorts(mode){
+    if(mode == null){mode = "host";}
+    var projects = await getProjectAll();
+    var portsList = [];
+    projects.forEach((val, id) => {
+        let curr = val.docker.ports;
+        if(typeof curr == 'object'){
+            curr.forEach(element => {
+                portsList.push(element[mode]);
+            });
+        }
+    });
+    return portsList;
+}
+
+async function getProjectPorts(id, mode){
+    if(mode == null){mode = "host";}
+    var project = await getProject(id);
+    var portsList = [];
+    let curr = project.docker.ports;
+    if(typeof curr == 'object'){
+        curr.forEach(element => {
+            portsList.push(element[mode]);
+        });
+    }
+    return portsList;
+}
+
 async function createProject(name, cluster, repo) {
     var db = await dbModule.loadDatabase('dashium');
     const repoInUse = await dbModule.selectRows(db, 'projects', '*', 'repo = ?', [repo]);
@@ -211,6 +239,55 @@ async function removeDockerUse(id, use){
     return id;
 }
 
+async function Portfinder(port, hostPORT){
+    if(port == null){port = common.global.docker.ports.start;}
+    if(hostPORT == null){hostPORT = await getProjectAllPorts();}
+
+    var testPORT = await common.findAvailablePort(port, common.global.docker.ports.end);
+
+        testPORT = await common.isHostPortUsed(testPORT, hostPORT);
+
+    if(testPORT == true){
+        port++;
+        return await Portfinder(port, hostPORT);
+    }
+    else {
+        return port;
+    }
+}
+
+async function addDockerPort(id, port){
+    var current = await getProject(id);
+    
+    if(typeof current.docker.ports != 'object'){
+        current.docker.ports = [];
+    }
+    var hostPORT = await Portfinder();
+
+    current.docker.ports.push({ host: hostPORT, container: port });
+
+    var project = await updateProjet(id, { docker: {ports: current.docker.ports} });
+
+    common.sucess(`Docker Ports "${project[0].name}" mis a jour !`, 'project');
+
+    return id;
+}
+
+async function removeDockerPort(id, port){
+    var current = await getProject(id);
+    
+    if(typeof current.docker.ports != 'object'){
+        current.docker.ports = [];
+    }
+        current.docker.ports = common.removeValueFromArray(current.docker.ports, port);
+
+    var project = await updateProjet(id, { docker: {ports: current.docker.ports} });
+
+    common.sucess(`Docker Ports "${project[0].name}" mis a jour !`, 'project');
+
+    return id;
+}
+
 module.exports = {
     getProject,
     getProjectDirs,
@@ -223,5 +300,10 @@ module.exports = {
     createProject,
     removeProject,
     addDockerUse,
-    removeDockerUse
+    removeDockerUse,
+    addDockerPort,
+    removeDockerPort,
+    getProjectPorts,
+    getProjectAllPorts,
+    Portfinder
 }
