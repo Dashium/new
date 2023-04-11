@@ -23,7 +23,11 @@ const App = () => {
                 top: 0,
                 width: '100%',
                 height: '100%',
-                // color: 'white'
+                overflow: 'hidden',
+
+                userSelect: 'none',
+                MozUserSelect: 'none',
+                WebkitUserSelect: 'none'
             }}>
                 <Headers></Headers>
                 <Background />
@@ -33,11 +37,13 @@ const App = () => {
                 <div style={{
                     position: 'absolute',
                     top: '2%',
+                    left: '2%',
                     right: '2%',
-                    width: 'calc(100% - 240px - 4%)'
+                    bottom: '2%',
+                    width: '100%'
                 }}>
-                    <Monitor containerName={'test9'}></Monitor>
-                    <TerminalSSH containerName={'test9'}></TerminalSSH>
+                    <Monitor containerName={'o7vZWjYh31'}></Monitor>
+                    <TerminalSSH containerName={'o7vZWjYh31'}></TerminalSSH>
                 </div>
 
                 <Navbar></Navbar>
