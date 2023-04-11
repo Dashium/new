@@ -90,7 +90,7 @@ async function createProject(name, cluster, repo) {
         ci: [],
         docker: {
             dockerID: common.generateRandomString(common.global.docker.IDgenerator),
-            dockerImage: 'ubuntu:latest',
+            image: 'ubuntu:latest',
         },
     };
 
@@ -181,6 +181,36 @@ async function setDockerImage(id, image){
     return id;
 }
 
+async function addDockerUse(id, use){
+    var current = await getProject(id);
+    
+    if(typeof current.docker.use != 'object'){
+        current.docker.use = [];
+    }
+        current.docker.use.push(use);
+
+    var project = await updateProjet(id, { docker: {use: current.docker.use} });
+
+    common.sucess(`Docker Use "${project[0].name}" mis a jour !`, 'project');
+
+    return id;
+}
+
+async function removeDockerUse(id, use){
+    var current = await getProject(id);
+    
+    if(typeof current.docker.use != 'object'){
+        current.docker.use = [];
+    }
+        current.docker.use = common.removeValueFromArray(current.docker.use, use);
+
+    var project = await updateProjet(id, { docker: {use: current.docker.use} });
+
+    common.sucess(`Docker Use "${project[0].name}" mis a jour !`, 'project');
+
+    return id;
+}
+
 module.exports = {
     getProject,
     getProjectDirs,
@@ -191,5 +221,7 @@ module.exports = {
     setCIScript,
     setDockerImage,
     createProject,
-    removeProject
+    removeProject,
+    addDockerUse,
+    removeDockerUse
 }

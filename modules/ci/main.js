@@ -28,10 +28,25 @@ async function runTasks(tasks, containerName, logpath) {
     }
 }
 
+async function addUse(uses, containerName, logpath) {
+    try {
+        for (const use of uses) {
+            common.log(`Import use "${use}"...`, 'ci');
+            await docker.use(use, containerName, logpath);
+            common.sucess(`Import use "${use}" finished successfully.`, 'ci');
+        }
+        common.success('All tasks finished successfully!', 'ci');
+    } catch (error) {
+        common.error(`Error running tasks: ${error}`, 'ci');
+    }
+}
+
 async function runCI(id) {
     const currentDate = common.replaceAll(new Date().toISOString(), ':', '-');
     var current = await project.getProjectDirs(id);
     var currentProject = await project.getProject(id);
+
+    const logpath = `${current.logs}/${currentDate}.txt`;
 
     if (fs.existsSync(current.ci)) {
         await common.rmdir(current.ci);
@@ -55,10 +70,10 @@ async function runCI(id) {
     await docker.downloadDockerImage(currentProject.docker.image);
     await docker.createDockerContainer(containerName, ports, currentProject.docker.image, current.ci);
     await docker.startDockerContainer(containerName);
-    await docker.use('dashium', containerName, `${current.logs}/${currentDate}.txt`);
-    await docker.use('nodejs', containerName, `${current.logs}/${currentDate}.txt`);
 
-    await runTasks(ciScript, containerName, `${current.logs}/${currentDate}.txt`);
+    await addUse(currentProject.docker.use, containerName, logpath);
+
+    await runTasks(ciScript, containerName, logpath);
 }
 
 module.exports = {

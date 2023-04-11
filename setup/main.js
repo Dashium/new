@@ -65,6 +65,8 @@ async function init() {
             }
         ]);
         await projet.setDockerImage(current.id, 'ubuntu:latest');
+        await projet.addDockerUse(current.id, 'dashium');
+        await projet.addDockerUse(current.id, 'nodejs');
 
         await ci.runCI(current.id);
 

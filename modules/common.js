@@ -130,6 +130,10 @@ function formatJsonToArray(jsonObj) {
     return formattedProjects;
 }
 
+function removeValueFromArray(array, value) {
+    return array.filter((item) => item !== value);
+}
+
 module.exports = {
     global,
     mkdir,
@@ -144,5 +148,6 @@ module.exports = {
     getUrlLastPath,
     getDomains,
     generateRandomString,
-    formatJsonToArray
+    formatJsonToArray,
+    removeValueFromArray
 }
