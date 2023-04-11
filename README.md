@@ -1,6 +1,6 @@
 # 💎 Dashium
 <p style="text-align:center;">
-    <img src="./modules/dashboard/react/public/logo512.png" width="50%" />
+    <img src="./modules/dashboard/public/logo512.png" width="50%" />
 </p>
 
 # 🧮Summary
