@@ -2,11 +2,11 @@
 
 # Mettre à jour le système
 sudo apt-get update && sudo apt-get upgrade -y
+sudo apt install curl -y
 
 # Installer Node.js
-curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-sudo apt-get install nodejs -y
-sudo apt-get install npm -y
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+source ~/.bashrc && nvm install v16.18.0 && nvm use v16.18.0
 
 # Installer Git
 sudo apt install git -y
