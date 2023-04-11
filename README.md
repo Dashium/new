@@ -21,14 +21,14 @@
 # 📦Installation
 
 ```bash
-wget https://dashium-tai-studio.netlify.app/setup.sh
+wget https://raw.githubusercontent.com/Dashium/new/main/setup/setup.sh
 sh setup.sh
 ```
 
 # 🗑️Uninstall
 
 ```bash
-wget https://dashium-tai-studio.netlify.app/uninstall.sh
+wget https://raw.githubusercontent.com/Dashium/new/main/setup/uninstall.sh
 sh uninstall.sh
 ```
 
