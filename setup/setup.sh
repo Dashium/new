@@ -36,8 +36,8 @@ fi
 # Installer Docker si ce n'est pas déjà fait
 if ! [ -x "$(command -v docker)" ]; then
   sudo apt-get install docker.io -y
-  sudo systemctl start docker
   sudo systemctl enable docker
+  sudo systemctl start docker
 fi
 
 # Cloner le dépôt Dashium
