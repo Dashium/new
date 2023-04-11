@@ -22,6 +22,7 @@
 
 ```bash
 wget https://raw.githubusercontent.com/Dashium/new/main/setup/setup.sh
+chmod +x setup.sh
 sh setup.sh
 ```
 
@@ -29,6 +30,7 @@ sh setup.sh
 
 ```bash
 wget https://raw.githubusercontent.com/Dashium/new/main/setup/uninstall.sh
+chmod +x uninstall.sh
 sh uninstall.sh
 ```
 
