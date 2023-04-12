@@ -42,6 +42,38 @@ function runDockerCommand(command, options, logFile, client) {
     });
 }
 
+async function deleteContainer(containerName) {
+    try {
+        // Stop and remove the container
+        await runDockerCommand(`stop ${containerName}`);
+        await runDockerCommand(`rm ${containerName}`);
+
+        console.log(`Container ${containerName} have been deleted.`);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function deleteImage(imageName) {
+    try {
+        // Remove the image
+        await runDockerCommand(`rmi ${imageName}`);
+        console.log(`Image ${imageName} have been deleted.`);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function isContainerExist(containerName) {
+    try {
+        const output = await runDockerCommand(`ps -a --filter "name=${containerName}" --format "{{.Names}}"`);
+        return output.trim() === containerName;
+    } catch (error) {
+        common.error(`Error while checking if container ${containerName} exists: ${error.message}`);
+        return false;
+    }
+}
+
 async function downloadDockerImage(imageName) {
     const imagesList = await runDockerCommand('image ls');
     if (!imagesList.includes(imageName)) {
@@ -141,28 +173,6 @@ async function getDockerNameByID(id){
     return name;
 }
 
-// async function main() {
-//     const repoUrl = 'https://github.com/Dashium/demo_project';
-//     const repoDir = 'new';
-//     const imageName = 'ubuntu:latest';
-//     const containerName = 'test8';
-//     const portBinder = "3000:3000";
-
-//     // await downloadGithubRepo(repoUrl, repoDir);
-//     await downloadDockerImage(imageName);
-//     await createDockerContainer(containerName, 3000, 3000, 38, imageName, repoDir);
-//     await startDockerContainer(containerName);
-//     await use('ubuntu', containerName);
-//     await use('nodejs', containerName);
-//     // await bindPorts(containerName, 3000, 3000);
-//     await runCommandInContainer(containerName, 'npm install');
-//     await runCommandInContainer(containerName, 'npm run test');
-
-//     monitorDocker(containerName);
-// }
-
-// main().catch(error => console.error(error));
-
 module.exports = {
     downloadDockerImage,
     createDockerContainer,
@@ -172,5 +182,8 @@ module.exports = {
     monitorDocker,
     removeDockerContainer,
     bindPorts,
-    getDockerNameByID
+    getDockerNameByID,
+    deleteContainer,
+    deleteImage,
+    isContainerExist
 }

@@ -45,15 +45,27 @@ async function runCI(id) {
     const currentDate = common.replaceAll(new Date().toISOString(), ':', '-');
     var current = await project.getProjectDirs(id);
     var currentProject = await project.getProject(id);
+    const containerName = currentProject.docker.dockerID;
 
     const logpath = `${current.logs}/${currentDate}.txt`;
 
+    if (fs.existsSync(current.repo)) {
+        await common.rmdir(current.repo);
+    }
+    
+    if(await docker.isContainerExist(containerName) == true){
+        await docker.deleteContainer(containerName);
+    }
     if (fs.existsSync(current.ci)) {
         await common.rmdir(current.ci);
         await common.mkdir(current.ci);
     }
-
-    await clone.clone(currentProject.repo, current.repo);
+    
+    try {
+        await clone.clone(currentProject.repo, current.repo);
+    } catch (error) {
+        common.error('Clone imposible !', 'ci');
+    }
 
     await common.copyDir(current.repo, current.ci);
 
@@ -66,8 +78,6 @@ async function runCI(id) {
     currentProject.docker.ports.push({host: common.global.socket.port, container: containerHost})
 
     const ports = await docker.bindPorts(currentProject.docker.ports);
-
-    const containerName = currentProject.docker.dockerID;
 
     await docker.downloadDockerImage(currentProject.docker.image);
     await docker.createDockerContainer(containerName, ports, currentProject.docker.image, current.ci);

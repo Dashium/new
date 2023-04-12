@@ -34,9 +34,9 @@ function rmdir(dirPath) {
             const filePath = path.join(dirPath, file);
             try {
                 if (fs.lstatSync(filePath).isDirectory()) {
-                    rmdir(filePath);
+                    return rmdir(filePath);
                 } else {
-                    rmfile(filePath);
+                    return rmfile(filePath);
                 }
             } catch (error) {
                 logFile.log(`Impossible de supprimé "${dirPath}"`, 'error', 'common');
@@ -56,8 +56,10 @@ function rmfile(filePath) {
         fs.unlink(filePath, (err) => {
             if (err) {
                 logFile.log(`Erreur: ${err}`, 'error', 'common');
+                return false;
             } else {
                 logFile.log(`Fichier "${filePath}" supprimé`, 'warn', 'common');
+                return true;
             }
         });
     }
