@@ -26,15 +26,23 @@ function rmdir(dirPath) {
         fs.readdirSync(dirPath).forEach((file) => {
             const filePath = path.join(dirPath, file);
 
-            if (fs.lstatSync(filePath).isDirectory()) {
-                rmdir(filePath);
-            } else {
-                fs.unlinkSync(filePath);
+            try {
+                if (fs.lstatSync(filePath).isDirectory()) {
+                    rmdir(filePath);
+                } else {
+                    rmfile(filePath);
+                }
+            } catch (error) {
+                logFile.log(`Impossible de supprimé "${dirPath}"`, 'error', 'common');
             }
         });
 
-        fs.rmdirSync(dirPath);
-        logFile.log(`Répertoire "${dirPath}" supprimé`, 'warn', 'common');
+        try {
+            fs.rmdirSync(dirPath);
+            logFile.log(`Répertoire "${dirPath}" supprimé`, 'warn', 'common');
+        } catch (error) {
+            logFile.log(`Impossible de supprimé "${dirPath}"`, 'error', 'common');
+        }
     }
 }
 
