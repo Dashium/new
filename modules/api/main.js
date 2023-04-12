@@ -14,6 +14,17 @@ app.get('/favicon.ico', (req, res) => {
     res.sendFile(path.join(__dirname, '../dashboard/public/favicon.ico'));
 });
 
+app.get('/global', async (req, res) => {
+    try {
+        var entries = await db.selectRows(bdd, 'global');
+            entries[0].json = JSON.parse(entries[0].json);
+        res.json(entries);
+    } catch (error) {
+        common.error(error, 'api');
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // START PROJECT
 // Route pour créer une nouvelle entrée dans la base de données
 app.post('/projects', async (req, res) => {
