@@ -60,11 +60,11 @@ async function runCI(id) {
         await common.rmdir(current.ci);
         await common.mkdir(current.ci);
     }
-    
+
     try {
         await clone.clone(currentProject.repo, current.repo);
     } catch (error) {
-        common.error('Clone imposible !', 'ci');
+        common.error(`Clone imposible ! ${error}`, 'ci');
     }
 
     await common.copyDir(current.repo, current.ci);

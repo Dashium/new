@@ -6,6 +6,8 @@ import Background from '../component/background';
 import Sidebar from '../component/sidebar';
 import Navbar from '../component/navbar';
 
+import Login from '../component/login';
+
 import Monitor from '../component/monitor';
 import TerminalSSH from '../component/terminal';
 
@@ -31,6 +33,8 @@ const App = () => {
             }}>
                 <Headers></Headers>
                 <Background />
+
+                <Login></Login>
 
                 {/* <Sidebar></Sidebar> */}
 
