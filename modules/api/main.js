@@ -2,6 +2,7 @@ const express = require('express');
 const db = require('../bdd/main');
 const common = require('../common');
 const ci = require('../ci/main');
+const path = require('path');
 
 var bdd = null;
 const app = express();
