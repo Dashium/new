@@ -18,9 +18,11 @@
     "setup:infos": "node ./modules/infos.js",
     "setup:setup": "node ./setup/main.js",
     "uninstall": "node ./setup/uninstaller.js",
-    "omg": "npm-run-all --continue-on-error omg:*",
-    "omg:u": "npm run uninstall",
-    "omg:s": "npm run setup",
+    
+    "reset": "npm-run-all --continue-on-error reset:*",
+    "reset:u": "npm run uninstall",
+    "reset:s": "npm run setup",
+
     "nogui": "npm-run-all --parallel nogui:*",
     "nogui:api": "node ./modules/api/main.js",
     "nogui:terminal": "node ./modules/terminal/main.js",
