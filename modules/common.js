@@ -78,6 +78,7 @@ function copyDir(src, dest) {
 }
 
 function createLogFile(filePath) {
+    if(!fs.existsSync(filePath.split('/')[0])){mkdir(filePath.split('/')[0]);}
     const stream = fs.createWriteStream(filePath, { flags: 'a' });
 
     function log(msg, type, module) {
