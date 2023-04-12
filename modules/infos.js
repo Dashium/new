@@ -1,4 +1,5 @@
-const config = require('../config/global.json');
+const common = require('../modules/common');
+const config = common.global;
 const version = require('../package.json');
 
 function printer(txt){
@@ -16,10 +17,16 @@ console.log("|  | |  | |/ _\\`/ __| '_ \\| | | | | '_ \` _ \\    |");
 console.log("|  | |__| | (_| \\__ \\ | | | | |_| | | | | | |   |");
 console.log("|  |_____/ \\__,_|___/_| |_|_|\\__,_|_| |_| |_|   |");
 console.log("|-----------------------------------------------|");
-printer(`Server name: ${config.server.name}`);
-printer(`Version: ${version.version}`);
-printer(`Web app: http://${config.server.host}:${config.server.port}`);
-printer(`API: http://${config.api.host}:${config.api.port}/api`);
+if(config != null){
+    printer(`Server name: ${config.server.name}`);
+    printer(`Version: ${version.version}`);
+    printer(`Web app: http://${config.server.host}:${config.server.port}`);
+    printer(`API: http://${config.api.host}:${config.api.port}/api`);
+}
+else{
+    printer(`Welcome to Dahsium !`);
+    printer(`Please feel free to answer any questions.`);
+}
 console.log("|    ---------------------------------------    |");
 console.log("|    © Tai Studio 2021/2023                     |");
 console.log("|-----------------------------------------------|");
