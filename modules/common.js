@@ -1,8 +1,15 @@
-const global = require('../config/global.json');
 const fs = require('fs');
 const path = require('path');
 const net = require('net');
 const os = require('os');
+
+var globalPath = path.join(__dirname, '../config/global.json');
+if(fs.existsSync(globalPath) == true){
+    var global = require(globalPath);
+}
+else{
+    var global = null;
+}
 
 const currentDate = replaceAll(new Date().toISOString(), ':', '-');
 const logFile = createLogFile(`logs/${currentDate}.txt`);

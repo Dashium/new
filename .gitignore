@@ -3,6 +3,7 @@ clusters
 logs
 *.db
 *.sqlite
+/config
 
 # REACT
 .next

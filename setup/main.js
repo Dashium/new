@@ -22,14 +22,14 @@ async function init(stopanimation, data) {
     common.mkdir('config');
     common.mkdir('logs');
 
-    if (common.global.api.host == "replaceHERE") {
-        var tmp = fs.readFileSync('./config/global.json');
-        tmp = JSON.parse(tmp);
+    // if (common.global.api.host == "replaceHERE") {
+    //     var tmp = fs.readFileSync('./config/global.json');
+    //     tmp = JSON.parse(tmp);
 
-        tmp = replaceLocalhost(tmp, `${common.getHostname()}.local`);
+    //     tmp = replaceLocalhost(tmp, `${common.getHostname()}.local`);
 
-        fs.writeFileSync('./config/global.json', JSON.stringify(tmp, null, 2));
-    }
+    //     fs.writeFileSync('./config/global.json', JSON.stringify(tmp, null, 2));
+    // }
 
     try {
         // START CREATE BDD
@@ -106,38 +106,45 @@ async function init(stopanimation, data) {
         };
         await dbModule.insertRow(db, 'global', {
             json: JSON.stringify(globalDATA)
-        })
+        });
 
-        // CREATE DEFAULT CLUSTER
-        await cluster.createCluster('Local Cluster #1', 'default', './clusters/cluster');
+        common.global = globalDATA;
+        await fs.writeFileSync('./config/global.json', JSON.stringify(globalDATA, null, 2));
 
-        // CREATE DEFAULT PROJET
-        var { alias } = await projet.createProject('Demo Dashium', 1, 'https://github.com/Dashium/demo_project');
-        var current = await projet.getProject(alias);
-        await projet.setCIScript(current.id, [
-            {
-                "name": "Node installer",
-                "mode": "npm",
-                "run": "npm install"
-            },
-            {
-                "name": "Node run",
-                "mode": "npm",
-                "run": "npm test"
-            }
-        ]);
-        await projet.setDockerImage(current.id, 'ubuntu:latest');
-        await projet.addDockerUse(current.id, 'dashium');
-        await projet.addDockerUse(current.id, 'nodejs');
-        await projet.addDockerPort(current.id, 3000);
+        await setTimeout(async () => {
+            console.log('Save !');
 
-        await ci.runCI(current.id);
+            // CREATE DEFAULT CLUSTER
+            await cluster.createCluster('Local Cluster #1', 'default', './clusters/cluster');
 
-        await stopanimation();
+            // CREATE DEFAULT PROJET
+            var { alias } = await projet.createProject('Demo Dashium', 1, 'https://github.com/Dashium/demo_project');
+            var current = await projet.getProject(alias);
+            await projet.setCIScript(current.id, [
+                {
+                    "name": "Node installer",
+                    "mode": "npm",
+                    "run": "npm install"
+                },
+                {
+                    "name": "Node run",
+                    "mode": "npm",
+                    "run": "npm test"
+                }
+            ]);
+            await projet.setDockerImage(current.id, 'ubuntu:latest');
+            await projet.addDockerUse(current.id, 'dashium');
+            await projet.addDockerUse(current.id, 'nodejs');
+            await projet.addDockerPort(current.id, 3000);
 
-        common.log('installation finish !', 'setup');
-        common.log('please run: `npm start`', 'setup');
+            await ci.runCI(current.id);
 
+            await stopanimation();
+
+            common.log('installation finish !', 'setup');
+            common.log('please run: `npm start`', 'setup');
+
+        }, 5000);
     } catch (error) {
         console.error(error);
     }
@@ -164,7 +171,7 @@ function askQuestion(query, df) {
 
     return new Promise(resolve => rl.question(query, res => {
         rl.close();
-        if(res == ''){res = df;}
+        if (res == '') { res = df; }
         resolve(res);
     }))
 }
