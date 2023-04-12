@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { useState, useEffect } from 'react';
 import { FaBars } from 'react-icons/fa';
 import { BsFillGridFill, BsFileEarmarkCodeFill, BsGearFill, BsArrowRepeat, BsStopFill } from 'react-icons/bs';
