@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('../bdd/main');
 const common = require('../common');
+const ci = require('../ci/main');
 
 var bdd = null;
 const app = express();
@@ -64,6 +65,25 @@ app.get('/projects/:id', async (req, res) => {
             entry.ci = JSON.parse(entry.ci);
             entry.docker = JSON.parse(entry.docker);
             res.json(entry);
+        }
+    } catch (error) {
+        common.error(error, 'api');
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.get('/projects/:id/ci', async (req, res) => {
+    try {
+        const { id } = req.params;
+        var [entry] = await db.selectRows(bdd, 'projects', '*', 'id = ?', [id]);
+        if (!entry) {
+            res.status(404).json({ error: 'Entry not found' });
+        } else {
+            entry.ci = JSON.parse(entry.ci);
+            entry.docker = JSON.parse(entry.docker);
+
+            res.json({run: entry.name});
+            ci.runCI(entry.id);
         }
     } catch (error) {
         common.error(error, 'api');
