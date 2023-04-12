@@ -25,7 +25,6 @@ function rmdir(dirPath) {
     if (fs.existsSync(dirPath)) {
         fs.readdirSync(dirPath).forEach((file) => {
             const filePath = path.join(dirPath, file);
-
             try {
                 if (fs.lstatSync(filePath).isDirectory()) {
                     rmdir(filePath);
@@ -36,7 +35,6 @@ function rmdir(dirPath) {
                 logFile.log(`Impossible de supprimé "${dirPath}"`, 'error', 'common');
             }
         });
-
         try {
             fs.rmdirSync(dirPath);
             logFile.log(`Répertoire "${dirPath}" supprimé`, 'warn', 'common');
