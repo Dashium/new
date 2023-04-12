@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaBars } from 'react-icons/fa';
-import { BsFillGridFill, BsFileEarmarkCodeFill, BsGearFill } from 'react-icons/bs';
+import { BsFillGridFill, BsFileEarmarkCodeFill, BsGearFill, BsArrowRepeat, BsStopFill } from 'react-icons/bs';
 import { IoMdClose } from 'react-icons/io';
 
 function Navbar() {
@@ -30,7 +30,17 @@ function Navbar() {
                     {showMenu ? <IoMdClose /> : <FaBars />}
                 </button>
             </div>
-            <div className={`navbar-menu ${showMenu ? 'navbar-menu-show' : ''}`}>
+            <div className={`navbar-menu2 ${showMenu ? 'navbar-menu-show' : ''}`}>
+                <button className="navbar-menu-item">
+                    <BsArrowRepeat />
+                    <span>Redémarrage</span>
+                </button>
+                <button className="navbar-menu-item">
+                    <BsStopFill />
+                    <span>Stop</span>
+                </button>
+            </div>
+            <div className="navbar-menu">
                 <button className="navbar-menu-item">
                     <BsFillGridFill />
                     <span>Gestionnaire de cluster</span>

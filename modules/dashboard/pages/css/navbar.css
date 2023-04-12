@@ -40,6 +40,10 @@
     margin-right: 1rem;
 }
 
+.navbar-menu2 {
+    display: none;
+}
+
 .navbar-menu-item {
     display: flex;
     flex-direction: column;
@@ -73,8 +77,16 @@
     position: absolute;
     bottom: 3.5rem;
     left: 0;
-    width: 100%;
+    width: 5%;
     background-color: rgba(255, 255, 255, 0.9);
+    justify-content: center;
+    border-radius: 10px 10px 0 0;
+}
+
+.navbar-menu-show .navbar-menu-item {
+    margin-right: inherit;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 .navbar-right {
