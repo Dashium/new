@@ -23,6 +23,7 @@ const AuthRoute = ({ children }) => {
         } catch (error) {
             router.push('/login');
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return isAuthenticated ? children : null;
