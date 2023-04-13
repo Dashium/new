@@ -12,7 +12,7 @@ const Logout = () => {
         // Supprimer le cookie d'authentification
         Cookies.remove('auth_token');
         // Rediriger vers la page de connexion
-        // router.push('/login');
+        setTimeout(() => router.push('/login'), 5000);
     }, []);
 
     return (
