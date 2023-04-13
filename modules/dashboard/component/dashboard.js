@@ -1,10 +1,10 @@
 import AuthRoute from './authroute';
 
 import Sidebar from './sidebar';
-import Navbar from './navbar';
+import Navbar from './dashboard/navbar';
 
-import Monitor from './monitor';
-import TerminalSSH from './terminal';
+import Monitor from './dashboard/monitor';
+import TerminalSSH from './dashboard/terminal';
 
 const Dashboard = () => {
     return (
@@ -17,8 +17,8 @@ const Dashboard = () => {
             {/* <Sidebar></Sidebar> */}
 
             <div>
-                <Monitor containerName={'o7vZWjYh31'}></Monitor>
-                <TerminalSSH containerName={'o7vZWjYh31'}></TerminalSSH>
+                {/* <Monitor containerName={'o7vZWjYh31'}></Monitor>
+                <TerminalSSH containerName={'o7vZWjYh31'}></TerminalSSH> */}
             </div>
 
             <Navbar></Navbar>

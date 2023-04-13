@@ -1,5 +1,5 @@
 import React from "react";
-var config = require('../../../config/global.json');
+var config = require('../../../../config/global.json');
 
 const TerminalSSH = ({ containerName }) => {
     return (
