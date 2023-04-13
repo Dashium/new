@@ -42,6 +42,10 @@ app.get('/', (req, res) => {
     res.redirect(`http://${common.global.server.host}:${common.global.server.port}`);
 });
 
+app.get('/font', (req, res) => {
+    res.sendFile(path.join(__dirname, '../dashboard/public/font/Heebo.css'));
+});
+
 app.get('/favicon.ico', (req, res) => {
     res.sendFile(path.join(__dirname, '../dashboard/public/favicon.ico'));
 });

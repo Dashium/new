@@ -27,14 +27,12 @@
     font-style: normal;
 }
 
-/* Exemple de styles */
 body {
     font-family: 'Heebo', sans-serif;
     font-size: 16px;
     font-weight: 300;
     line-height: 1.5;
     color: #333;
-    background-color: #fff;
 }
 
 h1,
