@@ -41,9 +41,11 @@ const Login = () => {
                             <input type="password" id="confirm-password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
                         </div>
                     )}
-                    <button type="submit">{isRegister ? 'S\'inscrire' : 'Se connecter'}</button>
+                    <div className='buttons'>
+                        <button onClick={toggleMode}>{isRegister ? 'Se connecter' : 'S\'inscrire'}</button>
+                        <button type="submit">{isRegister ? 'S\'inscrire' : 'Se connecter'}</button>
+                    </div>
                 </form>
-                <button onClick={toggleMode}>{isRegister ? 'Se connecter' : 'S\'inscrire'}</button>
             </div>
         </div>
     );
