@@ -1,29 +1,52 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from 'react';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/router';
 
-const Login = ({api}) => {
+const Login = ({ api }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [isRegister, setIsRegister] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [isRegister, setIsRegister] = useState(false);
+    const router = useRouter();
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        const url = isRegister ? `http://${api.host}:${api.port}/register` : `http://${api.host}:${api.port}/login`;
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
+    const handleRegister = async () => {
+        try {
+            const response = await axios.post(`http://${api.host}:${api.port}/register`, {
                 email,
                 password,
-                confirmPassword: isRegister ? confirmPassword : undefined,
-            }),
-        });
-        const data = await response.json();
-        // Traiter la réponse de l'API ici
-        console.log(data);
+                confirmPassword
+            });
+            console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleLogin = async () => {
+        try {
+            const response = await axios.post(`http://${api.host}:${api.port}/login`, {
+                email,
+                password
+            });
+            console.log(response.data);
+            if(response.data.token != null){
+                Cookies.set('auth_token', response.data.token);
+                router.push('/');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        if (isRegister) {
+            handleRegister();
+        } else {
+            handleLogin();
+        }
     };
 
     const toggleMode = () => {
