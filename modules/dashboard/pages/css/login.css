@@ -5,7 +5,7 @@
     height: 100vh;
 }
 
-.login-card {
+.login-container .login-card {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -21,7 +21,7 @@
     max-width: 90%;
 }
 
-.logo-container {
+.login-container .logo-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -29,22 +29,22 @@
     clip-path: circle();
 }
 
-.logo-container img {
+.login-container .logo-container img {
     width: 10rem;
 }
 
-.form-group {
+.login-container .form-group {
     display: flex;
     flex-direction: column;
     margin-bottom: 1rem;
 }
 
-.form-group label {
+.login-container .form-group label {
     margin-bottom: 0.5rem;
     color: #888;
 }
 
-.form-group input {
+.login-container .form-group input {
     padding: 0.5rem;
     font-size: 1rem;
     border-radius: 5px;
@@ -54,12 +54,12 @@
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
-.form-group input:focus {
+.login-container .form-group input:focus {
     outline: none;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px #0077ff;
 }
 
-.buttons{
+.login-container .buttons{
     position: absolute;
     left: 0;
     bottom: -4%;
@@ -68,7 +68,7 @@
     justify-content: space-around;
 }
 
-button[type='submit'] {
+.login-container button[type='submit'] {
     margin-top: 1rem;
     padding: 0.5rem 1rem;
     font-size: 1.2rem;
@@ -80,11 +80,11 @@ button[type='submit'] {
     transition: all 0.3s ease;
 }
 
-button[type='submit']:hover {
+.login-container button[type='submit']:hover {
     background-color: #0052cc;
 }
 
-button {
+.login-container button {
     margin-top: 1rem;
     padding: 0.5rem 1rem;
     font-size: 1rem;
@@ -97,6 +97,6 @@ button {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
-button:hover {
+.login-container button:hover {
     background-color: #f0f0f0;
 }

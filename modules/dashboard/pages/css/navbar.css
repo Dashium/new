@@ -13,18 +13,18 @@
     z-index: 999;
 }
 
-.navbar-logo {
+.navbar .navbar-logo {
     display: flex;
     align-items: center;
     margin-left: 1rem;
 }
 
-.navbar-logo img {
+.navbar .navbar-logo img {
     height: 2.5rem;
     margin-right: 0.5rem;
 }
 
-.navbar-menu-btn {
+.navbar .navbar-menu-btn {
     display: none;
     background: transparent;
     border: none;
@@ -33,18 +33,18 @@
     color: rgba(0, 0, 0, 0.5);
 }
 
-.navbar-menu {
+.navbar .navbar-menu {
     display: flex;
     flex-direction: row;
     align-items: center;
     margin-right: 1rem;
 }
 
-.navbar-menu2 {
+.navbar .navbar-menu2 {
     display: none;
 }
 
-.navbar-menu-item {
+.navbar .navbar-menu-item {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -57,21 +57,21 @@
     transition: color 0.2s ease-in-out;
 }
 
-.navbar-menu-item:hover {
+.navbar .navbar-menu-item:hover {
     color: rgba(0, 0, 0, 0.8);
 }
 
-.navbar-menu-item span {
+.navbar .navbar-menu-item span {
     font-size: 0.8rem;
     margin-top: 0.5rem;
 }
 
-.navbar-menu-item svg {
+.navbar .navbar-menu-item svg {
     width: 1.5rem;
     height: 1.5rem;
 }
 
-.navbar-menu-show {
+.navbar .navbar-menu-show {
     display: flex;
     flex-direction: column;
     position: absolute;
@@ -83,25 +83,25 @@
     border-radius: 10px 10px 0 0;
 }
 
-.navbar-menu-show .navbar-menu-item {
+.navbar .navbar-menu-show .navbar-menu-item {
     margin-right: inherit;
     margin-top: 1rem;
     margin-bottom: 1rem;
 }
 
-.navbar-right {
+.navbar .navbar-right {
     display: flex;
     align-items: center;
     margin-right: 1rem;
 }
 
-.navbar-date,
-.navbar-time {
+.navbar .navbar-date,
+.navbar .navbar-time {
     margin-right: 1rem;
     font-size: 0.9rem;
     color: rgba(0, 0, 0, 0.5);
 }
 
-.navbar-time {
+.navbar .navbar-time {
     margin-right: 0;
 }

@@ -24,25 +24,25 @@
     transform: scale(1);
 }
 
-.popup-default {
+.popup .popup-default {
     border: 1px solid #ccc;
     background-color: #fff;
     color: #333;
 }
 
-.popup-success {
+.popup .popup-success {
     border: 1px solid #2ecc71;
     background-color: #dff0d8;
     color: #3c763d;
 }
 
-.popup-warning {
+.popup .popup-warning {
     border: 1px solid #f1c40f;
     background-color: #fcf8e3;
     color: #8a6d3b;
 }
 
-.popup-error {
+.popup .popup-error {
     border: 1px solid #e74c3c;
     background-color: #f2dede;
     color: #a94442;

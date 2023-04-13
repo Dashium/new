@@ -9,7 +9,7 @@
     font-family: monospace;
 }
 
-.terminal-header {
+.terminal-container .terminal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -21,36 +21,36 @@
     border-top-left-radius: 5px;
 }
 
-.terminal-buttons {
+.terminal-container .terminal-buttons {
     display: flex;
     align-items: center;
 }
 
-.terminal-dot {
+.terminal-container .terminal-dot {
     width: 12px;
     height: 12px;
     border-radius: 50%;
     margin-right: 5px;
 }
 
-.terminal-red {
+.terminal-container .terminal-red {
     background-color: #ff5f56;
 }
 
-.terminal-yellow {
+.terminal-container .terminal-yellow {
     background-color: #ffbd2e;
 }
 
-.terminal-green {
+.terminal-container .terminal-green {
     background-color: #27c93f;
 }
 
-.terminal-title {
+.terminal-container .terminal-title {
     font-size: 14px;
     font-weight: bold;
 }
 
-.terminal-body {
+.terminal-container .terminal-body {
     padding: 10px;
     height: calc(100% - 30px);
     overflow-y: auto;
@@ -58,7 +58,7 @@
     font-size: 14px;
 }
 
-.terminal-body:after {
+.terminal-container .terminal-body:after {
     content: '';
     display: block;
     height: 0;
@@ -66,7 +66,7 @@
     clear: both;
 }
 
-.terminal-body iframe{
+.terminal-container .terminal-body iframe{
     width: 100%;
     height: calc(100% - 20px);
     border: none;
