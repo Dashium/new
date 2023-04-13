@@ -4,11 +4,21 @@ import React, { useState } from 'react';
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isRegister, setIsRegister] = useState(false);
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        // Code pour soumettre le formulaire de connexion
+        if (isRegister) {
+            // Code pour soumettre le formulaire d'inscription
+        } else {
+            // Code pour soumettre le formulaire de connexion
+        }
     };
+
+    const toggleMode = () => {
+        setIsRegister(!isRegister);
+    }
 
     return (
         <div className="login-container">
@@ -25,8 +35,15 @@ const Login = () => {
                         <label htmlFor="password">Password</label>
                         <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                     </div>
-                    <button type="submit">Se connecter</button>
+                    {isRegister && (
+                        <div className="form-group">
+                            <label htmlFor="confirm-password">Confirm Password</label>
+                            <input type="password" id="confirm-password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                        </div>
+                    )}
+                    <button type="submit">{isRegister ? 'S\'inscrire' : 'Se connecter'}</button>
                 </form>
+                <button onClick={toggleMode}>{isRegister ? 'Se connecter' : 'S\'inscrire'}</button>
             </div>
         </div>
     );

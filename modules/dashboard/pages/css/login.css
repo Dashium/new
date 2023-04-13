@@ -2,59 +2,71 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    background: #f0f4f8ad;
+    height: 100vh;
+    background: linear-gradient(to bottom right, #a8dadc, #f1faee);
 }
 
 .login-card {
     display: flex;
     flex-direction: column;
-    background: #fff;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
 }
 
 .logo-container {
     display: flex;
     justify-content: center;
+    align-items: center;
     margin-bottom: 20px;
+    width: 80px;
+    height: 80px;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
 }
 
-form {
-    display: flex;
-    flex-direction: column;
+.logo-container img {
+    max-width: 100%;
+    max-height: 100%;
 }
 
 .form-group {
+    display: flex;
+    flex-direction: column;
     margin-bottom: 20px;
 }
 
 label {
-    font-weight: 600;
+    font-weight: 500;
     margin-bottom: 5px;
 }
 
 input {
+    padding: 10px;
     border: none;
+    background-color: #f0f0f0;
     border-radius: 5px;
-    padding: 10px;
-    background: #f5f5f5;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
 }
 
-button[type='submit'] {
-    background: #fff;
-    border: 1px solid #4d4d4d;
-    color: #4d4d4d;
-    border-radius: 5px;
-    padding: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-button[type='submit']:hover {
-    background: #4d4d4d;
+button[type="submit"] {
+    background-color: #a8dadc;
     color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+button[type="submit"]:hover {
+    background-color: #f1faee;
+    color: #a8dadc;
+    transform: translateY(-2px);
 }
