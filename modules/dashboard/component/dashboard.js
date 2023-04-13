@@ -5,6 +5,7 @@ import Navbar from './dashboard/navbar';
 
 import Monitor from './dashboard/monitor';
 import TerminalSSH from './dashboard/terminal';
+import Project from './dashboard/projects';
 
 const Dashboard = () => {
     return (
@@ -19,6 +20,7 @@ const Dashboard = () => {
             <div>
                 {/* <Monitor containerName={'o7vZWjYh31'}></Monitor>
                 <TerminalSSH containerName={'o7vZWjYh31'}></TerminalSSH> */}
+                <Project></Project>
             </div>
 
             <Navbar></Navbar>
