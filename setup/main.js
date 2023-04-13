@@ -39,7 +39,8 @@ async function init(stopanimation, data) {
             [
                 'id INTEGER PRIMARY KEY',
                 'email TEXT',
-                'password TEXT'
+                'password TEXT',
+                'type TEXT'
             ]
         );
         await dbModule.createTable(db, 'global',
@@ -109,7 +110,7 @@ async function init(stopanimation, data) {
             json: JSON.stringify(globalDATA)
         });
 
-        await account.registerUser({ email: 'root@local', password: 'dashium' } );
+        await account.registerUser({ email: 'root@local', password: 'dashium', type: 'admin' } );
 
         common.global = globalDATA;
         await fs.writeFileSync('./config/global.json', JSON.stringify(globalDATA, null, 2));

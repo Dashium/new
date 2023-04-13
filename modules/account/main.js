@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 async function registerUser(data){
     try {
         var bdd = await dbModule.loadDatabase('dashium');
-        const { email, password } = data;
+        const { email, password, type } = data;
 
         // Vérifie si l'utilisateur existe déjà
         const existingUser = await dbModule.selectRows(bdd, 'users', '*', 'email = ?', [email]);
@@ -19,7 +19,7 @@ async function registerUser(data){
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Ajoute l'utilisateur à la base de données
-        await dbModule.insertRow(bdd, 'users', { email, password: hashedPassword });
+        await dbModule.insertRow(bdd, 'users', { email, password: hashedPassword, type });
 
         common.sucess('User created successfully', 'api');
         return { message: 'User created successfully' };
