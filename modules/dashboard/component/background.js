@@ -1,6 +1,13 @@
+/* eslint-disable @next/next/no-img-element */
 import React from 'react';
 
-const Background = () => {
+const Background = ({mode}) => {
+    if(mode == 'img'){
+        mode = `<img src='./themes/desktop/0.png' alt='Background' />`;
+    }
+    else{
+        mode = '';
+    }
     return (
         <div style={{
             position: 'fixed',
@@ -9,7 +16,7 @@ const Background = () => {
             height: '100vh',
             width: '100%'
         }}>
-            <img src='./themes/desktop/0.png' alt='Background' />
+            {mode}
         </div>
     );
 };
