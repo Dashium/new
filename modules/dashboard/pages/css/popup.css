@@ -1,0 +1,113 @@
+.popup {
+    position: fixed;
+    top: 1%;
+    left: 1%;
+    width: 320px;
+    max-width: 90%;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.popup.hide {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.9);
+}
+
+.popup.show {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+}
+
+.popup-default {
+    border: 1px solid #ccc;
+    background-color: #fff;
+    color: #333;
+}
+
+.popup-success {
+    border: 1px solid #2ecc71;
+    background-color: #dff0d8;
+    color: #3c763d;
+}
+
+.popup-warning {
+    border: 1px solid #f1c40f;
+    background-color: #fcf8e3;
+    color: #8a6d3b;
+}
+
+.popup-error {
+    border: 1px solid #e74c3c;
+    background-color: #f2dede;
+    color: #a94442;
+}
+
+.popup .popup-message {
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.popup .popup-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.popup .popup-close:hover {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.popup:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: linear-gradient(to bottom right, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0));
+    z-index: -1;
+    filter: blur(20px);
+    opacity: 0.3;
+    transition: all 0.3s ease-in-out;
+}
+
+.popup:after {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    z-index: -1;
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+}
+
+.popup.show:after {
+    opacity: 1;
+}
+
+.popup.show:before {
+    opacity: 0.6;
+}

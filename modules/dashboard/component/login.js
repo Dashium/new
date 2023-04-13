@@ -3,12 +3,15 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
+import Popup from './popup';
 
 const Login = ({ api }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [isRegister, setIsRegister] = useState(false);
+    const [displayPopup, setDisplayPopup] = useState(false);
+    const [popupMessage, setPopupMessage] = useState({ popupMessage: '', mode: '' });
     const router = useRouter();
 
     const handleRegister = async () => {
@@ -18,7 +21,10 @@ const Login = ({ api }) => {
                 password,
                 confirmPassword
             });
-            console.log(response.data);
+            if(response.data.message != null){setPopupMessage({popupMessage: response.data.message, mode: "success"});}
+            if(response.data.error != null){setPopupMessage({popupMessage: response.data.error, mode: "error"});}
+            setDisplayPopup(true);
+            setTimeout(() => setDisplayPopup(false), 5000);
         } catch (error) {
             console.error(error);
         }
@@ -30,8 +36,11 @@ const Login = ({ api }) => {
                 email,
                 password
             });
-            console.log(response.data);
-            if(response.data.token != null){
+            if(response.data.message != null){setPopupMessage({popupMessage: response.data.message, mode: "success"});}
+            if(response.data.error != null){setPopupMessage({popupMessage: response.data.error, mode: "error"});}
+            setDisplayPopup(true);
+            setTimeout(() => setDisplayPopup(false), 5000);
+            if (response.data.token != null) {
                 Cookies.set('auth_token', response.data.token);
                 router.push('/');
             }
@@ -80,6 +89,7 @@ const Login = ({ api }) => {
                     </div>
                 </form>
             </div>
+            {displayPopup && <Popup message={popupMessage.popupMessage} type={popupMessage.mode} onClose={() => setDisplayPopup(false)} />}
         </div>
     );
 };
