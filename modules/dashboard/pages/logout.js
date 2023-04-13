@@ -29,7 +29,7 @@ const Logout = () => {
             MozUserSelect: 'none',
             WebkitUserSelect: 'none'
         }}>
-            <Headers></Headers>
+            <Headers title='Logout'></Headers>
             <Background mode='color' />
             <Loading text='Déconnexion en cours...'></Loading>
         </div>

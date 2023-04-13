@@ -20,7 +20,7 @@ const App = () => {
             MozUserSelect: 'none',
             WebkitUserSelect: 'none'
         }}>
-            <Headers></Headers>
+            <Headers title='Login'></Headers>
             <Background mode='color' />
             <Login api={config.api}></Login>
         </div>

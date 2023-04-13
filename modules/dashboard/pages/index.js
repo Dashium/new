@@ -19,7 +19,7 @@ const App = () => {
             MozUserSelect: 'none',
             WebkitUserSelect: 'none'
         }}>
-            <Headers></Headers>
+            <Headers title='Dashboard'></Headers>
             <Background mode='color' />
             <Dashboard></Dashboard>
         </div>
