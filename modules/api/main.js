@@ -223,7 +223,7 @@ app.post('/register', async (req, res) => {
     try {
         var add = await account.registerUser(req.body);
         if(add.error != null){
-            res.status(500).json(add);
+            res.status(201).json(add);
         }
         if(add.message != null){
             res.status(201).json(add);
@@ -238,7 +238,7 @@ app.post('/login', async (req, res) => {
     try {
         var get = await account.loginUser(req.body);
         if(get.error != null){
-            res.status(500).json(get);
+            res.status(201).json(get);
         }
         if(get.message != null){
             res.status(201).json(get);
