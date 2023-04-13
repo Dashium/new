@@ -17,6 +17,7 @@ async function init(stopanimation, data) {
     const common = require('../modules/common');
     const cluster = require('../modules/cluster/main');
     const projet = require('../modules/projets/main');
+    const account = require('../modules/account/main');
     const ci = require('../modules/ci/main');
 
     common.mkdir('config');
@@ -107,6 +108,8 @@ async function init(stopanimation, data) {
         await dbModule.insertRow(db, 'global', {
             json: JSON.stringify(globalDATA)
         });
+
+        await account.registerUser({ email: 'root@local', password: 'dashium' } );
 
         common.global = globalDATA;
         await fs.writeFileSync('./config/global.json', JSON.stringify(globalDATA, null, 2));

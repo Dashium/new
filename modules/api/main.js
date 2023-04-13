@@ -1,14 +1,19 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const express = require('express');
-const db = require('../bdd/main');
-const common = require('../common');
+const account = require('../account/main');
 const ci = require('../ci/main');
+const common = require('../common');
+const db = require('../bdd/main');
+const express = require('express');
 const path = require('path');
 
 var bdd = null;
 const app = express();
 app.use(express.json());
+
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 app.get('/', (req, res) => {
     res.redirect(`http://${common.global.server.host}:${common.global.server.port}`);
@@ -213,27 +218,15 @@ app.delete('/clusters/:id', async (req, res) => {
 // END CLUSTERS
 
 // START LOGIN REGISTER
-var SECRET_KEY = null;
-
 app.post('/register', async (req, res) => {
     try {
-        const { email, password } = req.body;
-
-        // Vérifie si l'utilisateur existe déjà
-        const existingUser = await db.selectRows(bdd, 'users', '*', 'email = ?', [email]);
-        if (existingUser.length > 0) {
-            common.warn('Email already exists', 'api');
-            return res.status(400).json({ error: 'Email already exists' });
+        var add = await account.registerUser(req.body);
+        if(add.error != null){
+            res.status(500).json(add);
         }
-
-        // Hash le mot de passe
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Ajoute l'utilisateur à la base de données
-        await db.insertRow(bdd, 'users', { email, password: hashedPassword });
-
-        common.sucess('User created successfully', 'api');
-        res.status(201).json({ message: 'User created successfully' });
+        if(add.message != null){
+            res.status(201).json(add);
+        }
     } catch (error) {
         common.error(error, 'api');
         res.status(500).json({ error: 'Internal server error' });
@@ -242,28 +235,13 @@ app.post('/register', async (req, res) => {
 
 app.post('/login', async (req, res) => {
     try {
-        const { email, password } = req.body;
-
-        // Vérifie si l'utilisateur existe
-        const user = await db.selectRows(bdd, 'users', '*', 'email = ?', [email]);
-        if (user.length == 0) {
-            common.warn('Invalid email or password', 'api');
-            return res.status(401).json({ error: 'Invalid email or password' });
+        var get = await account.loginUser(req.body);
+        if(get.error != null){
+            res.status(500).json(get);
         }
-
-        // Vérifie si le mot de passe correspond
-        const passwordMatch = await bcrypt.compare(password, user[0].password);
-        if (!passwordMatch) {
-            common.warn('Invalid email or password', 'api');
-            return res.status(401).json({ error: 'Invalid email or password' });
+        if(get.message != null){
+            res.status(201).json(get);
         }
-
-        // Génère un token JWT
-        const token = jwt.sign({ userId: user[0].id }, SECRET_KEY);
-
-        common.sucess('Login successful', 'api');
-
-        res.status(200).json({ message: 'Login successful', token });
     } catch (error) {
         common.error(error, 'api');
         res.status(500).json({ error: 'Internal server error' });
@@ -274,8 +252,4 @@ app.post('/login', async (req, res) => {
 app.listen(common.global.api.port, async () => {
     common.sucess(`Server listening on port ${common.global.api.port}`, 'api');
     bdd = await db.loadDatabase('dashium');
-    var entries = await db.selectRows(bdd, 'global');
-        entries[0].json = JSON.parse(entries[0].json);
-    
-    SECRET_KEY = entries[0].json.server.encrypt;
 });

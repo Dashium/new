@@ -1,5 +1,6 @@
 import React from 'react';
 import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
+const config = require('../../../config/global.json');
 
 import Headers from '../component/header';
 import Background from '../component/background';
@@ -34,7 +35,7 @@ const App = () => {
                 <Headers></Headers>
                 <Background />
 
-                <Login></Login>
+                <Login api={config.api}></Login>
 
                 {/* <Sidebar></Sidebar> */}
 
