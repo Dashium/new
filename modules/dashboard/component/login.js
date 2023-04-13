@@ -22,8 +22,8 @@ const Login = ({api}) => {
             }),
         });
         const data = await response.json();
-        console.log(data);
         // Traiter la réponse de l'API ici
+        console.log(data);
     };
 
     const toggleMode = () => {
