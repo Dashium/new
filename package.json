@@ -18,16 +18,13 @@
     "setup:infos": "node ./modules/infos.js",
     "setup:setup": "node ./setup/main.js",
     "uninstall": "node ./setup/uninstaller.js",
-    
     "reset": "npm-run-all --continue-on-error reset:*",
     "reset:u": "npm run uninstall",
     "reset:s": "npm run setup",
-
     "nogui": "npm-run-all --parallel nogui:*",
     "nogui:api": "node ./modules/api/main.js",
     "nogui:terminal": "node ./modules/terminal/main.js",
     "nogui:monitor": "node ./modules/monitor/main.js",
-
     "dev": "next dev ./modules/dashboard",
     "build": "next build ./modules/dashboard",
     "startr": "next start ./modules/dashboard",
@@ -47,8 +44,10 @@
   "dependencies": {
     "@apollo/client": "^3.7.11",
     "axios": "^1.3.5",
+    "bcrypt": "^5.1.0",
     "eslint-config-next": "^13.3.0",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
     "next": "^13.3.0",
     "npm-run-all": "^4.1.5",
     "react-icons": "^4.8.0",

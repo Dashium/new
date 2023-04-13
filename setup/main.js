@@ -37,8 +37,8 @@ async function init(stopanimation, data) {
         await dbModule.createTable(db, 'users',
             [
                 'id INTEGER PRIMARY KEY',
-                'name TEXT',
-                'age INTEGER'
+                'email TEXT',
+                'password TEXT'
             ]
         );
         await dbModule.createTable(db, 'global',
@@ -70,12 +70,12 @@ async function init(stopanimation, data) {
         // END CREATE BDD
 
         // STORE GLOBAL CONFIG
-        console.log(data);
         var globalDATA = {
             "server": {
                 "name": data.name,
                 "host": data.host,
-                "port": data.port
+                "port": data.port,
+                "encrypt": common.generateRandomString(50)
             },
             "api": {
                 "host": data.host,

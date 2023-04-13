@@ -1,19 +1,29 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from 'react';
 
-const Login = () => {
+const Login = ({api}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isRegister, setIsRegister] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState('');
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        if (isRegister) {
-            // Code pour soumettre le formulaire d'inscription
-        } else {
-            // Code pour soumettre le formulaire de connexion
-        }
+        const url = isRegister ? `http://${api.host}:${api.port}/register` : `http://${api.host}:${api.port}/login`;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email,
+                password,
+                confirmPassword: isRegister ? confirmPassword : undefined,
+            }),
+        });
+        const data = await response.json();
+        console.log(data);
+        // Traiter la réponse de l'API ici
     };
 
     const toggleMode = () => {
