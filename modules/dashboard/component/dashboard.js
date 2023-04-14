@@ -1,3 +1,4 @@
+var config = require('../../../config/global.json');
 import AuthRoute from './authroute';
 
 import Sidebar from './sidebar';
@@ -12,15 +13,16 @@ const Dashboard = () => {
         <AuthRoute>
             <div>
                 <h1>Dashboard</h1>
-                <p>Welcome to the dashboard</p>
+                <p>Welcome to the dashium, my name is {config.server.name}</p>
             </div>
 
-            {/* <Sidebar></Sidebar> */}
+            {/* <Sidebar config={config}></Sidebar> */}
 
             <div>
-                {/* <Monitor containerName={'o7vZWjYh31'}></Monitor>
-                <TerminalSSH containerName={'o7vZWjYh31'}></TerminalSSH> */}
-                <Project></Project>
+                {/* <Monitor config={config} containerName={'o7vZWjYh31'}></Monitor>
+                <TerminalSSH config={config} containerName={'o7vZWjYh31'}></TerminalSSH> */}
+                <Project config={config}></Project>
+                <ProjectManager config={config} projectId={1}></ProjectManager>
             </div>
 
             <Navbar></Navbar>

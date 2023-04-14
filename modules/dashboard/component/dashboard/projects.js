@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-var config = require('../../../../config/global.json');
 
-const ProjectList = () => {
+const ProjectList = ({ config }) => {
     const [projects, setProjects] = useState([]);
 
     useEffect(() => {

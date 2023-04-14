@@ -1,7 +1,6 @@
 import React from "react";
-var config = require('../../../../config/global.json');
 
-const TerminalSSH = ({ containerName }) => {
+const TerminalSSH = ({ config, containerName }) => {
     return (
         <div className="terminal-container">
             <div className="terminal-header">
