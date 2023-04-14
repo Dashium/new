@@ -74,3 +74,20 @@
 .project-container .project-details a:hover {
     background-color: #0062cc;
 }
+
+.project-container .project-details button {
+    background: #007bff;
+    color: #fff;
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    margin-top: 10px;
+    text-decoration: none;
+    transition: background-color 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.project-container .project-details button:hover {
+    background-color: #0062cc;
+}

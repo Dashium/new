@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { RiDeleteBin6Line } from 'react-icons/ri';
 import axios from 'axios';
 
 function ProjectManager({ config, projectId }) {
@@ -67,6 +68,7 @@ function ProjectManager({ config, projectId }) {
 
     return (
         <div className="project-manager">
+            id: {projectId}
             <div className="project-menu">
                 <ul>
                     <li className={activeMenu === 'general' ? 'active' : ''} onClick={() => handleMenuClick('general')}>General</li>
@@ -93,7 +95,7 @@ function ProjectManager({ config, projectId }) {
                                     {project.docker.ports.map((port, index) => (
                                         <li key={index}>
                                             {port.container}
-                                            <button onClick={() => handlePortDelete(index)}>X</button>
+                                            <button onClick={() => handlePortDelete(index)}><RiDeleteBin6Line /></button>
                                         </li>
                                     ))}
                                 </ul>
@@ -111,9 +113,8 @@ function ProjectManager({ config, projectId }) {
                                     {project.ci.map((script, index) => (
                                         <li key={index}>
                                             {script.name}
-                                            {script.mode}
                                             {script.run}
-                                            <button onClick={() => handleScriptDelete(index)}>X</button>
+                                            <button onClick={() => handleScriptDelete(index)}><RiDeleteBin6Line /></button>
                                         </li>
                                     ))}
                                 </ul>
@@ -127,17 +128,17 @@ function ProjectManager({ config, projectId }) {
                             <>
                                 <h2>Environment Variables</h2>
                                 <ul>
-                                    {project.env.map((variable, index) => (
+                                    {project.docker.env.map((variable, index) => (
                                         <li key={index}>
                                             {variable}
-                                            <button onClick={() => handleVariableDelete(index)}>X</button>
+                                            <button onClick={() => handleVariableDelete(index)}><RiDeleteBin6Line /></button>
                                         </li>
                                     ))}
                                 </ul>
                                 <div>
-                                    <input type="text" name="newVariable" value={newVariable} onChange={handleInputChange} />
-                                    <input type="text" name="newValue" value={newValue} onChange={handleInputChange} />
-                                    <button onClick={handleVariableAdd}>Add</button>
+                                    {/* <input type="text" name="newVariable" value={newVariable} onChange={handleInputChange} /> */}
+                                    {/* <input type="text" name="newValue" value={newValue} onChange={handleInputChange} /> */}
+                                    {/* <button onClick={handleVariableAdd}>Add</button> */}
                                 </div>
                             </>
                         )}

@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 var config = require('../../../config/global.json');
 import AuthRoute from './authroute';
 
@@ -6,10 +7,17 @@ import Navbar from './dashboard/navbar';
 
 import Monitor from './dashboard/monitor';
 import TerminalSSH from './dashboard/terminal';
-import Project from './dashboard/projects';
-import ProjectManager from './dashboard/project';
+import Project from './dashboard/ProjectList';
+import ProjectManager from './dashboard/ProjectManager';
 
 const Dashboard = () => {
+    const [projectId, setProjectId] = useState(1);
+    const [project, setProject] = useState(null);
+
+    useEffect(() => {
+        setProject(false);
+    }, [projectId]);
+
     return (
         <AuthRoute>
             <div>
@@ -20,10 +28,17 @@ const Dashboard = () => {
             {/* <Sidebar config={config}></Sidebar> */}
 
             <div>
-                {/* <Monitor config={config} containerName={'o7vZWjYh31'}></Monitor>
-                <TerminalSSH config={config} containerName={'o7vZWjYh31'}></TerminalSSH> */}
-                <Project config={config}></Project>
-                <ProjectManager config={config} projectId={1}></ProjectManager>
+                <div>
+                    <Project config={config} setProjectId={setProjectId} setProject={setProject} />
+                    {project && (
+                        <>
+                            <ProjectManager config={config} projectId={projectId.id} />
+                            <Monitor config={config} containerName={projectId.docker.dockerID} />
+                            <TerminalSSH config={config} containerName={projectId.docker.dockerID} />
+                        </>
+                    )}
+
+                </div>
             </div>
 
             <Navbar></Navbar>

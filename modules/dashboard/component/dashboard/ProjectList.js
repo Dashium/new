@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const ProjectList = ({ config }) => {
+const ProjectList = ({ config, setProjectId, setProject }) => {
     const [projects, setProjects] = useState([]);
 
     useEffect(() => {
         axios.get(`http://${config.api.host}:${config.api.port}/projects`)
             .then(response => setProjects(response.data))
             .catch(error => console.log(error));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -28,7 +28,11 @@ const ProjectList = ({ config }) => {
                                     })
                                 }
                             </div>
-                            <a href={`/project/${project.id}`} rel="noopener noreferrer">Voir le projet</a>
+                            {/* <a href={`/project/${project.id}`} rel="noopener noreferrer">Voir le projet</a> */}
+                            <button onClick={() => {
+                                setProjectId(project);
+                                setProject(true);
+                            }}>Voir le projet</button>
                         </div>
                     </div>
                 ))}
