@@ -288,6 +288,36 @@ async function removeDockerPort(id, port){
     return id;
 }
 
+async function removeDockerEnv(id, env){
+    var current = await getProject(id);
+    
+    if(typeof current.docker.env != 'object'){
+        current.docker.env = [];
+    }
+        current.docker.env = common.removeValueFromArray(current.docker.env, env);
+
+    var project = await updateProjet(id, { docker: {env: current.docker.env} });
+
+    common.sucess(`Docker Env "${project[0].name}" mis a jour !`, 'project');
+
+    return id;
+}
+
+async function addDockerEnv(id, env){
+    var current = await getProject(id);
+    
+    if(typeof current.docker.env != 'object'){
+        current.docker.env = [];
+    }
+        current.docker.env.push(env);
+
+    var project = await updateProjet(id, { docker: {env: current.docker.env} });
+
+    common.sucess(`Docker Env "${project[0].name}" mis a jour !`, 'project');
+
+    return id;
+}
+
 module.exports = {
     getProject,
     getProjectDirs,
@@ -305,5 +335,7 @@ module.exports = {
     removeDockerPort,
     getProjectPorts,
     getProjectAllPorts,
-    Portfinder
+    Portfinder,
+    addDockerEnv,
+    removeDockerEnv
 }
