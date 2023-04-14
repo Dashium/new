@@ -6,6 +6,7 @@
   "scripts": {
     "start": "npm-run-all start:*",
     "start:infos": "node ./modules/infos.js",
+    "start:init": "node ./setup/init.js",
     "start:build": "next build ./modules/dashboard/",
     "start2:export": "next export ./modules/dashboard/",
     "start:dashium": "npm-run-all --parallel dashium:*",
@@ -16,6 +17,7 @@
     "dashium2:dashboard": "node ./modules/dashboard/dashboard.js",
     "setup": "npm-run-all setup:*",
     "setup:infos": "node ./modules/infos.js",
+    "setup:init": "node ./setup/init.js",
     "setup:setup": "node ./setup/main.js",
     "uninstall": "node ./setup/uninstaller.js",
     "reset": "npm-run-all --continue-on-error reset:*",
