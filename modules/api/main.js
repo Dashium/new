@@ -1,6 +1,7 @@
 const account = require('../account/main');
 const ci = require('../ci/main');
 const common = require('../common');
+const cors = require('cors');
 const db = require('../bdd/main');
 const express = require('express');
 const path = require('path');
@@ -9,11 +10,9 @@ var bdd = null;
 const app = express();
 app.use(express.json());
 
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
+app.use(cors({
+    origin: `http://${common.global.server.host}:${common.global.server.port}`
+}));
 
 app.get('/', (req, res) => {
     res.redirect(`http://${common.global.server.host}:${common.global.server.port}`);

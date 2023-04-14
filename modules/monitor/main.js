@@ -1,10 +1,15 @@
 const app = require('express')();
+const cors = require('cors');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const { exec } = require('child_process');
 const docker = require('../ci/docker');
 const common = require('../common');
 const path = require('path');
+
+app.use(cors({
+    origin: `http://${common.global.server.host}:${common.global.server.port}`
+}));
 
 // Déclaration d'un objet pour stocker les informations des conteneurs surveillés
 const monitoredContainers = {};

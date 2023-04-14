@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const http = require('http');
 const path = require('path');
 const io = require('socket.io');
@@ -8,6 +9,10 @@ const docker = require('../ci/docker');
 const app = express();
 const server = http.createServer(app);
 const socket = io(server);
+
+app.use(cors({
+    origin: `http://${common.global.server.host}:${common.global.server.port}`
+}));
 
 // Route pour afficher la page d'accueil
 app.get('/', (req, res) => {
