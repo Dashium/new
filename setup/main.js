@@ -1,6 +1,7 @@
 const dbModule = require('../modules/bdd/main');
 const readline = require('readline');
 const fs = require('fs');
+const common = require('../modules/common');
 
 function replaceLocalhost(jsonObj, newHost) {
     for (const key in jsonObj) {
@@ -186,7 +187,7 @@ async function main() {
     const name = await askQuestion("What is the name of the server? (default: Dashium) ", 'Dashium');
     console.log(`Hi, my name is ${name} !`);
 
-    const host = await askQuestion("What is the host name or IP address of the server? (default: localhost) ", 'localhost');
+    const host = await askQuestion(`What is the host name or IP address of the server? (default: ${common.getHostname()}.local) `, `${common.getHostname()}.local`);
     console.log(`The host name or IP address of the server is ${host}.`);
 
     const port = await askQuestion("What is the port number of the server? (default: 8080) ", 8080);
