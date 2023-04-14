@@ -7,6 +7,7 @@ import Navbar from './dashboard/navbar';
 import Monitor from './dashboard/monitor';
 import TerminalSSH from './dashboard/terminal';
 import Project from './dashboard/projects';
+import ProjectManager from './dashboard/project';
 
 const Dashboard = () => {
     return (

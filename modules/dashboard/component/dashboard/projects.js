@@ -8,6 +8,7 @@ const ProjectList = ({ config }) => {
         axios.get(`http://${config.api.host}:${config.api.port}/projects`)
             .then(response => setProjects(response.data))
             .catch(error => console.log(error));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

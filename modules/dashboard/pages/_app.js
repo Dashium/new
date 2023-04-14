@@ -6,6 +6,7 @@ import './css/login.css';
 import './css/popup.css';
 import './css/loading.css';
 import './css/projects.css';
+import './css/project.css';
 
 export default function MyApp({ Component, pageProps }) {
     return <Component {...pageProps} />
