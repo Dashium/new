@@ -17,8 +17,6 @@ async function removeDocker(){
     common.rmdir('./clusters');
     common.rmdir('./logs');
     common.rmfile('./config/dashium.db');
-    
-    common.rmfile('/etc/systemd/system/dashium.service');
 }
 
 removeDocker();

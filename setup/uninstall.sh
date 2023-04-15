@@ -2,6 +2,7 @@
 
 sudo systemctl stop dashium.service
 sudo systemctl disable dashium.service
+sudo rm -rf /etc/systemd/system/dashium.service;
 
 cd /dashium
 sudo npm run uninstall

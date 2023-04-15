@@ -13,10 +13,6 @@ async function init(stopanimation, data) {
     common.mkdir('config');
     common.mkdir('logs');
 
-    if(data.autoStart.toLowerCase() == 'y'){
-        common.copyFile('/setup/dashium.service', '/etc/systemd/system/dashium.service');
-    }
-
     try {
         // START CREATE BDD
         const db = await dbModule.createDatabase('dashium');
