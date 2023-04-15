@@ -1,5 +1,5 @@
 const next = require('next');
-const config = require('../../config/global.json');
+const common = require('../common');
 
 const dev = false;
 const app = next({ dev, dir: './build' });
@@ -22,9 +22,9 @@ app.prepare().then(() => {
 
             handle(req, res, parsedUrl);
         })
-        .listen(config.server.port, (err) => {
+        .listen(common.global.server.port, (err) => {
             if (err) throw err;
-            console.log(`> Ready on http://${config.server.host}:${config.server.port}`);
+            common.sucess(`Ready on http://${common.global.server.host}:${common.global.server.port}`, 'server');
         });
 });
 
