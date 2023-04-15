@@ -188,9 +188,9 @@ async function main() {
     console.log(`Hi, my name is ${name} !`);
 
     const host = await askQuestion(`What is the host name or IP address of the server? (default: ${common.getHostname()}.local) `, `${common.getHostname()}.local`);
-    console.log(`The host name or IP address of the server is ${host}.`);
+    console.log(`The host name or IP address of the server is ${host.toLowerCase()}.`);
 
-    const port = await askQuestion("What is the port number of the server? (default: 8080) ", 8080);
+    const port = await askQuestion("What is the port number of the server? (default: 80) ", 80);
     console.log(`The port number of the server is ${port}.`);
 
     const APIport = await askQuestion("What is the port number of the API server? (default: 5051) ", 5051);
@@ -222,7 +222,7 @@ async function main() {
 
     init(loadingAnimation(), {
         name: name,
-        host: host,
+        host: host.toLowerCase(),
         port: port,
         APIport: APIport,
         sshPort: sshPort,
