@@ -26,6 +26,22 @@ function loadDatabase(dbName) {
     });
 }
 
+function closeDatabase(db) {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not provided.'));
+        } else {
+            db.close((err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        }
+    });
+}
+
 // Fonction pour créer une table
 function createTable(db, tableName, columns) {
     const columnsStr = columns.join(',');
@@ -66,10 +82,10 @@ function selectRows(db, tableName, columns = '*', where = '1', params = []) {
             if (err) {
                 reject(err.message);
             }
-            if(rows == null){
+            if (rows == null) {
                 common.log(`${rows} rows selected from ${tableName}`, 'bdd');
             }
-            else{
+            else {
                 common.log(`${rows.length} rows selected from ${tableName}`, 'bdd');
             }
             resolve(rows);
@@ -109,6 +125,7 @@ function updateRows(db, tableName, data, where = '1', params = []) {
 }
 
 module.exports = {
+    closeDatabase,
     createDatabase,
     createTable,
     insertRow,
