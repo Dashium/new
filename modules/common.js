@@ -4,10 +4,10 @@ const net = require('net');
 const os = require('os');
 
 var globalPath = path.join(__dirname, '../config/global.json');
-if(fs.existsSync(globalPath) == true){
+if (fs.existsSync(globalPath) == true) {
     var global = require(globalPath);
 }
-else{
+else {
     var global = null;
 }
 
@@ -15,7 +15,7 @@ const currentDate = replaceAll(new Date().toISOString(), ':', '-');
 const logFile = createLogFile(`logs/${currentDate}.txt`);
 
 function getHostname() {
-  return os.hostname();
+    return os.hostname();
 }
 
 function mkdir(path) {
@@ -92,8 +92,12 @@ function copyDir(src, dest) {
     logFile.log(`Répertoire "${src}" copier`, 'warn', 'common');
 }
 
+function copyFile(source, destination) {
+    fs.copyFileSync(source, destination);
+}
+
 function createLogFile(filePath) {
-    if(!fs.existsSync(filePath.split('/')[0])){mkdir(filePath.split('/')[0]);}
+    if (!fs.existsSync(filePath.split('/')[0])) { mkdir(filePath.split('/')[0]); }
     const stream = fs.createWriteStream(filePath, { flags: 'a' });
 
     function log(msg, type, module) {
@@ -213,6 +217,7 @@ function isHostPortUsed(hostPort, portsConfig) {
 
 module.exports = {
     copyDir,
+    copyFile,
     error: (msg, from) => { logFile.log(msg, 'error', from); },
     findAvailablePort,
     formatJsonToArray,

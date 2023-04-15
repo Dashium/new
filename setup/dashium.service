@@ -1,0 +1,12 @@
+[Unit]
+Description=Dashium
+
+[Service]
+WorkingDirectory=/dashium
+ExecStart=/usr/bin/npm start
+Restart=always
+User=ubuntu
+Group=ubuntu
+
+[Install]
+WantedBy=multi-user.target

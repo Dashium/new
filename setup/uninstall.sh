@@ -1,5 +1,11 @@
 #!/bin/bash
 
+sudo systemctl stop dashium.service
+sudo systemctl disable dashium.service
+
+cd /dashium
+sudo npm run uninstall
+
 sudo apt purge build-essential -y
 sudo apt purge nodejs -y
 sudo apt purge npm -y

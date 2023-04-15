@@ -3,17 +3,6 @@ const readline = require('readline');
 const fs = require('fs');
 const common = require('../modules/common');
 
-function replaceLocalhost(jsonObj, newHost) {
-    for (const key in jsonObj) {
-        if (typeof jsonObj[key] === 'object') {
-            replaceLocalhost(jsonObj[key], newHost);
-        } else if (typeof jsonObj[key] === 'string' && jsonObj[key].includes('replaceHERE')) {
-            jsonObj[key] = jsonObj[key].replace(/replaceHERE/g, newHost);
-        }
-    }
-    return jsonObj;
-}
-
 async function init(stopanimation, data) {
     const common = require('../modules/common');
     const cluster = require('../modules/cluster/main');
@@ -24,14 +13,9 @@ async function init(stopanimation, data) {
     common.mkdir('config');
     common.mkdir('logs');
 
-    // if (common.global.api.host == "replaceHERE") {
-    //     var tmp = fs.readFileSync('./config/global.json');
-    //     tmp = JSON.parse(tmp);
-
-    //     tmp = replaceLocalhost(tmp, `${common.getHostname()}.local`);
-
-    //     fs.writeFileSync('./config/global.json', JSON.stringify(tmp, null, 2));
-    // }
+    if(data.autoStart.toLowerCase() == 'y'){
+        common.copyFile('/setup/dashium.service', '/etc/systemd/system/dashium.service');
+    }
 
     try {
         // START CREATE BDD
@@ -222,6 +206,9 @@ async function main() {
     const aliasGEN = await askQuestion("What is the number of characters to generate for the alias? (default: 30) ", 30);
     console.log(`${aliasGEN} characters ok.`);
 
+    const autoStart = await askQuestion("Do you want to enable automatic start? (Y/n) (default: Y) ", 'Y');
+    console.log(`Automatic start: ${autoStart}.`);
+
     init(loadingAnimation(), {
         name: name,
         host: host.toLowerCase(),
@@ -235,6 +222,7 @@ async function main() {
         dockerPortEnd: dockerPortEnd,
         dockerIMG: dockerIMG,
         aliasGEN: aliasGEN,
+        autoStart: autoStart,
     });
 }
 

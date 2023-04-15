@@ -55,6 +55,9 @@ sudo npm install
 npx next telemetry disable
 sudo npm run setup
 
+sudo systemctl enable dashium.service
+sudo systemctl start dashium.service
+
 for i in {1..50}; do
     echo ""
 done
