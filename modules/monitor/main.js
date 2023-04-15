@@ -17,35 +17,6 @@ app.use(function (req, res, next) {
 // Déclaration d'un objet pour stocker les informations des conteneurs surveillés
 const monitoredContainers = {};
 
-// Fonction qui renvoie les données d'un container
-function getContainerStats(containerName, socketId) {
-    return new Promise((resolve, reject) => {
-        var format = `{'cpuUsage': '{{.CPUPerc}}','memoryUsage': '{{.MemUsage}}','networkIn': '{{.NetIO}}'}`;
-        const cmd = `docker stats ${containerName} --format "${format}"`;
-        const process = exec(cmd);
-
-        let logs = '';
-
-        process.stdout.on('data', (data) => {
-            logs += data;
-            // Envoyer les données au client via le socket correspondant
-            io.to(socketId).emit('data', common.replaceAll(data, "'", '"'));
-        });
-
-        process.stderr.on('data', (data) => {
-            common.error(`Error: ${data}`, 'monitor');
-            // Envoyer un message d'erreur au client via le socket correspondant
-            io.to(socketId).emit('data', common.replaceAll("{'cpuUsage':'OFF', 'memoryUsage':'OFF', 'networkIn':'OFF / OFF'}", "'", '"'))
-            resolve(data);
-        });
-
-        process.on('close', (code) => {
-            common.error(`Child process exited with code ${code}`, 'monitor');
-            resolve(logs.trim());
-        });
-    });
-}
-
 app.get('/', (req, res) => {
     res.redirect(`http://${common.global.server.host}:${common.global.server.port}`);
 });
@@ -71,7 +42,7 @@ io.on('connection', (socket) => {
         // Stocker les informations du conteneur surveillé associé au socketId de l'utilisateur
         monitoredContainers[socket.id] = containerName;
         try {
-            getContainerStats(containerName, socket.id);
+            docker.monitorDocker(containerName, io, socket.id);
         } catch (error) {
             common.error(error, 'monitor');
             io.to(socket.id).emit('data', "{'cpuUsage':'OFF', 'memoryUsage':'OFF', 'networkIn':'OFF / OFF'}")

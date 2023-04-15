@@ -3,32 +3,6 @@ const dbModule = require('../bdd/main');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-async function registerUser(data){
-    try {
-        var bdd = await dbModule.loadDatabase('dashium');
-        const { email, password, type } = data;
-
-        // Vérifie si l'utilisateur existe déjà
-        const existingUser = await dbModule.selectRows(bdd, 'users', '*', 'email = ?', [email]);
-        if (existingUser.length > 0) {
-            common.warn('Email already exists', 'api');
-            return { error: 'Email already exists' };
-        }
-
-        // Hash le mot de passe
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Ajoute l'utilisateur à la base de données
-        await dbModule.insertRow(bdd, 'users', { email, password: hashedPassword, type });
-
-        common.sucess('User created successfully', 'api');
-        return { message: 'User created successfully' };
-    } catch (error) {
-        common.error(error, 'api');
-        return { error: 'Internal server error' };
-    }
-}
-
 async function loginUser(data){
     try {
         var bdd = await dbModule.loadDatabase('dashium');
@@ -59,6 +33,32 @@ async function loginUser(data){
         common.sucess('Login successful', 'api');
 
         return { message: 'Login successful', token };
+    } catch (error) {
+        common.error(error, 'api');
+        return { error: 'Internal server error' };
+    }
+}
+
+async function registerUser(data){
+    try {
+        var bdd = await dbModule.loadDatabase('dashium');
+        const { email, password, type } = data;
+
+        // Vérifie si l'utilisateur existe déjà
+        const existingUser = await dbModule.selectRows(bdd, 'users', '*', 'email = ?', [email]);
+        if (existingUser.length > 0) {
+            common.warn('Email already exists', 'api');
+            return { error: 'Email already exists' };
+        }
+
+        // Hash le mot de passe
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Ajoute l'utilisateur à la base de données
+        await dbModule.insertRow(bdd, 'users', { email, password: hashedPassword, type });
+
+        common.sucess('User created successfully', 'api');
+        return { message: 'User created successfully' };
     } catch (error) {
         common.error(error, 'api');
         return { error: 'Internal server error' };

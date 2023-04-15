@@ -1,40 +1,6 @@
 const common = require('../common');
 const dbModule = require('../bdd/main');
 
-function getClusterByID(ClusterID) {
-    return new Promise(async (resolve, reject) => {
-        const db = await dbModule.loadDatabase('dashium');
-        const [entry] = await dbModule.selectRows(db, 'clusters', '*', 'id = ?', [ClusterID]);
-        resolve(entry);
-    });
-}
-
-function getClusterByName(ClusterName) {
-    return new Promise(async (resolve, reject) => {
-        const db = await dbModule.loadDatabase('dashium');
-        const [entry] = await dbModule.selectRows(db, 'projects', '*', 'name = ?', [ClusterName]);
-        resolve(entry);
-    });
-}
-
-function getCluster(clusterIDorName) {
-    if (typeof clusterIDorName === 'number') {
-        return getClusterByID(clusterIDorName);
-    } else if (typeof clusterIDorName === 'string') {
-        return getClusterByName(clusterIDorName);
-    } else {
-        common.error(`Type de paramètre invalide pour getCluster : ${typeof clusterParam}`, 'cluster');
-    }
-}
-
-function getAllCluster(){
-    return new Promise(async (resolve, reject) => {
-        const db = await dbModule.loadDatabase('dashium');
-        const entries = await dbModule.selectRows(db, 'clusters');
-        resolve(entries);
-    });
-}
-
 async function createCluster(name, alias, path) {
     var db = await dbModule.loadDatabase('dashium');
     const pathInUse = await dbModule.selectRows(db, 'clusters', '*', 'path = ?', [path]);
@@ -60,6 +26,40 @@ async function createCluster(name, alias, path) {
         'path': newCluster.path,
     });
     return newCluster;
+}
+
+function getAllCluster(){
+    return new Promise(async (resolve, reject) => {
+        const db = await dbModule.loadDatabase('dashium');
+        const entries = await dbModule.selectRows(db, 'clusters');
+        resolve(entries);
+    });
+}
+
+function getCluster(clusterIDorName) {
+    if (typeof clusterIDorName === 'number') {
+        return getClusterByID(clusterIDorName);
+    } else if (typeof clusterIDorName === 'string') {
+        return getClusterByName(clusterIDorName);
+    } else {
+        common.error(`Type de paramètre invalide pour getCluster : ${typeof clusterParam}`, 'cluster');
+    }
+}
+
+function getClusterByID(ClusterID) {
+    return new Promise(async (resolve, reject) => {
+        const db = await dbModule.loadDatabase('dashium');
+        const [entry] = await dbModule.selectRows(db, 'clusters', '*', 'id = ?', [ClusterID]);
+        resolve(entry);
+    });
+}
+
+function getClusterByName(ClusterName) {
+    return new Promise(async (resolve, reject) => {
+        const db = await dbModule.loadDatabase('dashium');
+        const [entry] = await dbModule.selectRows(db, 'projects', '*', 'name = ?', [ClusterName]);
+        resolve(entry);
+    });
 }
 
 async function removeCluster(id) {

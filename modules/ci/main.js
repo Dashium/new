@@ -5,29 +5,6 @@ const project = require('../projets/main');
 const clone = require('../clone/main');
 const docker = require('./docker');
 
-async function getCIScript(id) {
-    var current = await project.getProject(id);
-    common.log(`get ci #${id} project`, 'ci');
-    return current.ci;
-}
-
-async function runTasks(tasks, containerName, logpath) {
-    try {
-        for (const task of tasks) {
-            common.log(`Starting task "${task.name}"...`, 'ci');
-            if (!task.mode) {
-                common.error('No task mode detected!', 'ci');
-                return;
-            }
-            await docker.runCommandInContainer(containerName, task.run, logpath);
-            common.sucess(`Task "${task.name}" finished successfully.`, 'ci');
-        }
-        common.success('All tasks finished successfully!', 'ci');
-    } catch (error) {
-        common.error(`Error running tasks: ${error}`, 'ci');
-    }
-}
-
 async function addUse(uses, containerName, logpath) {
     try {
         for (const use of uses) {
@@ -39,6 +16,12 @@ async function addUse(uses, containerName, logpath) {
     } catch (error) {
         common.error(`Error running tasks: ${error}`, 'ci');
     }
+}
+
+async function getCIScript(id) {
+    var current = await project.getProject(id);
+    common.log(`get ci #${id} project`, 'ci');
+    return current.ci;
 }
 
 async function runCI(id) {
@@ -87,6 +70,23 @@ async function runCI(id) {
     await addUse(currentProject.docker.use, containerName, logpath);
 
     await runTasks(ciScript, containerName, logpath);
+}
+
+async function runTasks(tasks, containerName, logpath) {
+    try {
+        for (const task of tasks) {
+            common.log(`Starting task "${task.name}"...`, 'ci');
+            if (!task.mode) {
+                common.error('No task mode detected!', 'ci');
+                return;
+            }
+            await docker.runCommandInContainer(containerName, task.run, logpath);
+            common.sucess(`Task "${task.name}" finished successfully.`, 'ci');
+        }
+        common.success('All tasks finished successfully!', 'ci');
+    } catch (error) {
+        common.error(`Error running tasks: ${error}`, 'ci');
+    }
 }
 
 module.exports = {

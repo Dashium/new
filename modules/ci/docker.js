@@ -1,45 +1,39 @@
+const common = require('../common');
 const { exec } = require('child_process');
 const fs = require('fs');
 
-function runDockerCommand(command, options, logFile, client) {
-    if(logFile == null){
-        logFile = './logs/logs.txt';
+async function addENV(env, value) {
+    return `-e ${env}="${value}" `;
+}
+
+async function addENVS(envs) {
+    let tmp = '';
+    for (const element of envs) {
+        let curr = element.split(':');
+        tmp += await addENV(curr[0], curr[1]);
     }
-    return new Promise((resolve, reject) => {
-        const commandProcess = exec(`docker ${command}`, options);
+    tmp = tmp.slice(0, -1);
+    return tmp;
+}
 
-        let logs = '';
+async function bindPort(host, container) {
+    return `-p ${host}:${container} `;
+}
 
-        commandProcess.stdout.on('data', (data) => {
-            logs += data;
-            process.stdout.write(data);
-            if(client != null){
-                client.emit('output', data);
-            }
-            if (logFile !== '') {
-                fs.appendFileSync(logFile, data);
-            }
-        });
+async function bindPorts(list) {
+    let tmp = '';
+    for (const element of list) {
+        tmp += await bindPort(element['host'], element['container']);
+    }
+    tmp = tmp.slice(0, -1);
+    return tmp;
+}
 
-        commandProcess.stderr.on('data', (data) => {
-            logs += data;
-            process.stderr.write(data);
-            if(client != null){
-                client.emit('output', data);
-            }
-            if (logFile !== '') {
-                fs.appendFileSync(logFile, data);
-            }
-        });
-
-        commandProcess.on('close', (code) => {
-            if (code === 0) {
-                resolve(logs.trim());
-            } else {
-                reject(new Error(`Command failed with exit code ${code}`));
-            }
-        });
-    });
+async function createDockerContainer(containerName, portBinder, envs, imageName, repoDir) {
+    const containersList = await runDockerCommand('ps -a');
+    if (!containersList.includes(containerName)) {
+        await runDockerCommand(`create --name ${containerName} -it -v ${process.cwd()}/${repoDir}:/app ${portBinder} ${envs} -w /app ${imageName} bash`, { cwd: repoDir });
+    }
 }
 
 async function deleteContainer(containerName) {
@@ -64,6 +58,18 @@ async function deleteImage(imageName) {
     }
 }
 
+async function downloadDockerImage(imageName) {
+    const imagesList = await runDockerCommand('image ls');
+    if (!imagesList.includes(imageName)) {
+        await runDockerCommand(`pull ${imageName}`);
+    }
+}
+
+async function getDockerNameByID(id) {
+    var name = await runDockerCommand(`ps -a --filter "id=${id}" --format "{{.Names}}"`);
+    return name;
+}
+
 async function isContainerExist(containerName) {
     try {
         const output = await runDockerCommand(`ps -a --filter "name=${containerName}" --format "{{.Names}}"`);
@@ -74,24 +80,75 @@ async function isContainerExist(containerName) {
     }
 }
 
-async function downloadDockerImage(imageName) {
-    const imagesList = await runDockerCommand('image ls');
-    if (!imagesList.includes(imageName)) {
-        await runDockerCommand(`pull ${imageName}`);
-    }
+function monitorDocker(containerName, client, socketId) {
+    return new Promise((resolve, reject) => {
+        var format = `{'cpuUsage': '{{.CPUPerc}}','memoryUsage': '{{.MemUsage}}','networkIn': '{{.NetIO}}'}`;
+        const cmd = `docker stats ${containerName} --format "${format}"`;
+        const process = exec(cmd);
+
+        let logs = '';
+
+        process.stdout.on('data', (data) => {
+            logs += data;
+            if (client != null) {
+                client.to(socketId).emit('data', common.replaceAll(data, "'", '"'));
+            }
+        });
+
+        process.stderr.on('data', (data) => {
+            common.error(`Error: ${data}`, 'monitor');
+            if (client != null) {
+                client.to(socketId).emit('data', common.replaceAll("{'cpuUsage':'OFF', 'memoryUsage':'OFF', 'networkIn':'OFF / OFF'}", "'", '"'))
+            }
+            resolve(data);
+        });
+
+        process.on('close', (code) => {
+            common.error(`Child process exited with code ${code}`, 'monitor');
+            resolve(logs.trim());
+        });
+    });
 }
 
-async function createDockerContainer(containerName, portBinder, envs, imageName, repoDir) {
-    const containersList = await runDockerCommand('ps -a');
-    if (!containersList.includes(containerName)) {
-        console.log(`create --name ${containerName} -it -v ${process.cwd()}/${repoDir}:/app ${portBinder} ${envs} -w /app ${imageName} bash`);
-        await runDockerCommand(`create --name ${containerName} -it -v ${process.cwd()}/${repoDir}:/app ${portBinder} ${envs} -w /app ${imageName} bash`, { cwd: repoDir });
-        // await runDockerCommand(` docker update --restart unless-stopped ${containerName}`);
+function runDockerCommand(command, options, logFile, client) {
+    if (logFile == null) {
+        logFile = './logs/logs.txt';
     }
-}
+    return new Promise((resolve, reject) => {
+        const commandProcess = exec(`docker ${command}`, options);
 
-async function startDockerContainer(containerName) {
-    await runDockerCommand(`start ${containerName}`);
+        let logs = '';
+
+        commandProcess.stdout.on('data', (data) => {
+            logs += data;
+            process.stdout.write(data);
+            if (client != null) {
+                client.emit('output', data);
+            }
+            if (logFile !== '') {
+                fs.appendFileSync(logFile, data);
+            }
+        });
+
+        commandProcess.stderr.on('data', (data) => {
+            logs += data;
+            process.stderr.write(data);
+            if (client != null) {
+                client.emit('output', data);
+            }
+            if (logFile !== '') {
+                fs.appendFileSync(logFile, data);
+            }
+        });
+
+        commandProcess.on('close', (code) => {
+            if (code === 0) {
+                resolve(logs.trim());
+            } else {
+                reject(new Error(`Command failed with exit code ${code}`));
+            }
+        });
+    });
 }
 
 async function runCommandInContainer(containerName, command, logpath, client) {
@@ -101,51 +158,8 @@ async function runCommandInContainer(containerName, command, logpath, client) {
     await runDockerCommand(`exec ${containerName} sh -c "${command}"`, null, logpath, client);
 }
 
-function monitorDocker(containerName) {
-    var format = "{{.Name}}: CPU {{.CPUPerc}}, MEM {{.MemUsage}}, NET I/O {{.NetIO}}";
-    // var format = `{"cpuUsage": {{.CPUPerc}},"memoryUsage": {{.MemUsage}},"networkIn": {{.NetIO}}}`;
-    const cmd = `docker stats ${containerName} --format "${format}"`
-
-    const process = exec(cmd);
-
-    process.stdout.on('data', (data) => {
-        console.log(data);
-    });
-
-    process.stderr.on('data', (data) => {
-        console.error(`Error: ${data}`);
-    });
-
-    process.on('close', (code) => {
-        console.log(`Child process exited with code ${code}`);
-    });
-}
-
-async function bindPort(host, container){
-    return `-p ${host}:${container} `;
-}
-
-async function bindPorts(list){
-    let tmp = '';
-    for (const element of list) {
-        tmp += await bindPort(element['host'], element['container']);
-    }
-    tmp = tmp.slice(0, -1);
-    return tmp;
-}
-
-async function addENV(env, value){
-    return `-e ${env}="${value}" `;
-}
-
-async function addENVS(envs){
-    let tmp = '';
-    for (const element of envs) {
-        let curr = element.split(':');
-        tmp += await addENV(curr[0], curr[1]);
-    }
-    tmp = tmp.slice(0, -1);
-    return tmp;
+async function startDockerContainer(containerName) {
+    await runDockerCommand(`start ${containerName}`);
 }
 
 async function use(lang, containerName, logpath) {
@@ -172,11 +186,6 @@ async function use(lang, containerName, logpath) {
         default:
             console.log('none');
     }
-}
-
-async function getDockerNameByID(id){
-    var name = await runDockerCommand(`ps -a --filter "id=${id}" --format "{{.Names}}"`);
-    return name;
 }
 
 module.exports = {
