@@ -141,6 +141,7 @@ async function init(stopanimation, data) {
             await projet.addDockerUse(current.id, 'dashium');
             await projet.addDockerUse(current.id, 'nodejs');
             await projet.addDockerPort(current.id, 3000);
+            await projet.addDockerEnv(current.id, 'dashiumENV:my env');
 
             await ci.runCI(current.id);
 

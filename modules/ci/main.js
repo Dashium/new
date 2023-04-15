@@ -78,9 +78,10 @@ async function runCI(id) {
     currentProject.docker.ports.push({host: common.global.socket.port, container: containerHost})
 
     const ports = await docker.bindPorts(currentProject.docker.ports);
+    const envs = await docker.addENVS(currentProject.docker.env);
 
     await docker.downloadDockerImage(currentProject.docker.image);
-    await docker.createDockerContainer(containerName, ports, currentProject.docker.image, current.ci);
+    await docker.createDockerContainer(containerName, ports, envs, currentProject.docker.image, current.ci);
     await docker.startDockerContainer(containerName);
 
     await addUse(currentProject.docker.use, containerName, logpath);

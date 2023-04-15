@@ -81,10 +81,11 @@ async function downloadDockerImage(imageName) {
     }
 }
 
-async function createDockerContainer(containerName, portBinder, imageName, repoDir) {
+async function createDockerContainer(containerName, portBinder, envs, imageName, repoDir) {
     const containersList = await runDockerCommand('ps -a');
     if (!containersList.includes(containerName)) {
-        await runDockerCommand(`create --name ${containerName} -it -v ${process.cwd()}/${repoDir}:/app ${portBinder} -w /app ${imageName} bash`, { cwd: repoDir });
+        console.log(`create --name ${containerName} -it -v ${process.cwd()}/${repoDir}:/app ${portBinder} ${envs} -w /app ${imageName} bash`);
+        await runDockerCommand(`create --name ${containerName} -it -v ${process.cwd()}/${repoDir}:/app ${portBinder} ${envs} -w /app ${imageName} bash`, { cwd: repoDir });
         // await runDockerCommand(` docker update --restart unless-stopped ${containerName}`);
     }
 }
@@ -142,6 +143,20 @@ async function bindPorts(list){
     return tmp;
 }
 
+async function addENV(env, value){
+    return `-e ${env}="${value}" `;
+}
+
+async function addENVS(envs){
+    let tmp = '';
+    for (const element of envs) {
+        let curr = element.split(':');
+        tmp += await addENV(curr[0], curr[1]);
+    }
+    tmp = tmp.slice(0, -1);
+    return tmp;
+}
+
 async function use(lang, containerName, logpath) {
     switch (lang) {
         case 'dashium':
@@ -174,6 +189,7 @@ async function getDockerNameByID(id){
 }
 
 module.exports = {
+    addENVS,
     downloadDockerImage,
     createDockerContainer,
     startDockerContainer,
