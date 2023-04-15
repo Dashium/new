@@ -101,15 +101,6 @@ async function runCommandInContainer(containerName, command, logpath, client) {
     await runDockerCommand(`exec ${containerName} sh -c "${command}"`, null, logpath, client);
 }
 
-async function removeDockerContainer(containerName) {
-    try {
-        await runDockerCommand(`rm ${containerName}`);
-        console.log(`Docker container '${containerName}' has been removed.`);
-    } catch (error) {
-        console.error(`Failed to remove Docker container '${containerName}'. Error: ${error.message}`);
-    }
-}
-
 function monitorDocker(containerName) {
     var format = "{{.Name}}: CPU {{.CPUPerc}}, MEM {{.MemUsage}}, NET I/O {{.NetIO}}";
     // var format = `{"cpuUsage": {{.CPUPerc}},"memoryUsage": {{.MemUsage}},"networkIn": {{.NetIO}}}`;
@@ -196,7 +187,6 @@ module.exports = {
     use,
     runCommandInContainer,
     monitorDocker,
-    removeDockerContainer,
     bindPorts,
     getDockerNameByID,
     deleteContainer,
