@@ -118,6 +118,7 @@ function runDockerCommand(command, options, logFile, client) {
         const commandProcess = exec(`docker ${command}`, options);
 
         let logs = '';
+        let lastLogTime = Date.now();
 
         commandProcess.stdout.on('data', (data) => {
             logs += data;
@@ -128,6 +129,7 @@ function runDockerCommand(command, options, logFile, client) {
             if (logFile !== '') {
                 fs.appendFileSync(logFile, data);
             }
+            lastLogTime = Date.now();
         });
 
         commandProcess.stderr.on('data', (data) => {
@@ -139,9 +141,19 @@ function runDockerCommand(command, options, logFile, client) {
             if (logFile !== '') {
                 fs.appendFileSync(logFile, data);
             }
+            lastLogTime = Date.now();
         });
 
+        const checkLogsInterval = setInterval(() => {
+            if (Date.now() - lastLogTime > 60000) { // 1 minute
+                clearInterval(checkLogsInterval);
+                commandProcess.kill();
+                reject(new Error('Process stopped due to inactivity'));
+            }
+        }, 1000);
+
         commandProcess.on('close', (code) => {
+            clearInterval(checkLogsInterval);
             if (code === 0) {
                 resolve(logs.trim());
             } else {
