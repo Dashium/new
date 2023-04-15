@@ -57,7 +57,7 @@ sudo npm run setup
 
 sudo systemctl enable dashium.service
 sudo systemctl start dashium.service
-sudo cp /setup/dashium.service /etc/systemd/system/dashium.service
+sudo cp /dashium/setup/dashium.service /etc/systemd/system/dashium.service
 
 for i in {1..50}; do
     echo ""
