@@ -1,5 +1,4 @@
 const app = require('express')();
-const cors = require('cors');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const { exec } = require('child_process');
@@ -7,9 +6,13 @@ const docker = require('../ci/docker');
 const common = require('../common');
 const path = require('path');
 
-app.use(cors({
-    origin: `http://${common.global.server.host}:${common.global.server.port}`
-}));
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", `http://${common.global.server.host}`);
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Credentials", true);
+    next();
+});
 
 // Déclaration d'un objet pour stocker les informations des conteneurs surveillés
 const monitoredContainers = {};

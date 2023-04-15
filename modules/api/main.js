@@ -1,7 +1,6 @@
 const account = require('../account/main');
 const ci = require('../ci/main');
 const common = require('../common');
-const cors = require('cors');
 const db = require('../bdd/main');
 const express = require('express');
 const path = require('path');
@@ -10,9 +9,13 @@ var bdd = null;
 const app = express();
 app.use(express.json());
 
-app.use(cors({
-    origin: `http://${common.global.server.host}:${common.global.server.port}`
-}));
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", `http://${common.global.server.host}`);
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Credentials", true);
+    next();
+});
 
 app.get('/', (req, res) => {
     res.redirect(`http://${common.global.server.host}:${common.global.server.port}`);
@@ -25,8 +28,8 @@ app.get('/favicon.ico', (req, res) => {
 app.get('/global', async (req, res) => {
     try {
         var entries = await db.selectRows(bdd, 'global');
-            entries[0].json = JSON.parse(entries[0].json);
-            delete entries[0].json.server.encrypt;
+        entries[0].json = JSON.parse(entries[0].json);
+        delete entries[0].json.server.encrypt;
         res.json(entries);
     } catch (error) {
         common.error(error, 'api');
@@ -221,10 +224,10 @@ app.delete('/clusters/:id', async (req, res) => {
 app.post('/register', async (req, res) => {
     try {
         var add = await account.registerUser(req.body);
-        if(add.error != null){
+        if (add.error != null) {
             res.status(201).json(add);
         }
-        if(add.message != null){
+        if (add.message != null) {
             res.status(201).json(add);
         }
     } catch (error) {
@@ -236,10 +239,10 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
     try {
         var get = await account.loginUser(req.body);
-        if(get.error != null){
+        if (get.error != null) {
             res.status(201).json(get);
         }
-        if(get.message != null){
+        if (get.message != null) {
             res.status(201).json(get);
         }
     } catch (error) {
