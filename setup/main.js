@@ -149,6 +149,7 @@ async function init(stopanimation, data) {
 
             common.log('installation finish !', 'setup');
             common.log('please run: `npm start`', 'setup');
+            process.exit(0);
 
         }, 5000);
     } catch (error) {
