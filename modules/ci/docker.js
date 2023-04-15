@@ -181,15 +181,15 @@ async function getDockerNameByID(id){
 
 module.exports = {
     addENVS,
-    downloadDockerImage,
-    createDockerContainer,
-    startDockerContainer,
-    use,
-    runCommandInContainer,
-    monitorDocker,
     bindPorts,
-    getDockerNameByID,
+    createDockerContainer,
     deleteContainer,
     deleteImage,
-    isContainerExist
+    downloadDockerImage,
+    getDockerNameByID,
+    isContainerExist,
+    monitorDocker,
+    runCommandInContainer,
+    startDockerContainer,
+    use
 }

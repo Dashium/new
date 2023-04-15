@@ -319,23 +319,23 @@ async function addDockerEnv(id, env){
 }
 
 module.exports = {
+    addDockerEnv,
+    addDockerPort,
+    addDockerUse,
+    createProject,
     getProject,
-    getProjectDirs,
     getProjectAll,
+    getProjectAllPorts,
     getProjectByID,
     getProjectByName,
-    getProjectWithCluster,
-    setCIScript,
-    setDockerImage,
-    createProject,
-    removeProject,
-    addDockerUse,
-    removeDockerUse,
-    addDockerPort,
-    removeDockerPort,
+    getProjectDirs,
     getProjectPorts,
-    getProjectAllPorts,
+    getProjectWithCluster,
     Portfinder,
-    addDockerEnv,
-    removeDockerEnv
+    removeDockerEnv,
+    removeDockerPort,
+    removeDockerUse,
+    removeProject,
+    setCIScript,
+    setDockerImage
 }

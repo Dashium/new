@@ -91,10 +91,10 @@ async function removeCluster(id) {
 }
 
 module.exports = {
-    getCluster,
+    createCluster,
     getAllCluster,
+    getCluster,
     getClusterByID,
     getClusterByName,
-    createCluster,
     removeCluster
 }

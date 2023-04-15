@@ -128,9 +128,9 @@ module.exports = {
     closeDatabase,
     createDatabase,
     createTable,
-    insertRow,
-    selectRows,
     deleteRows,
-    updateRows,
+    insertRow,
     loadDatabase,
+    selectRows,
+    updateRows,
 };

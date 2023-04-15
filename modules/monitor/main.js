@@ -58,7 +58,6 @@ app.get('/favicon.ico', (req, res) => {
     res.sendFile(path.join(__dirname, '../dashboard/public/favicon.ico'));
 });
 
-// Route pour envoyer la page HTML avec le client socket.io
 app.get('/:container', (req, res) => {
     res.sendFile(path.join(__dirname, '/index.html'));
 });

@@ -212,23 +212,23 @@ function isHostPortUsed(hostPort, portsConfig) {
 }
 
 module.exports = {
+    copyDir,
+    error: (msg, from) => { logFile.log(msg, 'error', from); },
+    findAvailablePort,
+    formatJsonToArray,
+    generateRandomString,
+    getDomains,
+    getHostname,
+    getUrlLastPath,
     global,
+    isHostPortUsed,
+    isPortInUse,
+    log: (msg, from) => { logFile.log(msg, 'info', from); },
     mkdir,
+    removeValueFromArray,
+    replaceAll,
     rmdir,
     rmfile,
-    copyDir,
-    log: (msg, from) => { logFile.log(msg, 'info', from); },
     sucess: (msg, from) => { logFile.log(msg, 'sucess', from); },
-    error: (msg, from) => { logFile.log(msg, 'error', from); },
-    warn: (msg, from) => { logFile.log(msg, 'warn', from); },
-    replaceAll,
-    getUrlLastPath,
-    getDomains,
-    generateRandomString,
-    formatJsonToArray,
-    removeValueFromArray,
-    isPortInUse,
-    findAvailablePort,
-    isHostPortUsed,
-    getHostname
+    warn: (msg, from) => { logFile.log(msg, 'warn', from); }
 }

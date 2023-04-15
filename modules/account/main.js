@@ -66,6 +66,6 @@ async function loginUser(data){
 }
 
 module.exports = {
-    registerUser,
-    loginUser
+    loginUser,
+    registerUser
 }
