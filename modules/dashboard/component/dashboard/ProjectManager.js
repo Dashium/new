@@ -14,7 +14,6 @@ function ProjectManager({ config, projectId }) {
             .then(response => {
                 setProject(response.data);
                 setLoading(false);
-                console.log(response.data);
             })
             .catch(error => console.log(error));
     }, [config, projectId]);

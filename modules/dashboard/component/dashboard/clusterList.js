@@ -25,7 +25,7 @@ const ClusterList = ({ config, setclusterId, setcluster }) => {
                             <button onClick={() => {
                                 setclusterId(cluster);
                                 setcluster(true);
-                            }}>Voir le projet</button>
+                            }}>Voir le cluster</button>
                         </div>
                     </div>
                 ))}
