@@ -12,7 +12,7 @@ import ClusterList from './dashboard/clusterList';
 import DashiumUpdater from './dashboard/update';
 
 const Dashboard = () => {
-    const [projectId, setProjectId] = useState(1);
+    const [projectId, setProjectId] = useState(null);
     const [project, setProject] = useState(null);
 
     useEffect(() => {
@@ -22,25 +22,25 @@ const Dashboard = () => {
     return (
         <AuthRoute>
             <div>
-                <h1>Dashboard</h1>
-                <p>Welcome to the dashium, my name is {config.server.name}</p>
-            </div>
-
-            {/* <Sidebar config={config}></Sidebar> */}
-
-            <div>
                 <div>
                     <DashiumUpdater config={config} repoName={'dashium/new'}></DashiumUpdater>
-                    <ClusterList config={config}></ClusterList>
-                    <Project config={config} setProjectId={setProjectId} setProject={setProject} />
-                    {project && (
+                    {!projectId && (
+                        <>
+                            <div>
+                                <h1>Dashboard</h1>
+                                <p>Welcome to the dashium, my name is {config.server.name}</p>
+                            </div>
+                            <ClusterList config={config}></ClusterList>
+                            <Project config={config} setProjectId={setProjectId} setProject={setProject} />
+                        </>
+                    )}
+                    {projectId && (
                         <>
                             <ProjectManager config={config} projectId={projectId.id} />
                             <Monitor config={config} containerName={projectId.docker.dockerID} />
                             <TerminalSSH config={config} containerName={projectId.docker.dockerID} />
                         </>
                     )}
-
                 </div>
             </div>
 
