@@ -7,6 +7,7 @@
     "start": "npm-run-all start:*",
     "start:infos": "node ./modules/infos.js",
     "start:init": "node ./setup/init.js",
+    "start:dockerStart": "node ./setup/dockerContainer.js",
     "start:build": "next build ./modules/dashboard/",
     "start:builder": "node ./modules/build/main.js",
     "start2:export": "next export ./modules/dashboard/",

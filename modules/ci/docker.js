@@ -70,6 +70,11 @@ async function getDockerNameByID(id) {
     return name;
 }
 
+async function getAllDockerName() {
+    var name = await runDockerCommand(`ps -a --format "{{.Names}}"`);
+    return name;
+}
+
 async function isContainerExist(containerName) {
     try {
         const output = await runDockerCommand(`ps -a --filter "name=${containerName}" --format "{{.Names}}"`);
@@ -207,6 +212,7 @@ module.exports = {
     deleteContainer,
     deleteImage,
     downloadDockerImage,
+    getAllDockerName,
     getDockerNameByID,
     isContainerExist,
     monitorDocker,
