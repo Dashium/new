@@ -3,6 +3,7 @@ const ci = require('../ci/main');
 const common = require('../common');
 const db = require('../bdd/main');
 const express = require('express');
+const github = require('../clone/github');
 const path = require('path');
 
 var bdd = null;
@@ -31,6 +32,16 @@ app.get('/global', async (req, res) => {
         entries[0].json = JSON.parse(entries[0].json);
         delete entries[0].json.server.encrypt;
         res.json(entries);
+    } catch (error) {
+        common.error(error, 'api');
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.get('/update', async (req, res) => {
+    try {
+        await github.updateRepo('./');
+        res.json({ msg: 'OK !' });
     } catch (error) {
         common.error(error, 'api');
         res.status(500).json({ error: 'Internal server error' });

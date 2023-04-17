@@ -9,6 +9,7 @@ import Monitor from './dashboard/monitor';
 import TerminalSSH from './dashboard/terminal';
 import Project from './dashboard/ProjectList';
 import ProjectManager from './dashboard/ProjectManager';
+import DashiumUpdater from './dashboard/update';
 
 const Dashboard = () => {
     const [projectId, setProjectId] = useState(1);
@@ -29,6 +30,7 @@ const Dashboard = () => {
 
             <div>
                 <div>
+                    <DashiumUpdater config={config} repoName={'dashium/new'}></DashiumUpdater>
                     <Project config={config} setProjectId={setProjectId} setProject={setProject} />
                     {project && (
                         <>
