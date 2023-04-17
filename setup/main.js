@@ -2,6 +2,7 @@ const dbModule = require('../modules/bdd/main');
 const readline = require('readline');
 const fs = require('fs');
 const common = require('../modules/common');
+const github = require('../modules/clone/github');
 
 async function init(stopanimation, data) {
     const common = require('../modules/common');
@@ -86,6 +87,9 @@ async function init(stopanimation, data) {
             },
             "alias": {
                 "generator": data.aliasGEN
+            },
+            "update": {
+                "sha": await github.getLatestCommitSha('./')
             }
         };
         await dbModule.insertRow(db, 'global', {
