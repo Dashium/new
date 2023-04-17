@@ -32,7 +32,7 @@ const DashiumUpdater = ({ config, repoName }) => {
     }, [config, latestCommitSha]);
 
     const handleUpdateClick = () => {
-        axios.get(`http://${config.api.host}:${config.api.port}/update`);
+        axios.post(`http://${config.api.host}:${config.api.port}/update`);
         setTimeout(() => {
             window.location.reload();
         }, 300000);

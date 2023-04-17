@@ -42,7 +42,7 @@ app.get('/global', async (req, res) => {
     }
 });
 
-app.get('/update', async (req, res) => {
+app.post('/update', async (req, res) => {
     try {
         await github.updateRepo('./');
         res.json({ msg: 'OK !' });
