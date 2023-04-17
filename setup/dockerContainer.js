@@ -8,7 +8,7 @@ async function startAll(){
     projectList.forEach(async (element) => {
         let container = element.docker.dockerID;
         await docker.startDockerContainer(container);
-        await ci.runCI(element.id);
+        // await ci.runCI(element.id);
     });
 }
 startAll();
