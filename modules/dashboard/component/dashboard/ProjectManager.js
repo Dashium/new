@@ -66,7 +66,6 @@ function ProjectManager({ config, projectId }) {
 
     return (
         <div className="project-manager">
-            id: {projectId}
             <div className="project-menu">
                 <ul>
                     <li className={activeMenu === 'general' ? 'active' : ''} onClick={() => handleMenuClick('general')}>General</li>
