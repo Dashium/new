@@ -35,7 +35,7 @@ const DashiumUpdater = ({ config, repoName }) => {
         axios.get(`http://${config.api.host}:${config.api.port}/update`);
         setTimeout(() => {
             window.location.reload();
-        }, 6000);
+        }, 300000);
     };
 
     return (
