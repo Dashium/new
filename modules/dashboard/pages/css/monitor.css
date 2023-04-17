@@ -1,5 +1,6 @@
 .monitor{
     position: absolute;
+    top: 1%;
     left: 1%;
     right: 1%;
 }
