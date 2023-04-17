@@ -38,7 +38,6 @@ const Dashboard = () => {
                         <>
                             <ProjectManager config={config} projectId={projectId.id} />
                             <Monitor config={config} containerName={projectId.docker.dockerID} />
-                            <TerminalSSH config={config} containerName={projectId.docker.dockerID} />
                         </>
                     )}
                 </div>
