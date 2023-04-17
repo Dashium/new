@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 var config = require('../../../config/global.json');
 import AuthRoute from './authroute';
 
-import Sidebar from './sidebar';
 import Navbar from './dashboard/navbar';
 
 import Monitor from './dashboard/monitor';
