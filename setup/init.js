@@ -1,3 +1,6 @@
+const fs = require('fs');
+const github = require('../modules/clone/github');
+const global = require('../modules/global/main');
 const os = require('os');
 const { spawn } = require('child_process');
 
@@ -26,3 +29,12 @@ function startDocker() {
     }
 }
 startDocker();
+
+async function setSHA() {
+    var sha = await github.getLatestCommitSha('./');
+    await global.updateSHA(sha);
+}
+
+if (fs.existsSync('./config/dashium.db')) {
+    setSHA();
+}
