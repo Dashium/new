@@ -21,8 +21,7 @@ async function updateSHA(sha) {
 async function updateGlobal(data) {
     var db = await dbModule.loadDatabase('dashium');
     const global = await dbModule.selectRows(db, 'global', '*', 'id = 1');
-
-    console.log(data);
+    
     if (data.json != null) {
         data.json = JSON.stringify(data.json);
     }
