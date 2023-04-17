@@ -1,84 +1,93 @@
-.cluster-manager {
+.cluster-container {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    backdrop-filter: blur(5px);
+    border-radius: 10px;
+    padding: 30px;
+    margin: 50px auto;
+    width: 80%;
+    max-width: 1200px;
+    text-align: center;
+}
+
+.cluster-container .cluster-list {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    margin-top: 20px;
 }
 
-.cluster-manager .cluster-menu {
-    width: 200px;
-    background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.cluster-manager .cluster-menu ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.cluster-manager .cluster-menu li {
-    padding: 10px;
-    cursor: pointer;
-}
-
-.cluster-manager .cluster-menu li.active {
-    background-color: #f2f2f2;
-}
-
-.cluster-manager .cluster-details {
-    margin-left: 50px;
+.cluster-container .cluster-card {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    margin: 20px;
     padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    width: 100%;
+    transition: transform 0.3s ease-in-out;
 }
 
-.cluster-manager .cluster-details h2 {
-    font-size: 24px;
+.cluster-container .cluster-card:hover {
+    transform: translateY(-5px);
+}
+
+.cluster-container .cluster-card img {
+    width: 100%;
+    border-radius: 10px;
     margin-bottom: 10px;
 }
 
-.cluster-manager .cluster-details p {
-    font-size: 18px;
-    line-height: 1.5;
-    margin-bottom: 20px;
-}
-
-.cluster-manager .cluster-details ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.cluster-manager .cluster-details li {
-    font-size: 18px;
-    line-height: 1.5;
-    margin-bottom: 10px;
+.cluster-container .cluster-details {
     display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
     align-items: center;
 }
 
-.cluster-manager .cluster-details button {
-    margin-left: 10px;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 4px;
-    background-color: #e74c3c;
+.cluster-container .cluster-details h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.cluster-container .cluster-details p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.cluster-container .cluster-details a {
+    background: #007bff;
     color: #fff;
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-top: 10px;
+    text-decoration: none;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.cluster-container .cluster-details a:hover {
+    background-color: #0062cc;
+}
+
+.cluster-container .cluster-details button {
+    background: #007bff;
+    color: #fff;
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    margin-top: 10px;
+    text-decoration: none;
+    transition: background-color 0.3s ease-in-out;
     cursor: pointer;
 }
 
-.cluster-manager .cluster-details input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-right: 10px;
-}
-
-.cluster-manager .cluster-details button[type="submit"] {
-    background-color: #3498db;
-}
-
-.cluster-manager .cluster-details button[type="submit"]:hover {
-    background-color: #2980b9;
+.cluster-container .cluster-details button:hover {
+    background-color: #0062cc;
 }
