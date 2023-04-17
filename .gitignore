@@ -4,6 +4,7 @@ logs
 *.db
 *.sqlite
 /config
+test.js
 
 # REACT
 .next
