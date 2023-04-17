@@ -33,21 +33,22 @@ async function init(stopanimation, data) {
         await dbModule.createTable(db, 'clusters',
             [
                 'id INTEGER PRIMARY KEY',
-                'name TEXT',
                 'alias TEXT',
-                'path TEXT'
+                'path TEXT',
+                'name TEXT'
             ]
         );
         await dbModule.createTable(db, 'projects',
             [
                 'id INTEGER PRIMARY KEY',
-                'name TEXT',
                 'alias TEXT',
-                'cluster INTEGER',
-                'repo TEXT',
-                'path TEXT',
                 'ci TEXT',
-                'docker TEXT'
+                'cluster INTEGER',
+                'deploy TEXT',
+                'docker TEXT',
+                'name TEXT',
+                'path TEXT',
+                'repo TEXT'
             ]
         );
         // END CREATE BDD

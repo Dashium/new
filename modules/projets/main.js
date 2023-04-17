@@ -36,9 +36,10 @@ async function getProjectDirs(id){
     var current = await getProjectWithCluster(id);
     var currentPathRepo = `${current.cluster.path}/${current.path}`;
     return {
-        repo: `${currentPathRepo}/repo`,
         ci: `${currentPathRepo}/ci`,
-        logs: `${currentPathRepo}/logs`
+        deploy: `${currentPathRepo}/deploy`,
+        logs: `${currentPathRepo}/logs`,
+        repo: `${currentPathRepo}/repo`
     };
 }
 
@@ -110,32 +111,38 @@ async function createProject(name, cluster, repo) {
     }
 
     const newproject = {
-        name,
         alias: common.generateRandomString(common.global.alias.generator),
-        cluster: clusterID.id,
-        repo,
-        path: common.getUrlLastPath(repo),
         ci: [],
+        cluster: clusterID.id,
+        deploy: {
+            dockerID: common.generateRandomString(common.global.docker.IDgenerator),
+            startCMD: ''
+        },
         docker: {
             dockerID: common.generateRandomString(common.global.docker.IDgenerator),
             image: 'ubuntu:latest',
         },
+        name,
+        path: common.getUrlLastPath(repo),
+        repo,
     };
 
     await dbModule.insertRow(db, 'projects', {
-        'name': newproject.name,
         'alias': newproject.alias,
-        'cluster': newproject.cluster,
-        'repo': newproject.repo,
-        'path': newproject.path,
         'ci': JSON.stringify(newproject.ci),
+        'cluster': newproject.cluster,
+        'deploy': JSON.stringify(newproject.deploy),
         'docker': JSON.stringify(newproject.docker),
+        'name': newproject.name,
+        'path': newproject.path,
+        'repo': newproject.repo,
     })
     .then(async (id) => {
         var base = await getProjectDirs(id);
         await common.mkdir(base.ci);
-        await common.mkdir(base.repo);
+        await common.mkdir(base.deploy);
         await common.mkdir(base.logs);
+        await common.mkdir(base.repo);
     })
     .catch((err) => {
         console.log(err);
