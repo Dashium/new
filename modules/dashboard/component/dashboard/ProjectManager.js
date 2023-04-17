@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import axios from 'axios';
+import TerminalSSH from './terminal';
 
 function ProjectManager({ config, projectId }) {
     const [project, setProject] = useState({});
@@ -72,6 +73,7 @@ function ProjectManager({ config, projectId }) {
                     <li className={activeMenu === 'ports' ? 'active' : ''} onClick={() => handleMenuClick('ports')}>Ports</li>
                     <li className={activeMenu === 'ci' ? 'active' : ''} onClick={() => handleMenuClick('ci')}>CI</li>
                     <li className={activeMenu === 'env' ? 'active' : ''} onClick={() => handleMenuClick('env')}>Environment Variables</li>
+                    <li className={activeMenu === 'consolessh' ? 'active' : ''} onClick={() => handleMenuClick('consolessh')}>Console SSH</li>
                 </ul>
             </div>
             <div className="project-details">
@@ -137,6 +139,11 @@ function ProjectManager({ config, projectId }) {
                                     {/* <input type="text" name="newValue" value={newValue} onChange={handleInputChange} /> */}
                                     {/* <button onClick={handleVariableAdd}>Add</button> */}
                                 </div>
+                            </>
+                        )}
+                        {activeMenu === 'consolessh' && (
+                            <>
+                                <TerminalSSH config={config} containerName={project.docker.dockerID} />
                             </>
                         )}
                     </>
