@@ -17,8 +17,7 @@ function ProjectManager({ config, projectId }) {
                 console.log(response.data);
             })
             .catch(error => console.log(error));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [config, projectId]);
 
     const handleMenuClick = (menu) => {
         setActiveMenu(menu);
