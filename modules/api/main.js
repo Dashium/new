@@ -4,14 +4,18 @@ const common = require('../common');
 const db = require('../bdd/main');
 const express = require('express');
 const github = require('../clone/github');
+const os = require('os');
 const path = require('path');
 
 var bdd = null;
 const app = express();
 app.use(express.json());
 
+var frontEND = `http://${common.global.server.host}:${common.global.server.port}`;
+if(os.platform() != 'win32'){frontEND = `http://${common.global.server.host}`}
+
 app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", `http://${common.global.server.host}:${common.global.server.port}`);
+    res.header("Access-Control-Allow-Origin", frontEND);
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Credentials", true);
@@ -29,7 +33,7 @@ app.get('/favicon.ico', (req, res) => {
 app.get('/global', async (req, res) => {
     try {
         var entries = await db.selectRows(bdd, 'global');
-        entries[0].json = JSON.parse(entries[0].json);
+            entries[0].json = JSON.parse(entries[0].json);
         delete entries[0].json.server.encrypt;
         res.json(entries);
     } catch (error) {
