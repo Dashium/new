@@ -21,8 +21,8 @@ const Login = ({ api }) => {
                 password,
                 confirmPassword
             });
-            if(response.data.message != null){setPopupMessage({popupMessage: response.data.message, mode: "success"});}
-            if(response.data.error != null){setPopupMessage({popupMessage: response.data.error, mode: "error"});}
+            if (response.data.message != null) { setPopupMessage({ popupMessage: response.data.message, mode: "success" }); }
+            if (response.data.error != null) { setPopupMessage({ popupMessage: response.data.error, mode: "error" }); }
             setDisplayPopup(true);
             setTimeout(() => setDisplayPopup(false), 5000);
         } catch (error) {
@@ -36,14 +36,16 @@ const Login = ({ api }) => {
                 email,
                 password
             });
-            if(response.data.message != null){setPopupMessage({popupMessage: response.data.message, mode: "success"});}
-            if(response.data.error != null){setPopupMessage({popupMessage: response.data.error, mode: "error"});}
+            if (response.data.message != null) { setPopupMessage({ popupMessage: response.data.message, mode: "success" }); }
+            if (response.data.error != null) { setPopupMessage({ popupMessage: response.data.error, mode: "error" }); }
             setDisplayPopup(true);
-            setTimeout(() => setDisplayPopup(false), 5000);
-            if (response.data.token != null) {
-                Cookies.set('auth_token', response.data.token);
-                router.push('/');
-            }
+            setTimeout(() => {
+                setDisplayPopup(false);
+                if (response.data.token != null) {
+                    Cookies.set('auth_token', response.data.token);
+                    router.push('/');
+                }
+            }, 5000);
         } catch (error) {
             console.error(error);
         }
