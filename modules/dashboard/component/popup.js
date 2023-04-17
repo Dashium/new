@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 
-const Popup = ({ type, message, close }) => {
+const Popup = ({ type, message, close, button }) => {
     const [display, setDisplay] = useState(true);
 
     const handleOnClick = () => {
         setDisplay(false);
-        close();
-    }
+        if (typeof close === 'function') {
+            close();
+        }
+    };
 
     const getClassName = () => {
         switch (type) {
@@ -19,13 +21,21 @@ const Popup = ({ type, message, close }) => {
             default:
                 return 'popup-default';
         }
-    }
+    };
 
     return (
         <div className={`popup ${display ? 'show' : 'hide'}`}>
             <div className={getClassName()}>
                 <div className="popup-message">{message}</div>
-                <div className="popup-close" onClick={handleOnClick}>X</div>
+                {button ? (
+                    <button className="popup-button" onClick={handleOnClick}>
+                        {button}
+                    </button>
+                ) : (
+                    <div className="popup-close" onClick={handleOnClick}>
+                        X
+                    </div>
+                )}
             </div>
         </div>
     );
