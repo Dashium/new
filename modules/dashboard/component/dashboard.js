@@ -9,6 +9,7 @@ import Monitor from './dashboard/monitor';
 import TerminalSSH from './dashboard/terminal';
 import Project from './dashboard/ProjectList';
 import ProjectManager from './dashboard/ProjectManager';
+import ClusterList from './dashboard/clusterList';
 import DashiumUpdater from './dashboard/update';
 
 const Dashboard = () => {
@@ -31,6 +32,7 @@ const Dashboard = () => {
             <div>
                 <div>
                     <DashiumUpdater config={config} repoName={'dashium/new'}></DashiumUpdater>
+                    <ClusterList config={config}></ClusterList>
                     <Project config={config} setProjectId={setProjectId} setProject={setProject} />
                     {project && (
                         <>

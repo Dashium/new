@@ -1,3 +1,4 @@
+import './css/clusters.css';
 import './css/loading.css';
 import './css/login.css';
 import './css/monitor.css';
