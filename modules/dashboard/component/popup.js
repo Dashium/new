@@ -25,7 +25,7 @@ const Popup = ({ type, message, close, button }) => {
 
     return (
         <div className={`popup ${display ? 'show' : 'hide'}`}>
-            <div className={getClassName()}>
+            <div style={{ display: 'flex' }}className={getClassName()}>
                 <div className="popup-message">{message}</div>
                 {button ? (
                     <button className="popup-button" onClick={handleOnClick}>
