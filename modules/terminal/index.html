@@ -131,6 +131,7 @@
                 switch (e) {
                     case '\u0003': // Ctrl+C
                         term.write('^C');
+                        term.write('\r\n');
                         prompt(term);
                         break;
                     case '\r': // Enter
@@ -152,6 +153,24 @@
                             term.write(e);
                         }
                 }
+
+                if (e === '[A') { // Up arrow
+                    if (currentCommandIndex > 0) {
+                        currentCommandIndex--;
+                        command = commandHistory[currentCommandIndex];
+                        term.write('\r$ ' + command);
+                    }
+                } else if (e === '[B') { // Down arrow
+                    if (currentCommandIndex < commandHistory.length - 1) {
+                        currentCommandIndex++;
+                        command = commandHistory[currentCommandIndex];
+                        term.write('\r$ ' + command);
+                    } else if (currentCommandIndex === commandHistory.length - 1) {
+                        currentCommandIndex++;
+                        command = '';
+                        term.write('\r$ ');
+                    }
+                }
             });
         }
 
@@ -161,11 +180,20 @@
         }
 
         var command = '';
+        var commandHistory = [];
+        var currentCommandIndex = 0;
 
         function runCommand(term, text) {
-            if(text == ''){
+            if (text == '') {
                 term.write('\r\n');
                 prompt(term);
+                return;
+            }
+            commandHistory.push(text);
+            currentCommandIndex = commandHistory.length;
+
+            if (text == 'clear') {
+                term.clear();
                 return;
             }
             const containerName = document.location.pathname;
@@ -195,7 +223,7 @@
         });
 
         socket.on('done', (data) => {
-            if(data == 'error'){
+            if (data == 'error') {
                 term.write('\r\n');
             }
             prompt(term);
