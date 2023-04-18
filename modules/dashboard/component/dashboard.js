@@ -5,7 +5,6 @@ import AuthRoute from './authroute';
 import Navbar from './dashboard/navbar';
 
 import Monitor from './dashboard/monitor';
-import TerminalSSH from './dashboard/terminal';
 import Project from './dashboard/ProjectList';
 import ProjectManager from './dashboard/ProjectManager';
 import ClusterList from './dashboard/clusterList';
@@ -20,7 +19,7 @@ const Dashboard = () => {
     }, [projectId]);
 
     return (
-        <AuthRoute>
+        <AuthRoute config={config}>
             <div>
                 <div>
                     <DashiumUpdater config={config} repoName={'dashium/new'}></DashiumUpdater>

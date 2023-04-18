@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 
 var frontEND = `http://${common.global.server.host}:${common.global.server.port}`;
-if(os.platform() != 'win32'){frontEND = `http://${common.global.server.host}`}
+if (os.platform() != 'win32') { frontEND = `http://${common.global.server.host}` }
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", frontEND);
@@ -33,7 +33,7 @@ app.get('/favicon.ico', (req, res) => {
 app.get('/global', async (req, res) => {
     try {
         var entries = await db.selectRows(bdd, 'global');
-            entries[0].json = JSON.parse(entries[0].json);
+        entries[0].json = JSON.parse(entries[0].json);
         delete entries[0].json.server.encrypt;
         res.json(entries);
     } catch (error) {
@@ -259,6 +259,23 @@ app.post('/login', async (req, res) => {
         }
         if (get.message != null) {
             res.status(201).json(get);
+        }
+    } catch (error) {
+        common.error(error, 'api');
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.post('/check-token', async (req, res) => {
+    console.log(req);
+    try {
+        const token = req.body.token;
+        const user = await account.verifyToken(token);
+
+        if (user) {
+            res.status(200).json({ message: 'Token is valid' });
+        } else {
+            res.status(401).json({ error: 'Invalid token' });
         }
     } catch (error) {
         common.error(error, 'api');

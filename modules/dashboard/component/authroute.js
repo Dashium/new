@@ -1,30 +1,35 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
+import axios from 'axios';
 
-const checkAuth = () => {
+const checkAuth = async ({ config }) => {
     const token = Cookies.get('auth_token');
     if (!token) {
         throw new Error('No token found');
     }
 
-    // TODO: Vérifier si le token est valide en le vérifiant avec le serveur
+    // Vérifier si le token est valide en le vérifiant avec le serveur
+    const response = (await axios.post(`http://${config.api.host}:${config.api.port}/check-token`, {token: token})).data;
+
+    if (!response.message) {
+        throw new Error('Invalid token');
+    }
 
     return true;
 };
 
-const AuthRoute = ({ children }) => {
+const AuthRoute = ({ children, config }) => {
     const router = useRouter();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
         try {
-            setIsAuthenticated(checkAuth());
+            checkAuth({ config }).then(() => setIsAuthenticated(true));
         } catch (error) {
             router.push('/login');
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [router, config]);
 
     return isAuthenticated ? children : null;
 };
