@@ -93,7 +93,7 @@ async function getProjectPorts(id, mode){
     return portsList;
 }
 
-async function createProject(name, cluster, repo) {
+async function createProject(name, cluster, repo, owner) {
     var db = await dbModule.loadDatabase('dashium');
     const repoInUse = await dbModule.selectRows(db, 'projects', '*', 'repo = ?', [repo]);
 
@@ -125,6 +125,7 @@ async function createProject(name, cluster, repo) {
             image: 'ubuntu:latest',
         },
         name,
+        owner,
         path: common.getUrlLastPath(repo),
         repo: {
             mode: 'private/public',
@@ -141,6 +142,7 @@ async function createProject(name, cluster, repo) {
         'docker': JSON.stringify(newproject.docker),
         'lastupdate': Date.now(),
         'name': newproject.name,
+        'owner': newproject.owner,
         'path': newproject.path,
         'repo': JSON.stringify(newproject.repo),
     })

@@ -21,6 +21,7 @@ async function init(stopanimation, data) {
             [
                 'id INTEGER PRIMARY KEY',
                 'email TEXT',
+                'name TEXT',
                 'password TEXT',
                 'type TEXT'
             ]
@@ -50,6 +51,7 @@ async function init(stopanimation, data) {
                 'docker TEXT',
                 'lastupdate TEXT',
                 'name TEXT',
+                'owner TEXT',
                 'path TEXT',
                 'repo TEXT'
             ]
@@ -98,7 +100,7 @@ async function init(stopanimation, data) {
             json: JSON.stringify(globalDATA)
         });
 
-        await account.registerUser({ email: 'root@local', password: 'dashium', type: 'admin' } );
+        await account.registerUser({ email: 'root@local', password: 'dashium', name: 'Root', type: 'admin' } );
 
         common.global = globalDATA;
         await fs.writeFileSync('./config/global.json', JSON.stringify(globalDATA, null, 2));
@@ -110,7 +112,7 @@ async function init(stopanimation, data) {
             await cluster.createCluster('Local Cluster #1', 'default', './clusters/cluster');
 
             // CREATE DEFAULT PROJET
-            var { alias } = await projet.createProject('Demo Dashium', 1, 'https://github.com/Dashium/demo_project');
+            var { alias } = await projet.createProject('Demo Dashium', 1, 'https://github.com/Dashium/demo_project', 'root');
             var current = await projet.getProject(alias);
             await projet.setCIScript(current.id, [
                 {
