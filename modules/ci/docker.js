@@ -129,7 +129,7 @@ function runDockerCommand(command, options, logFile, client) {
             logs += data;
             process.stdout.write(data);
             if (client != null) {
-                client.emit('output', data);
+                client(data);
             }
             if (logFile !== '') {
                 fs.appendFileSync(logFile, data);
@@ -141,7 +141,7 @@ function runDockerCommand(command, options, logFile, client) {
             logs += data;
             process.stderr.write(data);
             if (client != null) {
-                client.emit('output', data);
+                client(data);
             }
             if (logFile !== '') {
                 fs.appendFileSync(logFile, data);
@@ -160,8 +160,10 @@ function runDockerCommand(command, options, logFile, client) {
         commandProcess.on('close', (code) => {
             clearInterval(checkLogsInterval);
             if (code === 0) {
+                client('dashiumDONE');
                 resolve(logs.trim());
             } else {
+                client('dashiumERROR');
                 reject(new Error(`Command failed with exit code ${code}`));
             }
         });

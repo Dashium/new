@@ -51,8 +51,6 @@ async function verifyToken(token) {
         const decodedToken = jwt.verify(token, secretKey);
         const userId = decodedToken.userId;
 
-        console.log(userId);
-
         // Vérifie si l'utilisateur associé au token existe dans la base de données
         const user = await dbModule.selectRows(bdd, 'users', '*', 'id = ?', [userId]);
         if (user.length == 0) {

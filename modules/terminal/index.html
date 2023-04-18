@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="/node_modules/xterm/css/xterm.css" />
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <script src="/node_modules/xterm/lib/xterm.js"></script>
+    <script src="/node_modules/xterm-addon-fit/lib/xterm-addon-fit.js"></script>
+    <script src="/node_modules/xterm-addon-unicode11/lib/xterm-addon-unicode11.js"></script>
     <style>
         body {
             color: #fff;
@@ -68,13 +70,20 @@
         };
         var isBaseTheme = true;
 
+        var fitAddon = new window.FitAddon.FitAddon();
+        var unicode11Addon = new window.Unicode11Addon.Unicode11Addon();
+
         var term = new window.Terminal({
             fontFamily: '"Cascadia Code", Menlo, monospace',
             theme: baseTheme,
             cursorBlink: true,
             allowProposedApi: true
         });
+        term.loadAddon(fitAddon);
+        term.loadAddon(unicode11Addon);
         term.open(document.querySelector('#terminal'));
+
+        fitAddon.fit(term);
 
         var isWebglEnabled = false;
         try {
@@ -148,12 +157,17 @@
 
         function prompt(term) {
             command = '';
-            term.write('\r\n$ ');
+            term.write('$ ');
         }
 
         var command = '';
 
         function runCommand(term, text) {
+            if(text == ''){
+                term.write('\r\n');
+                prompt(term);
+                return;
+            }
             const containerName = document.location.pathname;
 
             // Envoi de la commande au serveur
@@ -167,17 +181,25 @@
         const socket = io();
 
         socket.on('output', (data) => {
-            if (data == null) { return; }
-            if(data.type != null){
-                if(data.type == 'error'){
-                    term.write(data.data);
-                }
-                prompt(term);
+            if (data == null) {
+                prompt(term); return;
             }
-            else{
+            if (data.type != null) {
+                term.write(data.data);
+                term.write('\r\n');
+            }
+            else {
                 term.write(data);
                 term.write('\r\n');
             }
+        });
+
+        socket.on('done', (data) => {
+            if(data == 'error'){
+                term.write('\r\n');
+            }
+            prompt(term);
+            return;
         });
     </script>
 </body>

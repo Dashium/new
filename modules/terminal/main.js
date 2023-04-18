@@ -35,6 +35,22 @@ app.get('/node_modules/xterm/lib/xterm.js', (req, res) => {
 app.get('/node_modules/xterm/lib/xterm.js.map', (req, res) => {
     res.sendFile(path.join(__dirname, '../../node_modules/xterm/lib/xterm.js.map'))
 });
+
+app.get('/node_modules/xterm-addon-fit/lib/xterm-addon-fit.js', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../node_modules/xterm-addon-fit/lib/xterm-addon-fit.js'))
+});
+
+app.get('/node_modules/xterm-addon-fit/lib/xterm-addon-fit.js.map', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../node_modules/xterm-addon-fit/lib/xterm-addon-fit.js.map'))
+});
+
+app.get('/node_modules/xterm-addon-unicode11/lib/xterm-addon-unicode11.js', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../node_modules/xterm-addon-unicode11/lib/xterm-addon-unicode11.js'))
+});
+
+app.get('/node_modules/xterm-addon-unicode11/lib/xterm-addon-unicode11.js.map', (req, res) => {
+    res.sendFile(path.join(__dirname, '../../node_modules/xterm-addon-unicode11/lib/xterm-addon-unicode11.js.map'))
+});
 // END IMPORT TERMINAL
 
 app.get('/favicon.ico', (req, res) => {
@@ -51,11 +67,25 @@ socket.on('connection', (client) => {
 
     // Affichage des messages de la console SSH
     function logOutput(data) {
-        const output = {
-            type: 'output',
-            data: data,
-        };
-        client.emit('output', output);
+        if (data == null) {
+            return;
+        }
+        if(data == 'dashiumDONE'){
+            client.emit('done', 'data');
+            return;
+        }
+        // if(data == 'dashiumERROR'){
+        //     client.emit('done', 'error');
+        //     return;
+        // }
+        var out = data.split('\n');
+        out.forEach((line) => {
+            const output = {
+                type: 'output',
+                data: line,
+            };
+            client.emit('output', output);
+        });
     }
 
     // Affichage des messages d'erreur
@@ -65,12 +95,13 @@ socket.on('connection', (client) => {
             data: data.toString(),
         };
         client.emit('output', output);
+        client.emit('done', 'error');
     }
 
     // Exécution d'une commande Docker
     client.on('command', async (containerName, command) => {
         try {
-            const output = await docker.runCommandInContainer(containerName, command, null, client);
+            const output = await docker.runCommandInContainer(containerName, command, null, logOutput);
             logOutput(output);
         } catch (err) {
             logError(err.message);
