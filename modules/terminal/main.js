@@ -74,10 +74,6 @@ socket.on('connection', (client) => {
             client.emit('done', 'data');
             return;
         }
-        // if(data == 'dashiumERROR'){
-        //     client.emit('done', 'error');
-        //     return;
-        // }
         var out = data.split('\n');
         out.forEach((line) => {
             const output = {

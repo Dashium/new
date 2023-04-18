@@ -163,7 +163,6 @@ function runDockerCommand(command, options, logFile, client) {
                 client('dashiumDONE');
                 resolve(logs.trim());
             } else {
-                client('dashiumERROR');
                 reject(new Error(`Command failed with exit code ${code}`));
             }
         });
