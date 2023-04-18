@@ -213,6 +213,9 @@
                 prompt(term); return;
             }
             if (data.type != null) {
+                if(data.data.startsWith('Command failed with exit code') == true){
+                    return;
+                }
                 term.write(data.data);
                 term.write('\r\n');
             }
@@ -223,9 +226,6 @@
         });
 
         socket.on('done', (data) => {
-            if (data == 'error') {
-                term.write('\r\n');
-            }
             prompt(term);
             return;
         });
