@@ -13,8 +13,7 @@ const Logout = () => {
         Cookies.remove('auth_token');
         // Rediriger vers la page de connexion
         setTimeout(() => router.push('/login'), 5000);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [router]);
 
     return (
         <div className='app' style={{
