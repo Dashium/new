@@ -45,7 +45,7 @@ async function runCI(id) {
     }
 
     try {
-        await clone.clone(currentProject.repo, current.repo);
+        await clone.clone(currentProject.repo.url, current.repo);
     } catch (error) {
         common.error(`Clone imposible ! ${error}`, 'ci');
     }

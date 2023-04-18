@@ -8,6 +8,7 @@ function getProjectByID(projectID) {
         var [entry] = await dbModule.selectRows(db, 'projects', '*', 'id = ?', [projectID]);
             entry.ci = JSON.parse(entry.ci);
             entry.docker = JSON.parse(entry.docker);
+            entry.repo = JSON.parse(entry.repo);
         resolve(entry);
     });
 }
@@ -18,6 +19,7 @@ function getProjectByName(projectName) {
         var [entry] = await dbModule.selectRows(db, 'projects', '*', 'alias = ?', [projectName]);
             entry.ci = JSON.parse(entry.ci);
             entry.docker = JSON.parse(entry.docker);
+            entry.repo = JSON.parse(entry.repo);
         resolve(entry);
     });
 }
@@ -124,7 +126,10 @@ async function createProject(name, cluster, repo) {
         },
         name,
         path: common.getUrlLastPath(repo),
-        repo,
+        repo: {
+            mode: 'private/public',
+            url: repo
+        }
     };
 
     await dbModule.insertRow(db, 'projects', {
@@ -137,7 +142,7 @@ async function createProject(name, cluster, repo) {
         'lastupdate': Date.now(),
         'name': newproject.name,
         'path': newproject.path,
-        'repo': newproject.repo,
+        'repo': JSON.stringify(newproject.repo),
     })
     .then(async (id) => {
         var base = await getProjectDirs(id);
