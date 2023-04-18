@@ -213,7 +213,7 @@
                 prompt(term); return;
             }
             if (data.type != null) {
-                if(data.data.startsWith('Command failed with exit code') == true){
+                if (data.data.startsWith('Command failed with exit code') == true) {
                     return;
                 }
                 term.write(data.data);
