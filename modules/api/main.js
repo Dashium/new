@@ -81,7 +81,9 @@ app.get('/projects', async (req, res) => {
         var entries = await db.selectRows(bdd, 'projects');
         entries.forEach(proj => {
             proj.ci = JSON.parse(proj.ci);
+            proj.date = common.timestampToString(proj.date);
             proj.docker = JSON.parse(proj.docker);
+            proj.lastupdate = common.timestampToString(proj.lastupdate);
         });
         res.json(entries);
     } catch (error) {
@@ -99,7 +101,9 @@ app.get('/projects/:id', async (req, res) => {
             res.status(404).json({ error: 'Entry not found' });
         } else {
             entry.ci = JSON.parse(entry.ci);
+            entry.date = common.timestampToString(entry.date);
             entry.docker = JSON.parse(entry.docker);
+            entry.lastupdate = common.timestampToString(entry.lastupdate);
             res.json(entry);
         }
     } catch (error) {

@@ -131,8 +131,10 @@ async function createProject(name, cluster, repo) {
         'alias': newproject.alias,
         'ci': JSON.stringify(newproject.ci),
         'cluster': newproject.cluster,
+        'date': Date.now(),
         'deploy': JSON.stringify(newproject.deploy),
         'docker': JSON.stringify(newproject.docker),
+        'lastupdate': Date.now(),
         'name': newproject.name,
         'path': newproject.path,
         'repo': newproject.repo,
@@ -194,6 +196,8 @@ async function updateProjet(id, data){
         data = {};
         data.docker = JSON.stringify(current);
     }
+
+    data.lastupdate = Date.now();
 
     await dbModule.updateRows(db, 'projects', data, 'id = ?', [id]);
 

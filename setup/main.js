@@ -45,8 +45,10 @@ async function init(stopanimation, data) {
                 'alias TEXT',
                 'ci TEXT',
                 'cluster INTEGER',
+                'date TEXT',
                 'deploy TEXT',
                 'docker TEXT',
+                'lastupdate TEXT',
                 'name TEXT',
                 'path TEXT',
                 'repo TEXT'

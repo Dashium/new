@@ -160,6 +160,24 @@ function removeValueFromArray(array, value) {
     return array.filter((item) => item !== value);
 }
 
+function timestampToString(timestamp) {
+        timestamp = parseInt(timestamp);
+        timestamp = Math.ceil(timestamp);
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = months[date.getMonth()];
+    const day = date.getDate();
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // convert 0 to 12
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    const formattedDate = month + ' ' + day + ', ' + year + ' at ' + hours + ':' + minutes + ' ' + ampm;
+    return formattedDate;
+}
+
 function isPortInUse(port) {
     return new Promise((resolve, reject) => {
         const server = net.createServer((socket) => {
@@ -235,5 +253,6 @@ module.exports = {
     rmdir,
     rmfile,
     sucess: (msg, from) => { logFile.log(msg, 'sucess', from); },
+    timestampToString,
     warn: (msg, from) => { logFile.log(msg, 'warn', from); }
 }
