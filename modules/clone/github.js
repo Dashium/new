@@ -1,5 +1,14 @@
 const common = require('../common');
 const { simpleGit } = require('simple-git');
+const { Octokit } = require("@octokit/rest");
+
+async function detectRepoPrivacy(url) {
+    const {owner, repo} = getRepoInfo(url);
+    const octokit = new Octokit();
+    const response = await octokit.repos.get({ owner, repo });
+
+    return response.data.private;
+}
 
 const getLatestCommitSha = async (repo) => {
     try {
@@ -11,6 +20,16 @@ const getLatestCommitSha = async (repo) => {
         return null;
     }
 };
+
+function getRepoInfo(url) {
+    const regex = /https?:\/\/github.com\/([^/]+)\/([^/]+)/;
+    const match = url.match(regex);
+    if (match) {
+        const [, owner, repo] = match;
+        return { owner, repo };
+    }
+    return null;
+}
 
 const updateRepo = async (path) => {
     const git = simpleGit(path);
@@ -29,6 +48,7 @@ const updateRepo = async (path) => {
 };
 
 module.exports = {
+    detectRepoPrivacy,
     gitClone: function (repo, dest) {
         if (repo == null) { common.error('no repo has been set', 'github'); return; }
         if (dest == null) { common.error('no destination has been set', 'github'); return; }
@@ -38,5 +58,6 @@ module.exports = {
         return simpleGit(dest).fetch();
     },
     getLatestCommitSha,
+    getRepoInfo,
     updateRepo
 }

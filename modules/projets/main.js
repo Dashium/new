@@ -1,6 +1,7 @@
 const common = require('../common');
 const clusters = require('../cluster/main');
 const dbModule = require('../bdd/main');
+const github = require('../clone/github');
 
 function getProjectByID(projectID) {
     return new Promise(async (resolve, reject) => {
@@ -128,7 +129,7 @@ async function createProject(name, cluster, repo, owner) {
         owner,
         path: common.getUrlLastPath(repo),
         repo: {
-            mode: 'private/public',
+            mode: await github.detectRepoPrivacy(repo),
             url: repo
         }
     };
