@@ -104,6 +104,7 @@ app.get('/projects/:id', async (req, res) => {
             entry.date = common.timestampToString(entry.date);
             entry.docker = JSON.parse(entry.docker);
             entry.lastupdate = common.timestampToString(entry.lastupdate);
+            entry.repo = JSON.parse(entry.repo);
             res.json(entry);
         }
     } catch (error) {
