@@ -6,6 +6,7 @@ logs
 /config
 test.js
 /test
+*.pem
 
 # REACT
 .next
