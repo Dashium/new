@@ -32,7 +32,14 @@ async function bindPorts(list) {
 async function createDockerContainer(containerName, portBinder, envs, imageName, repoDir) {
     const containersList = await runDockerCommand('ps -a');
     if (!containersList.includes(containerName)) {
-        await runDockerCommand(`create --name ${containerName} -it -v ${process.cwd()}/${repoDir}:/app ${portBinder} ${envs} -w /app ${imageName} bash`, { cwd: repoDir });
+        var cmd = `create --name ${containerName} -it -v ${process.cwd()}/${repoDir}:/app`;
+        if(portBinder != null){
+            cmd += ` ${portBinder}`;
+        }
+        if(envs != null){
+            cmd += ` ${envs}`;
+        }
+        await runDockerCommand(`${cmd} -w /app ${imageName} bash`, { cwd: repoDir });
     }
 }
 
@@ -80,7 +87,7 @@ async function isContainerExist(containerName) {
         const output = await runDockerCommand(`ps -a --filter "name=${containerName}" --format "{{.Names}}"`);
         return output.trim() === containerName;
     } catch (error) {
-        common.error(`Error while checking if container ${containerName} exists: ${error.message}`);
+        common.error(`Error while checking if container ${containerName} exists: ${error.message}`, 'docker');
         return false;
     }
 }
