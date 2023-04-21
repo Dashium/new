@@ -1,6 +1,7 @@
 const fs = require('fs');
 const common = require('../common');
 const project = require('../projets/main');
+const global = require('../global/main');
 
 const clone = require('../clone/main');
 const docker = require('./docker');
@@ -54,14 +55,22 @@ async function runCI(id) {
 
     var ciScript = await getCIScript(id);
 
-    var containerHost = await project.getProjectPorts(id, 'container');
-        containerHost = await project.Portfinder(3000, containerHost);
+    // var containerHost = await project.getProjectPorts(id, 'container');
+    //     containerHost = await project.Portfinder(3000, containerHost);
 
-    if(typeof currentProject.docker.ports != 'object'){currentProject.docker.ports = [];}
-    currentProject.docker.ports.push({host: common.global.socket.port, container: containerHost})
+    //     global.addPort(containerHost);
 
-    const ports = await docker.bindPorts(currentProject.docker.ports);
-    const envs = await docker.addENVS(currentProject.docker.env);
+    // if(typeof currentProject.docker.ports != 'object'){currentProject.docker.ports = [];}
+    // currentProject.docker.ports.push({host: common.global.socket.port, container: containerHost})
+
+    var ports, envs;
+    if(currentProject.docker.ports != null){
+        ports = await docker.bindPorts(currentProject.docker.ports);
+    }
+
+    if(currentProject.docker.env != null){
+        envs = await docker.addENVS(currentProject.docker.env);
+    }
 
     await docker.downloadDockerImage(currentProject.docker.image);
     await docker.createDockerContainer(containerName, ports, envs, currentProject.docker.image, current.ci);
