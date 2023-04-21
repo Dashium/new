@@ -29,10 +29,11 @@
 .project-manager .project-details {
     margin-left: 50px;
     padding: 20px;
-    background-color: #fff;
+    background-color: #8d8d8db9;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     width: 751px;
-    height: 486px;
+    border-radius: 10px;
+    /* height: 486px; */
 }
 
 .project-manager .project-details h2 {
@@ -83,4 +84,20 @@
 
 .project-manager .project-details button[type="submit"]:hover {
     background-color: #2980b9;
+}
+
+.project-manager .project-details .element{
+    background-color: #ccc;
+    padding: 1%;
+    margin: 1%;
+    border-radius: 10px;
+}
+
+.project-manager .project-details .element.tomato{
+    background-color: tomato;
+}
+
+.project-manager .project-details .element p,
+.project-manager .project-details .element h1{
+    margin: 0;
 }
