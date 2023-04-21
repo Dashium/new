@@ -3,6 +3,7 @@ const readline = require('readline');
 const fs = require('fs');
 const common = require('../modules/common');
 const github = require('../modules/clone/github');
+const integrations = require('../modules/integration/main');
 
 async function init(stopanimation, data) {
     const common = require('../modules/common');
@@ -24,6 +25,14 @@ async function init(stopanimation, data) {
                 'name TEXT',
                 'password TEXT',
                 'type TEXT'
+            ]
+        );
+        await dbModule.createTable(db, 'integrations',
+            [
+                'id INTEGER PRIMARY KEY',
+                'service TEXT',
+                'appID TEXT',
+                'key TEXT'
             ]
         );
         await dbModule.createTable(db, 'global',
@@ -99,6 +108,8 @@ async function init(stopanimation, data) {
         await dbModule.insertRow(db, 'global', {
             json: JSON.stringify(globalDATA)
         });
+
+        await integrations.addIntegration('github', data.githubAPPID)
 
         await account.registerUser({ email: 'root@local', password: 'dashium', name: 'Root', type: 'admin' } );
 
@@ -214,6 +225,9 @@ async function main() {
     const autoStart = await askQuestion("Do you want to enable automatic start? (Y/n) (default: Y) ", 'Y');
     console.log(`Automatic start: ${autoStart}.`);
 
+    const githubAPP = await askQuestion("Give me your Github APP Token (default: none) ", 'none');
+    console.log(`The Github APP token has been set !`);
+
     init(loadingAnimation(), {
         name: name,
         host: host.toLowerCase(),
@@ -228,6 +242,7 @@ async function main() {
         dockerIMG: dockerIMG,
         aliasGEN: aliasGEN,
         autoStart: autoStart,
+        githubAPPID: githubAPP
     });
 }
 

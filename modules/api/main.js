@@ -4,8 +4,10 @@ const common = require('../common');
 const db = require('../bdd/main');
 const express = require('express');
 const github = require('../clone/github');
+const integration = require('../integration/main');
 const os = require('os');
 const path = require('path');
+const project = require('../projets/main');
 
 var bdd = null;
 const app = express();
@@ -82,8 +84,10 @@ app.get('/projects', async (req, res) => {
         entries.forEach(proj => {
             proj.ci = JSON.parse(proj.ci);
             proj.date = common.timestampToString(proj.date);
+            proj.deploy = JSON.parse(proj.deploy);
             proj.docker = JSON.parse(proj.docker);
             proj.lastupdate = common.timestampToString(proj.lastupdate);
+            proj.repo = JSON.parse(proj.repo);
         });
         res.json(entries);
     } catch (error) {
@@ -288,6 +292,45 @@ app.post('/check-token', async (req, res) => {
     }
 });
 // END LOGIN REGISTER
+
+// START INTEGRATION
+app.post('/get_repos', async (req, res) => {
+    try {
+        const service = req.body.service;
+        const repos = await integration.getRepos(service);
+        if (repos) {
+            res.send(repos);
+        } else {
+            res.status(401).json({ error: 'Invalid token' });
+        }
+    } catch (error) {
+        common.error(error, 'api');
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+app.post('/add_integ', async (req, res) => {
+    const current = req.body;
+    console.log(current);
+    const {id} = await project.createProject(current.projectName, parseInt(current.cluster), current.selectedProject, 'root@local');
+    console.log(id);
+
+    await project.setDockerImage(id, current.selectedImage);
+    await project.addDockerUse(id, 'dashium');
+    await project.addDockerUse(id, current.selectedLanguage);
+
+    await current.ports.forEach(async (curr) => {
+        await project.addDockerPort(id, curr.port);
+    });
+
+    await current.envVars.forEach(async (curr) => {
+        await project.addDockerEnv(id, `${curr.name}:${curr.value}`);
+    });
+
+    setTimeout(() => {
+        ci.runCI(id);
+    }, 5000);
+});
+// END INTEGRATION
 
 app.listen(common.global.api.port, async () => {
     common.sucess(`Server listening on port ${common.global.api.port}`, 'api');
