@@ -1,7 +1,7 @@
 const common = require('../common');
 const clusters = require('../cluster/main');
 const dbModule = require('../bdd/main');
-const github = require('../clone/github');
+const global = require('../global/main');
 
 function getProjectByID(projectID) {
     return new Promise(async (resolve, reject) => {
