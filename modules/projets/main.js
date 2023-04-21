@@ -267,6 +267,12 @@ async function Portfinder(port, hostPORT){
     var testPORT = await common.findAvailablePort(port, common.global.docker.ports.end);
 
         testPORT = await common.isHostPortUsed(testPORT, hostPORT);
+    
+    var globalPorts = await global.getPorts();
+
+    if(globalPorts.includes(port)){
+        testPORT == true;
+    }
 
     if(testPORT == true){
         port++;
@@ -285,7 +291,9 @@ async function addDockerPort(id, port){
     }
     var hostPORT = await Portfinder();
 
-    current.docker.ports.push({ host: hostPORT, container: port });
+    global.addPort(hostPORT);
+
+    current.docker.ports.push({ host: hostPORT, container: parseInt(port) });
 
     var project = await updateProjet(id, { docker: {ports: current.docker.ports} });
 
@@ -301,6 +309,8 @@ async function removeDockerPort(id, port){
         current.docker.ports = [];
     }
         current.docker.ports = common.removeValueFromArray(current.docker.ports, port);
+    
+    global.removePort(port);
 
     var project = await updateProjet(id, { docker: {ports: current.docker.ports} });
 
