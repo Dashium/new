@@ -130,7 +130,7 @@ async function createProject(name, cluster, repo, owner) {
         owner,
         path: common.getUrlLastPath(repo),
         repo: {
-            mode: await github.detectRepoPrivacy(repo),
+            mode: repo,
             url: repo
         }
     };
