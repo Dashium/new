@@ -114,6 +114,7 @@ async function createProject(name, cluster, repo, owner) {
     }
 
     const newproject = {
+        id: null,
         alias: common.generateRandomString(common.global.alias.generator),
         ci: [],
         cluster: clusterID.id,
@@ -148,6 +149,7 @@ async function createProject(name, cluster, repo, owner) {
         'repo': JSON.stringify(newproject.repo),
     })
     .then(async (id) => {
+        newproject.id = id;
         var base = await getProjectDirs(id);
         await common.mkdir(base.ci);
         await common.mkdir(base.deploy);
