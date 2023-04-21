@@ -20,6 +20,19 @@
 
 # 📦Installation
 
+### Create a Github APP for your dashium:
+- First go on [your Github Settings](https://github.com/settings/apps)
+- click on `New Github App`
+- fill the form with values: <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Github App Name: `Dashium_<YOUR_NAME>` <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Homepage URL: `https://github.com/Dashium/Dashium` <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Callback URL: `empty`
+- Generate a private key
+- Upload .pem file with dashium and give APP ID
+- Go in your public link and add into your github profile
+
+
+### Install dashium in your machine:
 ```bash
 wget https://raw.githubusercontent.com/Dashium/new/main/setup/setup.sh
 chmod +x setup.sh
