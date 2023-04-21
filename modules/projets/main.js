@@ -37,7 +37,7 @@ function getProject(projectIDorName) {
 
 async function getProjectDirs(id){
     var current = await getProjectWithCluster(id);
-    var currentPathRepo = `${current.cluster.path}/${current.path}`;
+    var currentPathRepo = `${current.cluster.path}/${current.alias}`;
     return {
         ci: `${currentPathRepo}/ci`,
         deploy: `${currentPathRepo}/deploy`,
