@@ -85,10 +85,6 @@ async function runTasks(tasks, containerName, logpath) {
     try {
         for (const task of tasks) {
             common.log(`Starting task "${task.name}"...`, 'ci');
-            if (!task.mode) {
-                common.error('No task mode detected!', 'ci');
-                return;
-            }
             await docker.runCommandInContainer(containerName, task.run, logpath);
             common.sucess(`Task "${task.name}" finished successfully.`, 'ci');
         }
