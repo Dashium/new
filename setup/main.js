@@ -125,18 +125,8 @@ async function init(stopanimation, data) {
             // CREATE DEFAULT PROJET
             var { alias } = await projet.createProject('Demo Dashium', 1, 'https://github.com/Dashium/demo_project', 'root');
             var current = await projet.getProject(alias);
-            await projet.setCIScript(current.id, [
-                {
-                    "name": "Node installer",
-                    "mode": "npm",
-                    "run": "npm install"
-                },
-                {
-                    "name": "Node run",
-                    "mode": "npm",
-                    "run": "npm test"
-                }
-            ]);
+            await projet.addCIcmd(current.id, "Node installer", "npm install");
+            await projet.addCIcmd(current.id, "Node run", "npm test");
             await projet.setDockerImage(current.id, 'ubuntu:latest');
             await projet.addDockerUse(current.id, 'dashium');
             await projet.addDockerUse(current.id, 'nodejs');
