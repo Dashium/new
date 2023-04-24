@@ -20,7 +20,7 @@ const ProjectList = ({ config, setProjectId, setProject }) => {
                             <h2>{project.name}</h2>
                             <div className='ports'>
                                 {
-                                    project.docker.ports.map((val, id) => {
+                                    project.docker.ports && project.docker.ports.map((val, id) => {
                                         return (
                                             <a key={id} target='_blank' href={`http://${config.server.host}:${val.host}/`}>{`http://${config.server.host}:${val.host}/`}</a>
                                         )
