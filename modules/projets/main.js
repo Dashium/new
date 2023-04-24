@@ -222,6 +222,20 @@ async function setCIScript(id, ciScript){
     return id;
 }
 
+async function addCIcmd(id, name, cmd){
+    var project = await getProject(id);
+    const newCI = {
+        name: name,
+        run: cmd
+    };
+
+    project.ci.push(newCI);
+
+    await setCIScript(id, project.ci);
+
+    return id;
+}
+
 async function setDockerImage(id, image){
     var project = await updateProjet(id, { docker: {image: image} });
 
@@ -350,6 +364,7 @@ async function addDockerEnv(id, env){
 }
 
 module.exports = {
+    addCIcmd,
     addDockerEnv,
     addDockerPort,
     addDockerUse,
