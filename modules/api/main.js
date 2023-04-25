@@ -8,6 +8,7 @@ const integration = require('../integration/main');
 const os = require('os');
 const path = require('path');
 const project = require('../projets/main');
+const global = require('../global/main');
 
 var bdd = null;
 const app = express();
@@ -47,6 +48,8 @@ app.get('/global', async (req, res) => {
 app.post('/update', async (req, res) => {
     try {
         await github.updateRepo('./');
+        var sha = await github.getLatestCommitSha('./');
+        await global.updateSHA(sha);
         res.json({ msg: 'OK !' });
     } catch (error) {
         common.error(error, 'api');
@@ -308,7 +311,7 @@ app.post('/get_repos', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-app.post('/add_integ', async (req, res) => {
+app.post('/add_project', async (req, res) => {
     const current = req.body;
     console.log(current);
     const {id} = await project.createProject(current.projectName, parseInt(current.cluster), current.selectedProject, 'root@local');
@@ -324,6 +327,12 @@ app.post('/add_integ', async (req, res) => {
 
     await current.envVars.forEach(async (curr) => {
         await project.addDockerEnv(id, `${curr.name}:${curr.value}`);
+    });
+
+    var script = current.commands.split('\n');
+
+    await script.forEach(async (val) => {
+        await project.addCIcmd(id, 'no name', val);
     });
 
     setTimeout(() => {
