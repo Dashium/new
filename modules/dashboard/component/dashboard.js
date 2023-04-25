@@ -4,7 +4,6 @@ import AuthRoute from './authroute';
 
 import Navbar from './dashboard/navbar';
 
-import Monitor from './dashboard/monitor';
 import Project from './dashboard/ProjectList';
 import ProjectManager from './dashboard/ProjectManager';
 import ClusterList from './dashboard/clusterList';
@@ -35,7 +34,6 @@ const Dashboard = () => {
                     )}
                     {projectId && (
                         <>
-                            <Monitor config={config} containerName={projectId.docker.dockerID} />
                             <ProjectManager config={config} projectId={projectId.id} setProjectId={setProjectId} />
                         </>
                     )}
