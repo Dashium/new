@@ -18,7 +18,6 @@ const DashiumUpdater = ({ config, repoName }) => {
             const data = response['json'];
             const currentCommitSha = data.update;
             setcurrentCommitSha(currentCommitSha);
-            console.log(currentCommitSha, latestCommitSha);
             if (currentCommitSha !== latestCommitSha) {
                 setIsUpToDate(false);
             }
