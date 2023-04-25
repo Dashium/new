@@ -3,7 +3,7 @@ import { RiDeleteBin6Line } from 'react-icons/ri';
 import axios from 'axios';
 import TerminalSSH from './terminal';
 
-function ProjectManager({ config, projectId }) {
+function ProjectManager({ config, projectId, setProjectId }) {
     const [project, setProject] = useState({});
     const [loading, setLoading] = useState(true);
     const [activeMenu, setActiveMenu] = useState('general');
@@ -20,6 +20,9 @@ function ProjectManager({ config, projectId }) {
     }, [config, projectId]);
 
     const handleMenuClick = (menu) => {
+        if(menu == 'return'){
+            setProjectId(null);
+        }
         setActiveMenu(menu);
     };
 
@@ -69,6 +72,7 @@ function ProjectManager({ config, projectId }) {
         <div className="project-manager">
             <div className="project-menu">
                 <ul>
+                    <li className={activeMenu === 'return' ? 'active' : ''} onClick={() => handleMenuClick('return')}>Return</li>
                     <li className={activeMenu === 'general' ? 'active' : ''} onClick={() => handleMenuClick('general')}>General</li>
                     <li className={activeMenu === 'ports' ? 'active' : ''} onClick={() => handleMenuClick('ports')}>Ports</li>
                     <li className={activeMenu === 'ci' ? 'active' : ''} onClick={() => handleMenuClick('ci')}>CI</li>

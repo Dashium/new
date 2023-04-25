@@ -35,8 +35,8 @@ const Dashboard = () => {
                     )}
                     {projectId && (
                         <>
-                            <ProjectManager config={config} projectId={projectId.id} />
                             <Monitor config={config} containerName={projectId.docker.dockerID} />
+                            <ProjectManager config={config} projectId={projectId.id} setProjectId={setProjectId} />
                         </>
                     )}
                 </div>
