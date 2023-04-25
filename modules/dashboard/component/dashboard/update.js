@@ -5,6 +5,7 @@ import Popup from '../popup';
 const DashiumUpdater = ({ config, repoName }) => {
     const [isUpToDate, setIsUpToDate] = useState(true);
     const [latestCommitSha, setLatestCommitSha] = useState(null);
+    const [currentCommitSha, setcurrentCommitSha] = useState(null);
 
     useEffect(() => {
         const fetchLatestCommitSha = async () => {
@@ -14,22 +15,20 @@ const DashiumUpdater = ({ config, repoName }) => {
         };
 
         fetchLatestCommitSha();
-    }, [repoName]);
-
-    useEffect(() => {
         const fetchGlobalData = async () => {
             const response = await (await axios.get(`http://${config.api.host}:${config.api.port}/global`)).data[0];
             const data = response['json'];
             const currentCommitSha = data.update.sha;
+            setcurrentCommitSha(currentCommitSha)
             if (currentCommitSha !== latestCommitSha) {
                 setIsUpToDate(false);
             }
         };
 
-        if (latestCommitSha != null) {
+        if (currentCommitSha != null) {
             fetchGlobalData();
         }
-    }, [config, latestCommitSha]);
+    }, [repoName, config, currentCommitSha, latestCommitSha]);
 
     const handleUpdateClick = () => {
         axios.post(`http://${config.api.host}:${config.api.port}/update`);

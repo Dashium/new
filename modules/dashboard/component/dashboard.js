@@ -26,7 +26,7 @@ const Dashboard = ({ }) => {
         <AuthRoute config={config}>
             <div>
                 <div>
-                    <DashiumUpdater config={config} repoName={'dashium/new'}></DashiumUpdater>
+                    <DashiumUpdater config={config} repoName={'Dashium/new'}></DashiumUpdater>
                     {menu === 'dashboard' && (
                         <>
                             {!projectId && (
