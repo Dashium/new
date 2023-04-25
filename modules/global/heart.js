@@ -36,7 +36,7 @@ function restartServer(pid) {
         });
     } else {
         // Unix / Mac
-        exec(`kill ${pid}`, (err, stdout, stderr) => {
+        exec(`sudo kill ${pid}`, (err, stdout, stderr) => {
             if (err) {
                 common.error(err, '💖 heart');
                 exec(`sudo systemctl restart dashium`, (err, stdout, stderr) => {
