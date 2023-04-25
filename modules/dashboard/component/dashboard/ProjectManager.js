@@ -5,7 +5,7 @@ import axios from 'axios';
 import TerminalSSH from './terminal';
 import Monitor from './monitor';
 
-function ProjectManager({ config, projectId, setProjectId }) {
+function ProjectManager({ config, projectId, setProjectId, setMode }) {
     const [project, setProject] = useState({});
     const [loading, setLoading] = useState(true);
     const [activeMenu, setActiveMenu] = useState('general');
@@ -24,6 +24,7 @@ function ProjectManager({ config, projectId, setProjectId }) {
     const handleMenuClick = (menu) => {
         if(menu == 'return'){
             setProjectId(null);
+            setMode('project');
         }
         setActiveMenu(menu);
     };
@@ -227,7 +228,7 @@ function ProjectManager({ config, projectId, setProjectId }) {
                                         ))}
                                     </ul>
                                     <div>
-                                        <input type="text" name="newPort" value={newPort} onChange={handleInputChange} />
+                                        <input type="number" autoComplete='off' name="newPort" value={newPort} onChange={handleInputChange} />
                                         <button onClick={handlePortAdd}>Add</button>
                                     </div>
                                 </div>
@@ -248,7 +249,7 @@ function ProjectManager({ config, projectId, setProjectId }) {
                                         ))}
                                     </ul>
                                     <div>
-                                        <input type="text" name="newScript" value={newScript} onChange={handleInputChange} />
+                                        <textarea type="text" name="newScript" value={newScript} onChange={handleInputChange} />
                                         <button onClick={handleScriptAdd}>Add</button>
                                     </div>
                                 </div>

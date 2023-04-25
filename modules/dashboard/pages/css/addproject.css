@@ -1,0 +1,97 @@
+.addProjectForm {
+    position: fixed;
+    top: 1%;
+    bottom: 1%;
+    width: 100%;
+}
+
+.addProjectForm form {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+.addProjectForm label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.addProjectForm input[type="text"],
+.addProjectForm select,
+.addProjectForm textarea {
+    display: block;
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    transition: border-color 0.2s ease-in-out;
+}
+
+.addProjectForm input[type="text"]:hover,
+.addProjectForm select:hover,
+.addProjectForm textarea:hover {
+    border-color: #aaa;
+}
+
+.addProjectForm select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M7.4 9.4L12 14 16.6 9.4c.8-.8 2-.8 2.8 0 .8.8.8 2 0 2.8L12 19.2l-7.4-7.4c-.8-.8-.8-2 0-2.8.8-.8 2-.8 2.8 0z'/%3E%3C/svg%3E") no-repeat;
+    background-position: right center;
+    background-size: 1.5em;
+}
+
+.addProjectForm button {
+    background-color: #0099ff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.addProjectForm button:hover {
+    background-color: #0077cc;
+}
+
+.addProjectForm button.delete {
+    background-color: #ec4545;
+    color: #fff;
+}
+
+.addProjectForm button.delete:hover {
+    background-color: #cc0000;
+}
+
+.addProjectForm h3 {
+    margin: 1rem 0 0.5rem;
+    font-size: 1.2rem;
+}
+
+.addProjectForm textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.addProjectForm input[type="text"]::placeholder,
+.addProjectForm textarea::placeholder {
+    color: #999;
+}
+
+/* Error styles */
+.addProjectForm .error {
+    color: red;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+}

@@ -1,4 +1,6 @@
 import './css/common.css';
+import './css/addproject.css';
+import './css/addintegrations.css';
 import './css/clusters.css';
 import './css/loading.css';
 import './css/login.css';

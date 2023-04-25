@@ -1,0 +1,69 @@
+.addInteg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+}
+
+.addInteg .platform-select{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.addInteg .platform-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    margin-right: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.addInteg .platform-btn.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.addInteg .platform-btn:hover {
+    background-color: #e5e5e5;
+}
+
+.addInteg .form {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.addInteg label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.addInteg input[type="text"],
+.addInteg input[type="password"],
+.addInteg input[type="number"] {
+    padding: 0.5rem;
+    border: none;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.addInteg button[type="submit"] {
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.addInteg button[type="submit"]:hover {
+    background-color: #0062cc;
+}

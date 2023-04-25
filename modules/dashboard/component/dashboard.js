@@ -9,9 +9,14 @@ import ProjectManager from './dashboard/ProjectManager';
 import ClusterList from './dashboard/clusterList';
 import DashiumUpdater from './dashboard/update';
 
-const Dashboard = () => {
+import AddProjectForm from './dashboard/AddProject';
+import SetupApplication from './dashboard/setupIntegrations'
+
+const Dashboard = ({ }) => {
     const [projectId, setProjectId] = useState(null);
     const [project, setProject] = useState(null);
+    const [mode, setMode] = useState('project');
+    const [menu, setMenu] = useState('dashboard');
 
     useEffect(() => {
         setProject(false);
@@ -22,21 +27,31 @@ const Dashboard = () => {
             <div>
                 <div>
                     <DashiumUpdater config={config} repoName={'dashium/new'}></DashiumUpdater>
-                    {!projectId && (
+                    {menu === 'dashboard' && (
                         <>
-                            <div className='cluster-container'>
-                                <h1>Dashboard</h1>
-                                <p>Welcome to the dashium, my name is {config.server.name}.</p>
-                            </div>
-                            <ClusterList config={config}></ClusterList>
-                            <Project config={config} setProjectId={setProjectId} setProject={setProject} />
+                            {!projectId && (
+                                <div className='cluster-container'>
+                                    <h1>Dashboard</h1>
+                                    <p>Welcome to the dashium, my name is {config.server.name}.</p>
+                                </div>
+                            )}
+                            {mode === 'cluster' && (
+                                <ClusterList config={config} setMode={setMode} />
+                            )}
+                            {mode === 'project' && (
+                                <Project config={config} setProjectId={setProjectId} setProject={setProject} setMenu={setMenu} setMode={setMode} />
+                            )}
+                            {projectId && (
+                                <ProjectManager config={config} projectId={projectId.id} setProjectId={setProjectId} setMode={setMode} />
+                            )}
                         </>
                     )}
-                    {projectId && (
-                        <>
-                            <ProjectManager config={config} projectId={projectId.id} setProjectId={setProjectId} />
-                        </>
-                    )}
+                    {menu == 'addproject' &&
+                        <AddProjectForm config={config} setMenu={setMenu}></AddProjectForm>
+                    }
+                    {menu == 'addinteg' &&
+                        <SetupApplication config={config} setMenu={setMenu}></SetupApplication>
+                    }
                 </div>
             </div>
 
