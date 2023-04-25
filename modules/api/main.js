@@ -43,6 +43,7 @@ app.get('/global', async (req, res) => {
         var entries = await db.selectRows(bdd, 'global');
         entries[0].json = JSON.parse(entries[0].json);
         delete entries[0].json.server.encrypt;
+        delete entries[0].json.pid;
         res.json(entries);
     } catch (error) {
         common.error(error, 'api');
