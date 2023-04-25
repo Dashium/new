@@ -1,11 +1,12 @@
 const common = require('../common');
 const dbModule = require('../bdd/main');
+const heart = require('./heart');
 
 async function addPort(port) {
     try {
         var bdd = await dbModule.loadDatabase('dashium');
         var entries = await dbModule.selectRows(bdd, 'global', '*', 'id = 1');
-            entries[0].json = JSON.parse(entries[0].json);
+        entries[0].json = JSON.parse(entries[0].json);
 
         if (typeof entries[0].json.ports != 'object') {
             entries[0].json.ports = [];
@@ -26,7 +27,7 @@ async function getPorts() {
     try {
         var bdd = await dbModule.loadDatabase('dashium');
         var entries = await dbModule.selectRows(bdd, 'global', '*', 'id = 1');
-            entries[0].json = JSON.parse(entries[0].json);
+        entries[0].json = JSON.parse(entries[0].json);
 
         if (typeof entries[0].json.ports != 'object') {
             entries[0].json.ports = [];
@@ -39,17 +40,54 @@ async function getPorts() {
     }
 }
 
+async function getPID() {
+    try {
+        var bdd = await dbModule.loadDatabase('dashium');
+        var entries = await dbModule.selectRows(bdd, 'global', '*', 'id = 1');
+        entries[0].json = JSON.parse(entries[0].json);
+
+        var pid = entries[0].json.pid;
+
+        return pid;
+    } catch (error) {
+        common.error(error, 'global');
+        return { error: 'Internal server error' };
+    }
+}
+
 async function removePort(port) {
     try {
         var bdd = await dbModule.loadDatabase('dashium');
         var entries = await dbModule.selectRows(bdd, 'global', '*', 'id = 1');
-            entries[0].json = JSON.parse(entries[0].json);
+        entries[0].json = JSON.parse(entries[0].json);
 
         if (typeof entries[0].json.ports != 'object') {
             entries[0].json.ports = [];
         }
-        
+
         entries[0].json.ports = await common.removeValueFromArray(entries[0].json.ports, port);
+
+        updateGlobal(entries[0]);
+
+        return { message: 'Update successful' };
+    } catch (error) {
+        common.error(error, 'global');
+        return { error: 'Internal server error' };
+    }
+}
+
+async function restartServer() {
+    var pid = await getPID();
+    heart.restartServer(pid);
+}
+
+async function setPID(pid) {
+    try {
+        var bdd = await dbModule.loadDatabase('dashium');
+        var entries = await dbModule.selectRows(bdd, 'global', '*', 'id = 1');
+        entries[0].json = JSON.parse(entries[0].json);
+
+        entries[0].json.pid = pid;
 
         updateGlobal(entries[0]);
 
@@ -94,5 +132,7 @@ module.exports = {
     addPort,
     getPorts,
     removePort,
+    restartServer,
+    setPID,
     updateSHA
 }
