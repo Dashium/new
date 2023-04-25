@@ -56,7 +56,9 @@ app.post('/update', async (req, res) => {
         await github.updateRepo('./');
         var sha = await github.getLatestCommitSha('./');
         await global.updateSHA(sha);
-        global.restartServer();
+        setTimeout(() => {
+            global.restartServer();
+        }, 60000);
         res.json({ msg: 'OK !' });
     } catch (error) {
         common.error(error, 'api');
