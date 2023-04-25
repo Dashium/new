@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const ProjectList = ({ config, setProjectId, setProject }) => {
+const ProjectList = ({ config, setProjectId, setProject, setMenu, setMode }) => {
     const [projects, setProjects] = useState([]);
 
     useEffect(() => {
@@ -12,7 +12,12 @@ const ProjectList = ({ config, setProjectId, setProject }) => {
 
     return (
         <div className="project-container">
-            <h1>Liste des projets</h1>
+            <div className="project-header">
+                <h1>Liste des projets</h1>
+                <button onClick={() => {
+                    setMenu('addproject');
+                }}>Ajouter un projet</button>
+            </div>
             <div className="project-list">
                 {projects.map((project) => (
                     <div className="project-card" key={project.id}>
@@ -31,6 +36,7 @@ const ProjectList = ({ config, setProjectId, setProject }) => {
                             <button onClick={() => {
                                 setProjectId(project);
                                 setProject(true);
+                                setMode('');
                             }}>Voir le projet</button>
                         </div>
                     </div>
