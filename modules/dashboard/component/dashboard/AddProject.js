@@ -52,6 +52,7 @@ const AddProjectForm = ({ config, setMenu }) => {
             envVars,
         };
         axios.post(`http://${config.api.host}:${config.api.port}/add_project`, data);
+        setMenu('dashboard');
     }
 
     const handleAddPort = () => {
