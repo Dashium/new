@@ -87,7 +87,7 @@ const AddProjectForm = ({ config, setMenu }) => {
                     <div>
                         <label htmlFor="cluster">Cluster :</label>
                         <select id="cluster" value={cluster} onChange={(e) => setCluster(e.target.value)}>
-                            <option value="" hidden selected>-- Choisissez un cluster --</option>
+                            <option value="" hidden>-- Choisissez un cluster --</option>
                             {clusters.map(cluster => (
                                 <option key={cluster.id} value={cluster.id}>
                                     {cluster.name}
@@ -113,7 +113,7 @@ const AddProjectForm = ({ config, setMenu }) => {
                             value={selectedProject}
                             onChange={(e) => setSelectedProject(e.target.value)}
                         >
-                            <option value="" hidden selected>-- Choisissez un projet --</option>
+                            <option value="" hidden>-- Choisissez un projet --</option>
                             {projects.map((project) => (
                                 <option key={project.repository.id} value={project.repository.html_url}>
                                     {project.repository.name}
@@ -127,7 +127,7 @@ const AddProjectForm = ({ config, setMenu }) => {
                             value={selectedProject}
                             onChange={(e) => setSelectedProject(e.target.value)}
                         >
-                            <option value="" hidden selected>-- Choisissez un projet --</option>
+                            <option value="" hidden>-- Choisissez un projet --</option>
                             {projects.map((project) => (
                                 <option key={project.repository.id} value={project.repository.html_url}>
                                     {project.repository.name}
@@ -141,7 +141,7 @@ const AddProjectForm = ({ config, setMenu }) => {
                             value={selectedProject}
                             onChange={(e) => setSelectedProject(e.target.value)}
                         >
-                            <option value="" hidden selected>-- Choisissez un projet --</option>
+                            <option value="" hidden>-- Choisissez un projet --</option>
                             {projects.map((project) => (
                                 <option key={project.repository.id} value={project.repository.html_url}>
                                     {project.repository.name}
