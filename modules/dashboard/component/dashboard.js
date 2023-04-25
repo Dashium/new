@@ -24,9 +24,9 @@ const Dashboard = () => {
                     <DashiumUpdater config={config} repoName={'dashium/new'}></DashiumUpdater>
                     {!projectId && (
                         <>
-                            <div>
+                            <div className='cluster-container'>
                                 <h1>Dashboard</h1>
-                                <p>Welcome to the dashium, my name is {config.server.name}</p>
+                                <p>Welcome to the dashium, my name is {config.server.name}.</p>
                             </div>
                             <ClusterList config={config}></ClusterList>
                             <Project config={config} setProjectId={setProjectId} setProject={setProject} />
