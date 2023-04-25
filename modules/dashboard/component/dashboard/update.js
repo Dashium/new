@@ -39,7 +39,7 @@ const DashiumUpdater = ({ config, repoName }) => {
 
     return (
         <div>
-            {isUpToDate && (
+            {!isUpToDate && (
                 <Popup close={handleUpdateClick} type='warning' button='Update' message={`A new version of the application is available!`}></Popup>
             )}
         </div>
