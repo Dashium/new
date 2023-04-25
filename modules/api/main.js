@@ -279,7 +279,6 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/check-token', async (req, res) => {
-    console.log(req);
     try {
         const token = req.body.token;
         const user = await account.verifyToken(token);
