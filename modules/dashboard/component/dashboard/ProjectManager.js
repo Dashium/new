@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import axios from 'axios';
 import TerminalSSH from './terminal';
+import Monitor from './monitor';
 
 function ProjectManager({ config, projectId, setProjectId }) {
     const [project, setProject] = useState({});
@@ -148,6 +149,7 @@ function ProjectManager({ config, projectId, setProjectId }) {
                         {activeMenu === 'consolessh' && (
                             <>
                                 <TerminalSSH config={config} containerName={project.docker.dockerID} />
+                                <Monitor config={config} containerName={project.docker.dockerID} />
                             </>
                         )}
                     </>
