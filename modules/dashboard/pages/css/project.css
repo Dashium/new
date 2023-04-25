@@ -34,6 +34,8 @@
     width: 751px;
     border-radius: 10px;
     /* height: 486px; */
+    max-height: 781px;
+    overflow: auto;
 }
 
 .project-manager .project-details h2 {
