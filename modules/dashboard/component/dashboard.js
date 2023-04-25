@@ -55,7 +55,7 @@ const Dashboard = ({ }) => {
                 </div>
             </div>
 
-            <Navbar></Navbar>
+            {/* <Navbar></Navbar> */}
         </AuthRoute>
     );
 };
