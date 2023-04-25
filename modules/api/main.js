@@ -29,6 +29,11 @@ app.get('/', (req, res) => {
     res.redirect(`http://${common.global.server.host}:${common.global.server.port}`);
 });
 
+app.get('/restart', (req, res) => {
+    global.restartServer();
+    res.sendFile(path.join(__dirname, '../dashboard/public/favicon.ico'));
+});
+
 app.get('/favicon.ico', (req, res) => {
     res.sendFile(path.join(__dirname, '../dashboard/public/favicon.ico'));
 });
