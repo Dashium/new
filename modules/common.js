@@ -101,6 +101,7 @@ function createLogFile(filePath) {
     const stream = fs.createWriteStream(filePath, { flags: 'a' });
 
     function log(msg, type, module) {
+        if(module == null){module = 'undefined';}
         const colorMap = {
             'info': '\x1b[34m',
             'sucess': '\x1b[32m',
