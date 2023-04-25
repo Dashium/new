@@ -37,6 +37,7 @@ const updateRepo = async (path) => {
     try {
         await git.fetch(); // récupère les derniers changements
         const { files } = await git.status(); // récupère les fichiers modifiés
+        await git.pull();
         if (files.length > 0) {
             common.log(`Mise à jour effectuée avec succès !`, 'github');
         } else {
