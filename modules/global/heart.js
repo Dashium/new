@@ -36,9 +36,9 @@ function restartServer(pid) {
         });
     } else {
         // Unix / Mac
-        exec(`sudo kill ${pid}`, (err, stdout, stderr) => {
-            if (err) {
-                common.error(err, '💖 heart');
+        // exec(`sudo kill ${pid}`, (err, stdout, stderr) => {
+        //     if (err) {
+        //         common.error(err, '💖 heart');
                 exec(`sudo systemctl restart dashium`, (err, stdout, stderr) => {
                     if (err) {
                         common.error(err, '💖 heart');
@@ -46,10 +46,10 @@ function restartServer(pid) {
                     }
                     common.log(`Server stopped with systemCTL`, '💖 heart');
                 });
-                return;
-            }
-            common.log(`Server stopped with PID: ${pid}`, '💖 heart');
-        });
+            //     return;
+            // }
+            // common.log(`Server stopped with PID: ${pid}`, '💖 heart');
+        // });
     }
 }
 
