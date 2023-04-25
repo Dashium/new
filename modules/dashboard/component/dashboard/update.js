@@ -18,7 +18,7 @@ const DashiumUpdater = ({ config, repoName }) => {
         const fetchGlobalData = async () => {
             const response = await (await axios.get(`http://${config.api.host}:${config.api.port}/global`)).data[0];
             const data = response['json'];
-            const currentCommitSha = data.update.sha;
+            const currentCommitSha = data.update;
             setcurrentCommitSha(currentCommitSha)
             if (currentCommitSha !== latestCommitSha) {
                 setIsUpToDate(false);
@@ -39,8 +39,8 @@ const DashiumUpdater = ({ config, repoName }) => {
 
     return (
         <div>
-            {!isUpToDate && (
-                <Popup close={handleUpdateClick} type='warning' button='Update' message='A new version of the application is available!'></Popup>
+            {isUpToDate && (
+                <Popup close={handleUpdateClick} type='warning' button='Update' message={`A new version of the application is available!`}></Popup>
             )}
         </div>
     );
