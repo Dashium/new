@@ -140,8 +140,7 @@ const SetupApplication = () => {
                 {selectedPlatform === "github" && githubForm}
                 {selectedPlatform === "gitlab" && gitlabForm}
                 {selectedPlatform === "bitbucket" && bitbucketForm}
-
-                <button type="submit">Valider</button>
+                {selectedPlatform && <button type="submit">Valider</button>}
             </form>
         </div >
     );
