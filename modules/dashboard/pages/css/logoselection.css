@@ -1,0 +1,46 @@
+.logo-selector {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-selector .option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    padding: 10px;
+    transition: all 0.2s ease-in-out;
+}
+
+.logo-selector .option:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.logo-selector .selected {
+    background-color: #0059b3;
+    color: white;
+}
+
+.logo-selector .selected:hover {
+    background-color: #007acc;
+}
+
+.logo-selector .option.logo {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.logo-selector .label {
+    font-size: 16px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
