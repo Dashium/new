@@ -109,8 +109,6 @@ async function init(stopanimation, data) {
             json: JSON.stringify(globalDATA)
         });
 
-        await integrations.addIntegration('github', data.githubAPPID)
-
         await account.registerUser({ email: 'root@local', password: 'dashium', name: 'Root', type: 'admin' } );
 
         common.global = globalDATA;
@@ -215,9 +213,6 @@ async function main() {
     const autoStart = await askQuestion("Do you want to enable automatic start? (Y/n) (default: Y) ", 'Y');
     console.log(`Automatic start: ${autoStart}.`);
 
-    const githubAPP = await askQuestion("Give me your Github APP Token (default: none) ", 'none');
-    console.log(`The Github APP token has been set !`);
-
     init(loadingAnimation(), {
         name: name,
         host: host.toLowerCase(),
@@ -232,7 +227,6 @@ async function main() {
         dockerIMG: dockerIMG,
         aliasGEN: aliasGEN,
         autoStart: autoStart,
-        githubAPPID: githubAPP
     });
 }
 
