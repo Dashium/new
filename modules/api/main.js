@@ -3,7 +3,6 @@ const ci = require('../ci/main');
 const common = require('../common');
 const db = require('../bdd/main');
 const express = require('express');
-const fs = require('fs');
 const global = require('../global/main');
 const github = require('../clone/github');
 const https = require('https');
@@ -19,10 +18,7 @@ var bdd = null;
 const app = express();
 app.use(express.json());
 
-const SSLfile = {
-    key: fs.readFileSync(ssl.sslFile().key),
-    cert: fs.readFileSync(ssl.sslFile().cert)
-};
+const SSLfile = ssl.getSSL();
 
 var frontEND = `https://${common.global.server.host}:${common.global.server.port}`;
 if (os.platform() != 'win32') { frontEND = `https://${common.global.server.host}` }
