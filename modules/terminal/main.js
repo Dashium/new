@@ -1,12 +1,19 @@
 const express = require('express');
-const http = require('http');
 const path = require('path');
 const io = require('socket.io');
 const common = require('../common');
+const fs = require('fs');
 const docker = require('../ci/docker');
+const https = require('https');
+const ssl = require('../ssl/main');
+
+const SSLfile = {
+    key: fs.readFileSync(ssl.sslFile().key),
+    cert: fs.readFileSync(ssl.sslFile().cert)
+};
 
 const app = express();
-const server = http.createServer(app);
+const server = https.createServer(SSLfile, app);
 const socket = io(server);
 
 app.use(function (req, res, next) {

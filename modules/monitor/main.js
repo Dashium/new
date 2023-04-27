@@ -1,10 +1,17 @@
 const app = require('express')();
-const server = require('http').createServer(app);
+const server = require('https');
 const io = require('socket.io')(server);
 const { exec } = require('child_process');
+const fs = require('fs');
 const docker = require('../ci/docker');
 const common = require('../common');
 const path = require('path');
+const ssl = require('../ssl/main');
+
+const SSLfile = {
+    key: fs.readFileSync(ssl.sslFile().key),
+    cert: fs.readFileSync(ssl.sslFile().cert)
+};
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", `http://${common.global.server.host}`);
@@ -72,6 +79,6 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(common.global.monitor.port, () => {
+server.createServer(SSLfile, app).listen(common.global.monitor.port, async () => {
     common.sucess(`Server listening on port ${common.global.monitor.port}`, 'monitor');
 });
