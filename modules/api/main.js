@@ -383,8 +383,9 @@ app.post('/add_project', async (req, res) => {
 });
 // END PROJECT
 if (SSLfile != null) {
-    https.createServer(SSLfile, app).listen(common.global.api.port, () => {
+    https.createServer(SSLfile, app).listen(common.global.api.port, async () => {
         common.sucess(`Server listening on port ${common.global.api.port}`, 'api');
+        bdd = await db.loadDatabase('dashium');
     });
 }
 else {
