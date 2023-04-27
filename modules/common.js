@@ -102,7 +102,7 @@ function createLogFile(filePath) {
     const stream = fs.createWriteStream(filePath, { flags: 'a' });
 
     function log(msg, type, module) {
-        if(module == null){module = 'undefined';}
+        if (module == null) { module = 'undefined'; }
         const colorMap = {
             'info': '\x1b[34m',
             'sucess': '\x1b[32m',
@@ -120,6 +120,12 @@ function createLogFile(filePath) {
     }
 
     return { log };
+}
+
+function datePlus24h() {
+    const now = Date.now();
+    const plus24h = now + 24 * 60 * 60 * 1000;
+    return plus24h;
 }
 
 function replaceAll(str, find, replace) {
@@ -163,8 +169,8 @@ function removeValueFromArray(array, value) {
 }
 
 function timestampToString(timestamp) {
-        timestamp = parseInt(timestamp);
-        timestamp = Math.ceil(timestamp);
+    timestamp = parseInt(timestamp);
+    timestamp = Math.ceil(timestamp);
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const date = new Date(timestamp);
     const year = date.getFullYear();
@@ -200,6 +206,11 @@ function isPortInUse(port) {
             resolve(false);
         });
     });
+}
+
+function isTimestampUpcoming(timestamp) {
+    const now = Date.now();
+    return timestamp > now;
 }
 
 function findAvailablePort(startPort = 3000, endPort = 3999) {
@@ -238,6 +249,7 @@ function isHostPortUsed(hostPort, portsConfig) {
 module.exports = {
     copyDir,
     copyFile,
+    datePlus24h,
     error: (msg, from) => { logFile.log(msg, 'error', from); },
     findAvailablePort,
     formatJsonToArray,
@@ -248,6 +260,7 @@ module.exports = {
     global,
     isHostPortUsed,
     isPortInUse,
+    isTimestampUpcoming,
     log: (msg, from) => { logFile.log(msg, 'info', from); },
     mkdir,
     removeValueFromArray,

@@ -28,7 +28,7 @@ async function loginUser(data) {
         }
 
         // Génère un token JWT
-        const token = jwt.sign({ userId: user[0].id }, SECRET_KEY);
+        const token = jwt.sign({ userId: user[0].id, expire: common.datePlus24h() }, SECRET_KEY);
 
         common.sucess('Login successful', 'account');
 
@@ -50,6 +50,7 @@ async function verifyToken(token) {
         // Vérifie le token JWT
         const decodedToken = jwt.verify(token, secretKey);
         const userId = decodedToken.userId;
+        const expire = decodedToken.expire;
 
         // Vérifie si l'utilisateur associé au token existe dans la base de données
         const user = await dbModule.selectRows(bdd, 'users', '*', 'id = ?', [userId]);
@@ -57,6 +58,12 @@ async function verifyToken(token) {
             common.error('Invalid token', 'account');
             return { error: 'Invalid token' };
         }
+
+        if(common.isTimestampUpcoming(expire) == false){
+            common.error('Invalid token', 'account');
+            return { error: 'Invalid token' };
+        }
+
         common.log('Valid token', 'account');
 
         // Le token est valide
