@@ -3,12 +3,14 @@ const ci = require('../ci/main');
 const common = require('../common');
 const db = require('../bdd/main');
 const express = require('express');
+const global = require('../global/main');
 const github = require('../clone/github');
 const integration = require('../integration/main');
+var multer = require('multer');
 const os = require('os');
 const path = require('path');
 const project = require('../projets/main');
-const global = require('../global/main');
+const upload = multer({ dest: 'uploads/' });
 
 var bdd = null;
 const app = express();
@@ -319,10 +321,33 @@ app.post('/get_repos', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+app.post('/add_integ', upload.single('privateKey'), (req, res) => {
+    const { selectedPlatform, appId, privateKey, baseUrl, username, password } = req.body;
+
+    // if (!selectedPlatform || !appId || !privateKey || !baseUrl || !username || !password) {
+    //     return res.status(201).send('Toutes les données requises ne sont pas fournies');
+    // }
+
+    switch (selectedPlatform){
+        case 'github':
+            if (!appId || !req.file.path) {
+                return res.status(201).send('Toutes les données requises ne sont pas fournies');
+            }
+            common.copyFile(req.file.path, `./config/${selectedPlatform}.pem`);
+            break;
+        default:
+            return res.status(201).send('Toutes les données requises ne sont pas fournies');
+    }
+
+    res.status(201).send('Intégration ajoutée avec succès');
+});
+// END INTEGRATION
+
+// START PROJECT
 app.post('/add_project', async (req, res) => {
     const current = req.body;
     console.log(current);
-    const {id} = await project.createProject(current.projectName, parseInt(current.cluster), current.selectedProject, 'root@local');
+    const { id } = await project.createProject(current.projectName, parseInt(current.cluster), current.selectedProject, 'root@local');
     console.log(id);
 
     await project.setDockerImage(id, current.selectedImage);
@@ -347,7 +372,7 @@ app.post('/add_project', async (req, res) => {
         ci.runCI(id);
     }, 5000);
 });
-// END INTEGRATION
+// END PROJECT
 
 app.listen(common.global.api.port, async () => {
     common.sucess(`Server listening on port ${common.global.api.port}`, 'api');
