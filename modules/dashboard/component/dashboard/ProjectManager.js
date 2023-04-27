@@ -13,7 +13,7 @@ function ProjectManager({ config, projectId, setProjectId, setMode }) {
     const [newScript, setNewScript] = useState('');
 
     useEffect(() => {
-        axios.get(`http://${config.api.host}:${config.api.port}/projects/${projectId}`)
+        axios.get(`https://${config.api.host}:${config.api.port}/projects/${projectId}`)
             .then(response => {
                 setProject(response.data);
                 setLoading(false);
@@ -222,7 +222,7 @@ function ProjectManager({ config, projectId, setProjectId, setMode }) {
                                     <ul>
                                         {project.docker.ports && project.docker.ports.map((port, index) => (
                                             <li key={index}>
-                                                <a target='_blank' href={`http://${config.server.host}:${port.host}/`}>{port.container}</a>
+                                                <a target='_blank' href={`https://${config.server.host}:${port.host}/`}>{port.container}</a>
                                                 <button onClick={() => handlePortDelete(index)}><RiDeleteBin6Line /></button>
                                             </li>
                                         ))}

@@ -12,7 +12,7 @@ const TerminalSSH = ({ config, containerName }) => {
                 <div className="terminal-title">SSH Terminal</div>
             </div>
             <div className="terminal-body">
-                <iframe src={`http://${config.ssh.host}:${config.ssh.port}/${containerName}`}></iframe>
+                <iframe src={`https://${config.ssh.host}:${config.ssh.port}/${containerName}`}></iframe>
             </div>
         </div>
     );

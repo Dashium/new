@@ -16,7 +16,7 @@ const Login = ({ api }) => {
 
     const handleRegister = async () => {
         try {
-            const response = await axios.post(`http://${api.host}:${api.port}/register`, {
+            const response = await axios.post(`https://${api.host}:${api.port}/register`, {
                 email,
                 password,
                 confirmPassword
@@ -32,7 +32,7 @@ const Login = ({ api }) => {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post(`http://${api.host}:${api.port}/login`, {
+            const response = await axios.post(`https://${api.host}:${api.port}/login`, {
                 email,
                 password
             });

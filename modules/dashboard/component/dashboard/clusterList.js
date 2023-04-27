@@ -5,7 +5,7 @@ const ClusterList = ({ config, setclusterId, setcluster }) => {
     const [clusters, setclusters] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://${config.api.host}:${config.api.port}/clusters`)
+        axios.get(`https://${config.api.host}:${config.api.port}/clusters`)
             .then(response => setclusters(response.data))
             .catch(error => console.log(error));
     }, [config]);

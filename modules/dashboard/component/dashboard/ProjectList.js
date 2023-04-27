@@ -5,7 +5,7 @@ const ProjectList = ({ config, setProjectId, setProject, setMenu, setMode }) => 
     const [projects, setProjects] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://${config.api.host}:${config.api.port}/projects`)
+        axios.get(`https://${config.api.host}:${config.api.port}/projects`)
             .then(response => setProjects(response.data))
             .catch(error => console.log(error));
     }, [config]);
@@ -27,7 +27,7 @@ const ProjectList = ({ config, setProjectId, setProject, setMenu, setMode }) => 
                                 {
                                     project.docker.ports && project.docker.ports.map((val, id) => {
                                         return (
-                                            <a key={id} target='_blank' href={`http://${config.server.host}:${val.host}/`}>{`http://${config.server.host}:${val.host}/`}</a>
+                                            <a key={id} target='_blank' href={`https://${config.server.host}:${val.host}/`}>{`http://${config.server.host}:${val.host}/`}</a>
                                         )
                                     })
                                 }

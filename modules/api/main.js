@@ -3,21 +3,29 @@ const ci = require('../ci/main');
 const common = require('../common');
 const db = require('../bdd/main');
 const express = require('express');
+const fs = require('fs');
 const global = require('../global/main');
 const github = require('../clone/github');
+const https = require('https');
 const integration = require('../integration/main');
 var multer = require('multer');
 const os = require('os');
 const path = require('path');
 const project = require('../projets/main');
+const ssl = require('../ssl/main');
 const upload = multer({ dest: 'uploads/' });
 
 var bdd = null;
 const app = express();
 app.use(express.json());
 
-var frontEND = `http://${common.global.server.host}:${common.global.server.port}`;
-if (os.platform() != 'win32') { frontEND = `http://${common.global.server.host}` }
+const SSLfile = {
+    key: fs.readFileSync(ssl.sslFile().key),
+    cert: fs.readFileSync(ssl.sslFile().cert)
+};
+
+var frontEND = `https://${common.global.server.host}:${common.global.server.port}`;
+if (os.platform() != 'win32') { frontEND = `https://${common.global.server.host}` }
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", frontEND);
@@ -28,7 +36,7 @@ app.use(function (req, res, next) {
 });
 
 app.get('/', (req, res) => {
-    res.redirect(`http://${common.global.server.host}:${common.global.server.port}`);
+    res.redirect(`https://${common.global.server.host}:${common.global.server.port}`);
 });
 
 app.get('/restart', (req, res) => {
@@ -328,7 +336,7 @@ app.post('/add_integ', upload.single('privateKey'), (req, res) => {
     //     return res.status(201).send('Toutes les données requises ne sont pas fournies');
     // }
 
-    switch (selectedPlatform){
+    switch (selectedPlatform) {
         case 'github':
             if (!appId || !req.file.path) {
                 return res.status(201).send('Toutes les données requises ne sont pas fournies');
@@ -374,8 +382,14 @@ app.post('/add_project', async (req, res) => {
     }, 5000);
 });
 // END PROJECT
-
-app.listen(common.global.api.port, async () => {
-    common.sucess(`Server listening on port ${common.global.api.port}`, 'api');
-    bdd = await db.loadDatabase('dashium');
-});
+if (SSLfile != null) {
+    https.createServer(SSLfile, app).listen(common.global.api.port, () => {
+        common.sucess(`Server listening on port ${common.global.api.port}`, 'api');
+    });
+}
+else {
+    app.listen(common.global.api.port, async () => {
+        common.sucess(`Server listening on port ${common.global.api.port}`, 'api');
+        bdd = await db.loadDatabase('dashium');
+    });
+}

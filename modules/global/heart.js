@@ -2,6 +2,8 @@ const { exec } = require('child_process');
 const os = require('os');
 const global = require('./main');
 const common = require('../common');
+const ssl = require('../ssl/main');
+
 const autorestart = process.argv[2] == '--norestart' ? false : true;
 
 function startScript() {
@@ -9,6 +11,8 @@ function startScript() {
         common.warn('Auto restart is set to FALSE !', '💖 heart');
     }
     common.log('Starting script...', '💖 heart');
+
+    ssl.createSSL();
 
     const heart = exec('npm run build');
 

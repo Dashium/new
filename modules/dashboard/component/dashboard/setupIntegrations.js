@@ -21,7 +21,7 @@ const SetupApplication = ({ config }) => {
             formData.append("password", password);
 
         fetch(
-            `http://${config.api.host}:${config.api.port}/add_integ`,
+            `https://${config.api.host}:${config.api.port}/add_integ`,
             {
                 method: 'POST',
                 body: formData,

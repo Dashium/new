@@ -21,7 +21,7 @@ const AddProjectForm = ({ config, setMenu }) => {
         // fetch projects data from API when service changes
         async function fetchProjects() {
             try {
-                const response = await axios.post(`http://${config.api.host}:${config.api.port}/get_repos/`, { service: service })
+                const response = await axios.post(`https://${config.api.host}:${config.api.port}/get_repos/`, { service: service })
                 const data = response.data;
                 setProjects(data);
             } catch (error) {
@@ -33,7 +33,7 @@ const AddProjectForm = ({ config, setMenu }) => {
             fetchProjects();
         }
 
-        axios.get(`http://${config.api.host}:${config.api.port}/clusters`).then(response => {
+        axios.get(`https://${config.api.host}:${config.api.port}/clusters`).then(response => {
             setClusters(response.data);
         });
     }, [config, service]);
@@ -51,7 +51,7 @@ const AddProjectForm = ({ config, setMenu }) => {
             ports,
             envVars,
         };
-        axios.post(`http://${config.api.host}:${config.api.port}/add_project`, data);
+        axios.post(`https://${config.api.host}:${config.api.port}/add_project`, data);
         setMenu('dashboard');
     }
 

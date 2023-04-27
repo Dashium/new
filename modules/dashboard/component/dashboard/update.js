@@ -14,7 +14,7 @@ const DashiumUpdater = ({ config, repoName }) => {
             setLatestCommitSha(latestCommit.sha);
         };
         const fetchGlobalData = async () => {
-            const response = await (await axios.get(`http://${config.api.host}:${config.api.port}/global`)).data[0];
+            const response = await (await axios.get(`https://${config.api.host}:${config.api.port}/global`)).data[0];
             const data = response['json'];
             const currentCommitSha = data.update;
             setcurrentCommitSha(currentCommitSha);
@@ -31,7 +31,7 @@ const DashiumUpdater = ({ config, repoName }) => {
     }, [repoName, config, currentCommitSha, latestCommitSha]);
 
     const handleUpdateClick = () => {
-        axios.post(`http://${config.api.host}:${config.api.port}/update`);
+        axios.post(`https://${config.api.host}:${config.api.port}/update`);
         setTimeout(() => {
             window.location.reload();
         }, 300000);

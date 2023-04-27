@@ -180,7 +180,7 @@ async function main() {
     const host = await askQuestion(`What is the host name or IP address of the server? (default: ${common.getHostname()}.local) `, `${common.getHostname()}.local`);
     console.log(`The host name or IP address of the server is ${host.toLowerCase()}.`);
 
-    const port = await askQuestion("What is the port number of the server? (default: 80) ", 80);
+    const port = await askQuestion("What is the port number of the server? (default: 443) ", 443);
     console.log(`The port number of the server is ${port}.`);
 
     const APIport = await askQuestion("What is the port number of the API server? (default: 5051) ", 5051);

@@ -10,7 +10,7 @@ const checkAuth = async ({ config }) => {
     }
 
     // Vérifier si le token est valide en le vérifiant avec le serveur
-    const response = (await axios.post(`http://${config.api.host}:${config.api.port}/check-token`, {token: token})).data;
+    const response = (await axios.post(`https://${config.api.host}:${config.api.port}/check-token`, {token: token})).data;
 
     if (!response.message) {
         throw new Error('Invalid token');
