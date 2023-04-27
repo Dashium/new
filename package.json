@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node start.js",
     "build": "npm-run-all build:*",
+    "build:install": "npm install",
     "build:infos": "node ./modules/infos.js",
     "build:init": "node ./setup/init.js",
     "build:dockerStart": "node ./setup/dockerContainer.js",
