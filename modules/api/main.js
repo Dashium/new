@@ -339,16 +339,16 @@ app.post('/add_integ', upload.single('privateKey'), (req, res) => {
     switch (selectedPlatform) {
         case 'github':
             if (!appId || !req.file.path) {
-                return res.status(201).send('Toutes les données requises ne sont pas fournies');
+                return res.status(201).json({message: 'Toutes les données requises ne sont pas fournies'});
             }
             common.copyFile(req.file.path, `./config/${selectedPlatform}.pem`);
             integration.addIntegration('github', appId);
             break;
         default:
-            return res.status(201).send('Toutes les données requises ne sont pas fournies');
+            return res.status(201).json({message: 'Toutes les données requises ne sont pas fournies'});
     }
 
-    res.status(201).send('Intégration ajoutée avec succès');
+    res.status(201).json({message: 'Intégration ajoutée avec succès'});
 });
 // END INTEGRATION
 
