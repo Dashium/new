@@ -334,6 +334,7 @@ app.post('/add_integ', upload.single('privateKey'), (req, res) => {
                 return res.status(201).send('Toutes les données requises ne sont pas fournies');
             }
             common.copyFile(req.file.path, `./config/${selectedPlatform}.pem`);
+            integration.addIntegration('github', appId);
             break;
         default:
             return res.status(201).send('Toutes les données requises ne sont pas fournies');
