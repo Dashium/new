@@ -52,7 +52,12 @@ sh uninstall.sh
 go on: 
 ```bash
  http://<serverIP>:<serverPORT>
- ```
+```
+
+if no autorestart app start with this command:
+```bash
+ npm start -- --norestart
+```
 
 
 © [Tai Studio](https://tai-studio.netlify.app) 2021/2023

@@ -2,8 +2,12 @@ const { exec } = require('child_process');
 const os = require('os');
 const global = require('./main');
 const common = require('../common');
+const autorestart = process.argv[2] == '--norestart' ? false : true;
 
 function startScript() {
+    if(autorestart == false){
+        common.warn('Auto restart is set to FALSE !', '💖 heart');
+    }
     common.log('Starting script...', '💖 heart');
 
     const process = exec('npm run build');
@@ -18,7 +22,12 @@ function startScript() {
 
     process.on('close', (code) => {
         common.log(`Script exited with code ${code}. Restarting...`, '💖 heart');
-        startScript();
+        if(autorestart == true){
+            startScript();
+        }
+        else{
+            process.exit(0);
+        }
     });
 
     global.setPID(process.pid);
