@@ -48,7 +48,14 @@ async function verifyToken(token) {
         const secretKey = entries[0].json.server.encrypt;
 
         // Vérifie le token JWT
-        const decodedToken = jwt.verify(token, secretKey);
+        let decodedToken = null;
+        try {
+            decodedToken = jwt.verify(token, secretKey);
+        } catch (err) {
+            common.error('Invalid token', 'account');
+            return { error: 'Invalid token' };
+        }
+
         const userId = decodedToken.userId;
         const expire = decodedToken.expire;
 
@@ -59,7 +66,7 @@ async function verifyToken(token) {
             return { error: 'Invalid token' };
         }
 
-        if(common.isTimestampUpcoming(expire) == false){
+        if (common.isTimestampUpcoming(expire) == false) {
             common.error('Invalid token', 'account');
             return { error: 'Invalid token' };
         }
@@ -67,7 +74,7 @@ async function verifyToken(token) {
         common.log('Valid token', 'account');
 
         // Le token est valide
-        return { userId };
+        return { message: 'Valid token' };
     } catch (error) {
         common.error(error, 'account');
         return { error: 'Invalid token' };

@@ -35,6 +35,33 @@ app.use(function (req, res, next) {
     next();
 });
 
+async function verifyTOKEN(req, res, nosend) {
+    try {
+        const token = req.body.token;
+        const code = await account.verifyToken(token);
+
+        if(code.error != null){
+            if (nosend == null) {
+                res.status(200).json({ error: 'Invalid token' });
+            }
+            return false;
+        }
+
+        if(code.message != null){
+            if (nosend == null) {
+                res.status(200).json({ message: 'Token is valid' });
+            }
+            return true;
+        }
+    } catch (error) {
+        common.error(error, 'api');
+        if (nosend == null) {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+        return false;
+    }
+}
+
 app.get('/', (req, res) => {
     res.redirect(`https://${common.global.server.host}:${common.global.server.port}`);
 });
@@ -298,19 +325,7 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/check-token', async (req, res) => {
-    try {
-        const token = req.body.token;
-        const user = await account.verifyToken(token);
-
-        if (user) {
-            res.status(200).json({ message: 'Token is valid' });
-        } else {
-            res.status(401).json({ error: 'Invalid token' });
-        }
-    } catch (error) {
-        common.error(error, 'api');
-        res.status(500).json({ error: 'Internal server error' });
-    }
+    await verifyTOKEN(req, res);
 });
 // END LOGIN REGISTER
 
@@ -339,16 +354,16 @@ app.post('/add_integ', upload.single('privateKey'), (req, res) => {
     switch (selectedPlatform) {
         case 'github':
             if (!appId || !req.file.path) {
-                return res.status(201).json({message: 'Toutes les données requises ne sont pas fournies'});
+                return res.status(201).json({ message: 'Toutes les données requises ne sont pas fournies' });
             }
             common.copyFile(req.file.path, `./config/${selectedPlatform}.pem`);
             integration.addIntegration('github', appId);
             break;
         default:
-            return res.status(201).json({message: 'Toutes les données requises ne sont pas fournies'});
+            return res.status(201).json({ message: 'Toutes les données requises ne sont pas fournies' });
     }
 
-    res.status(201).json({message: 'Intégration ajoutée avec succès'});
+    res.status(201).json({ message: 'Intégration ajoutée avec succès' });
 });
 // END INTEGRATION
 
