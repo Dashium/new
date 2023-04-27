@@ -93,6 +93,7 @@ function copyDir(src, dest) {
 }
 
 function copyFile(source, destination) {
+    logFile.log(`Fichier "${source}" copier dans ${destination}`, 'warn', 'common');
     fs.copyFileSync(source, destination);
 }
 
