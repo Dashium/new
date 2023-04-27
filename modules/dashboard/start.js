@@ -1,20 +1,16 @@
 const next = require('next');
 const common = require('../common');
 const https = require('https');
-const fs = require('fs');
 const ssl = require('../ssl/main');
 
 const dev = false;
 const app = next({ dev, dir: './build' });
 const handle = app.getRequestHandler();
 
-const sslOptions = {
-    key: fs.readFileSync(ssl.sslFile().key),
-    cert: fs.readFileSync(ssl.sslFile().cert)
-};
+const SSLfile = ssl.getSSL();
 
 app.prepare().then(() => {
-    https.createServer(sslOptions, (req, res) => {
+    https.createServer(SSLfile, (req, res) => {
         // Be sure to pass `true` as the second argument to `url.parse`.
         // This tells it to parse the query portion of the URL.
         const parsedUrl = require('url').parse(req.url, true);

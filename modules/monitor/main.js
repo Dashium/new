@@ -2,16 +2,12 @@ const app = require('express')();
 const server = require('https');
 const io = require('socket.io')(server);
 const { exec } = require('child_process');
-const fs = require('fs');
 const docker = require('../ci/docker');
 const common = require('../common');
 const path = require('path');
 const ssl = require('../ssl/main');
 
-const SSLfile = {
-    key: fs.readFileSync(ssl.sslFile().key),
-    cert: fs.readFileSync(ssl.sslFile().cert)
-};
+const SSLfile = ssl.getSSL();
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", `http://${common.global.server.host}`);

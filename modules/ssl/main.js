@@ -46,7 +46,22 @@ async function createSSL(){
     );
 }
 
+function getSSL(){
+    const SSLfile = {
+        key: null,
+        cert: null
+    };
+    if(fs.existsSync(sslFile().key)){
+        SSLfile.key = fs.readFileSync(sslFile().key);
+    }
+    if(fs.existsSync(sslFile().cert)){
+        SSLfile.cert = fs.readFileSync(sslFile().cert);
+    }
+    return SSLfile;
+}
+
 module.exports = {
     createSSL,
-    sslFile
+    sslFile,
+    getSSL
 }
