@@ -10,17 +10,17 @@ function startScript() {
     }
     common.log('Starting script...', '💖 heart');
 
-    const process = exec('npm run build');
+    const heart = exec('npm run build');
 
-    process.stdout.on('data', (data) => {
+    heart.stdout.on('data', (data) => {
         common.log(data, '💖 heart');
     });
 
-    process.stderr.on('data', (data) => {
+    heart.stderr.on('data', (data) => {
         common.error(data, '💖 heart');
     });
 
-    process.on('close', (code) => {
+    heart.on('close', (code) => {
         common.log(`Script exited with code ${code}. Restarting...`, '💖 heart');
         if(autorestart == true){
             startScript();
@@ -30,7 +30,7 @@ function startScript() {
         }
     });
 
-    global.setPID(process.pid);
+    global.setPID(heart.pid);
 }
 
 function restartServer(pid) {
