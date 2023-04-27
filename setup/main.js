@@ -3,7 +3,6 @@ const readline = require('readline');
 const fs = require('fs');
 const common = require('../modules/common');
 const github = require('../modules/clone/github');
-const integrations = require('../modules/integration/main');
 
 async function init(stopanimation, data) {
     const common = require('../modules/common');
