@@ -1,5 +1,6 @@
 const sqlite3 = require('sqlite3').verbose();
 const common = require('../common');
+const fs = require('fs');
 
 // Fonction pour créer la base de données
 function createDatabase(dbName) {
@@ -16,6 +17,11 @@ function createDatabase(dbName) {
 
 function loadDatabase(dbName) {
     return new Promise((resolve, reject) => {
+        if(!fs.existsSync(`./config/${dbName}.db`)){
+            // reject(`Database ${dbName} not found !`);
+            common.error(`Database ${dbName} not found !`, 'bdd');
+            return;
+        }
         const db = new sqlite3.Database(`./config/${dbName}.db`, (err) => {
             if (err) {
                 reject(err.message);
