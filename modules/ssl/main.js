@@ -19,7 +19,7 @@ async function createSSL(){
     common.mkdir('config/ssl');
 
     if(fs.existsSync(keyFileName)){
-        common.log('SSL certificate already exist !');
+        common.log('SSL certificate already exist !', 'ssl');
         return;
     }
 
@@ -34,14 +34,14 @@ async function createSSL(){
         },
         (error, stdout, stderr) => {
             if (error) {
-                common.error(`Error while generating SSL certificate: ${error.message}`);
+                common.error(`Error while generating SSL certificate: ${error.message}`, 'ssl');
                 return;
             }
             if (stderr) {
-                common.error(`Error while generating SSL certificate: ${stderr}`);
+                common.error(`Error while generating SSL certificate: ${stderr}`, 'ssl');
                 return;
             }
-            common.log('SSL certificate generated successfully');
+            common.log('SSL certificate generated successfully', 'ssl');
         },
     );
 }
