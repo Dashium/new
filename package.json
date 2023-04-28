@@ -31,7 +31,7 @@
     "nogui:api": "node ./modules/api/main.js",
     "nogui:terminal": "node ./modules/terminal/main.js",
     "nogui:monitor": "node ./modules/monitor/main.js",
-    "dev": "next dev ./modules/dashboard",
+    "dev": "node ./modules/dashboard/start.js --dev",
     "lint": "next lint ./modules/dashboard",
     "export": "next export ./modules/dashboard"
   },
