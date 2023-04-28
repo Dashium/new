@@ -27,7 +27,7 @@ const ProjectList = ({ config, setProjectId, setProject, setMenu, setMode }) => 
                                 {
                                     project.docker.ports && project.docker.ports.map((val, id) => {
                                         return (
-                                            <a key={id} target='_blank' href={`https://${config.server.host}:${val.host}/`}>{`http://${config.server.host}:${val.host}/`}</a>
+                                            <a key={id} target='_blank' href={`http://${config.server.host}:${val.host}/`}>{`http://${config.server.host}:${val.host}/`}</a>
                                         )
                                     })
                                 }
