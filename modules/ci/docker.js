@@ -160,8 +160,8 @@ function runDockerCommand(command, options, logFile, client) {
             if (Date.now() - lastLogTime > 60000) { // 1 minute
                 clearInterval(checkLogsInterval);
                 commandProcess.kill();
-                // reject(new Error('Process stopped due to inactivity'));
                 common.error('Process stopped due to inactivity', 'docker');
+                reject(new Error('Process stopped due to inactivity'));
             }
         }, 1000);
 
