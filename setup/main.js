@@ -108,7 +108,7 @@ async function init(stopanimation, data) {
             json: JSON.stringify(globalDATA)
         });
 
-        await account.registerUser({ email: 'root@local', password: 'dashium', name: 'Root', type: 'admin' } );
+        await account.registerUser({ email: data.adminEmail, password: data.adminPassWord, name: data.adminName, type: 'admin' });
 
         common.global = globalDATA;
         await fs.writeFileSync('./config/global.json', JSON.stringify(globalDATA, null, 2));
@@ -176,6 +176,15 @@ async function main() {
     const name = await askQuestion("What is the name of the server? (default: Dashium) ", 'Dashium');
     console.log(`Hi, my name is ${name} !`);
 
+    const adminEmail = await askQuestion("What is the admin email? (default: root@local) ", 'root@local');
+    console.log(`Hi, my admin email is ${adminEmail} !`);
+
+    const adminName = await askQuestion("What is the admin name? (default: Root) ", 'Root');
+    console.log(`Hi, my admin name is ${adminName} !`);
+
+    const adminPassword = await askQuestion("What is the admin password? (default: dashium) ", 'dashium');
+    console.log(`Hi, my admin password is ${adminPassword} !`);
+
     const host = await askQuestion(`What is the host name or IP address of the server? (default: ${common.getHostname()}.local) `, `${common.getHostname()}.local`);
     console.log(`The host name or IP address of the server is ${host.toLowerCase()}.`);
 
@@ -214,6 +223,9 @@ async function main() {
 
     init(loadingAnimation(), {
         name: name,
+        adminEmail: adminEmail,
+        adminName: adminName,
+        adminPassWord: adminPassword,
         host: host.toLowerCase(),
         port: parseInt(port),
         APIport: parseInt(APIport),
