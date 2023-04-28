@@ -29,7 +29,7 @@ app.prepare().then(() => {
         .listen(common.global.server.port, (err) => {
             if (err) throw err;
             if (isDev) {
-                common.sucess(`Ready on http://${common.global.server.host}:${common.global.server.port} [DEV MODE]`, 'server');
+                common.sucess(`Ready on https://${common.global.server.host}:${common.global.server.port} [DEV MODE]`, 'server');
             } else {
                 common.sucess(`Ready on https://${common.global.server.host}:${common.global.server.port}`, 'server');
             }
