@@ -1,3 +1,4 @@
+const axios = require('axios');
 const common = require('../common');
 const { exec } = require('child_process');
 const fs = require('fs');
@@ -89,6 +90,22 @@ async function isContainerExist(containerName) {
     } catch (error) {
         common.error(`Error while checking if container ${containerName} exists: ${error.message}`, 'docker');
         return false;
+    }
+}
+
+async function isDockerImagePrivate(imageName) {
+    const DockerHubAPI = 'https://hub.docker.com/v2/repositories/';
+    try {
+        const response = await axios.get(`${DockerHubAPI}${imageName}`);
+        const data = response.data;
+        if (!data.is_private) {
+            return false;
+        } else {
+            return true;
+        }
+    } catch (error) {
+        common.error('error 503 Service Unavailable', 'docker');
+        return true;
     }
 }
 
@@ -228,6 +245,7 @@ module.exports = {
     getAllDockerName,
     getDockerNameByID,
     isContainerExist,
+    isDockerImagePrivate,
     monitorDocker,
     runCommandInContainer,
     startDockerContainer,
