@@ -185,7 +185,7 @@ const SetupApplication = ({ config }) => {
                 >
                     <AiFillGithub />
                 </button>
-                <button
+                {/* <button
                     className={`platform-btn ${selectedPlatform === "gitlab" ? "active" : ""
                         }`}
                     onClick={() => setSelectedPlatform("gitlab")}
@@ -200,7 +200,7 @@ const SetupApplication = ({ config }) => {
                     title="bitbucket"
                 >
                     <FaBitbucket />
-                </button>
+                </button> */}
                 <button
                     className={`platform-btn ${selectedPlatform === "docker" ? "active" : ""
                         }`}
@@ -213,8 +213,8 @@ const SetupApplication = ({ config }) => {
 
             <form onSubmit={handleSubmit}>
                 {selectedPlatform === "github" && githubForm}
-                {selectedPlatform === "gitlab" && gitlabForm}
-                {selectedPlatform === "bitbucket" && bitbucketForm}
+                {/* {selectedPlatform === "gitlab" && gitlabForm}
+                {selectedPlatform === "bitbucket" && bitbucketForm} */}
                 {selectedPlatform === "docker" && dockerForm}
                 {selectedPlatform && <button type="submit">Valider</button>}
             </form>
