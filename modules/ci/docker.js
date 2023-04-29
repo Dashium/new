@@ -66,10 +66,16 @@ async function deleteImage(imageName) {
     }
 }
 
-async function downloadDockerImage(imageName) {
-    const imagesList = await runDockerCommand('image ls');
-    if (!imagesList.includes(imageName)) {
+async function downloadDockerImage(imageName, username, password) {
+    var curr = imageName.split(':');
+    const isPrivate = await isDockerImagePrivate(curr[0]);
+    if (isPrivate) {
+        await dockerLogin(username, password, 'docker.io');
+    }
+    try {
         await runDockerCommand(`pull ${imageName}`);
+    } catch (error) {
+        throw new Error('Failed to download Docker image');
     }
 }
 
