@@ -50,9 +50,9 @@ async function deleteContainer(containerName) {
         await runDockerCommand(`stop ${containerName}`);
         await runDockerCommand(`rm ${containerName}`);
 
-        console.log(`Container ${containerName} have been deleted.`);
+        common.log(`Container ${containerName} have been deleted.`, 'docker');
     } catch (error) {
-        console.error(error);
+        common.error(error, 'docker');
     }
 }
 
@@ -60,9 +60,9 @@ async function deleteImage(imageName) {
     try {
         // Remove the image
         await runDockerCommand(`rmi ${imageName}`);
-        console.log(`Image ${imageName} have been deleted.`);
+        common.log(`Image ${imageName} have been deleted.`, 'docker');
     } catch (error) {
-        console.error(error);
+        common.error(error, 'docker');
     }
 }
 
@@ -254,7 +254,7 @@ async function use(lang, containerName, logpath) {
             await runCommandInContainer(containerName, 'cd minecraft_server && sudo java -Xms1G -Xmx2G -jar server.jar nogui', logpath);
             break;
         default:
-            console.log('none');
+            common.log('none', 'docker');
     }
 }
 
