@@ -1,6 +1,6 @@
 const axios = require('axios');
 const common = require('../common');
-const { exec } = require('child_process');
+const { exec, spawn } = require('child_process');
 const fs = require('fs');
 
 async function addENV(env, value) {
@@ -34,10 +34,10 @@ async function createDockerContainer(containerName, portBinder, envs, imageName,
     const containersList = await runDockerCommand('ps -a');
     if (!containersList.includes(containerName)) {
         var cmd = `create --name ${containerName} -it -v ${process.cwd()}/${repoDir}:/app`;
-        if(portBinder != null){
+        if (portBinder != null) {
             cmd += ` ${portBinder}`;
         }
-        if(envs != null){
+        if (envs != null) {
             cmd += ` ${envs}`;
         }
         await runDockerCommand(`${cmd} -w /app ${imageName} bash`, { cwd: repoDir });
@@ -71,6 +71,29 @@ async function downloadDockerImage(imageName) {
     if (!imagesList.includes(imageName)) {
         await runDockerCommand(`pull ${imageName}`);
     }
+}
+
+async function dockerLogin(username, password) {
+    const loginCommand = `login -u ${username} --password-stdin`;
+    const loginProcess = spawn('docker', loginCommand.split(' '), { stdio: ['pipe', 'pipe', 'pipe'] });
+
+    loginProcess.stdin.write(`${password}\n`);
+    loginProcess.stdin.end();
+
+    const output = await new Promise((resolve) => {
+        let result = '';
+        loginProcess.stdout.on('data', (data) => {
+            result += data;
+        });
+        loginProcess.stderr.on('data', (data) => {
+            result += data;
+        });
+        loginProcess.on('close', (code) => {
+            resolve(result.trim());
+        });
+    });
+
+    return output;
 }
 
 async function getDockerNameByID(id) {
@@ -241,6 +264,7 @@ module.exports = {
     createDockerContainer,
     deleteContainer,
     deleteImage,
+    dockerLogin,
     downloadDockerImage,
     getAllDockerName,
     getDockerNameByID,
