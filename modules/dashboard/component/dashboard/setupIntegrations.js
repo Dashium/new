@@ -180,29 +180,34 @@ const SetupApplication = ({ config }) => {
                 <button
                     className={`platform-btn ${selectedPlatform === "github" ? "active" : ""
                         }`}
-                    onClick={() => setSelectedPlatform("github")}>
-                    <AiFillGithub title="github" />
+                    onClick={() => setSelectedPlatform("github")}
+                    title="github"
+                >
+                    <AiFillGithub />
                 </button>
                 <button
                     className={`platform-btn ${selectedPlatform === "gitlab" ? "active" : ""
                         }`}
                     onClick={() => setSelectedPlatform("gitlab")}
+                    title="gitlab"
                 >
-                    <AiFillGitlab title="gitlab" />
+                    <AiFillGitlab />
                 </button>
                 <button
                     className={`platform-btn ${selectedPlatform === "bitbucket" ? "active" : ""
                         }`}
                     onClick={() => setSelectedPlatform("bitbucket")}
+                    title="bitbucket"
                 >
-                    <FaBitbucket title="bitbucket" />
+                    <FaBitbucket />
                 </button>
                 <button
                     className={`platform-btn ${selectedPlatform === "docker" ? "active" : ""
                         }`}
                     onClick={() => setSelectedPlatform("docker")}
+                    title="docker"
                 >
-                    <FontAwesomeIcon icon={faDocker} title="docker" />
+                    <FontAwesomeIcon icon={faDocker} />
                 </button>
             </div>
 
