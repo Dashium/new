@@ -340,12 +340,6 @@ app.post('/get_repos', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-app.get('/integ', async (req, res) => {
-    var t = await integration.getDataALL('github');
-    console.log(t);
-    
-    res.json(t);
-});
 app.post('/add_integ', upload.single('privateKey'), (req, res) => {
     const { selectedPlatform, appId, privateKey, baseUrl, username, password } = req.body;
 
