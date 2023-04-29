@@ -4,7 +4,7 @@ const fs = require('fs');
 const github = require('./github');
 const path = require('path');
 
-async function addIntegration(service, appID){
+async function addIntegration(service, appID, key){
     var db = await dbModule.loadDatabase('dashium');
     const integ = await dbModule.selectRows(db, 'integrations', '*', 'service = ?', [service]);
 
@@ -15,7 +15,8 @@ async function addIntegration(service, appID){
 
     await dbModule.insertRow(db, 'integrations', {
         'service': service,
-        'appID': appID
+        'appID': appID,
+        'key': key
     });
 
     return {ok: 'integrations added !'};

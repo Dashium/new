@@ -340,12 +340,19 @@ app.post('/get_repos', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+app.get('/integ', async (req, res) => {
+    var t = await integration.getDataALL('github');
+    console.log(t);
+    
+    res.json(t);
+});
 app.post('/add_integ', upload.single('privateKey'), (req, res) => {
     const { selectedPlatform, appId, privateKey, baseUrl, username, password } = req.body;
 
     // if (!selectedPlatform || !appId || !privateKey || !baseUrl || !username || !password) {
     //     return res.status(201).send('Toutes les données requises ne sont pas fournies');
     // }
+    // console.log(selectedPlatform, appId, privateKey, baseUrl, username, password);
 
     switch (selectedPlatform) {
         case 'github':
@@ -354,6 +361,12 @@ app.post('/add_integ', upload.single('privateKey'), (req, res) => {
             }
             common.copyFile(req.file.path, `./config/${selectedPlatform}.pem`);
             integration.addIntegration('github', appId);
+            break;
+        case 'docker':
+            if (!username || !password) {
+                return res.status(201).json({ message: 'Toutes les données requises ne sont pas fournies' });
+            }
+            integration.addIntegration('docker', username, password);
             break;
         default:
             return res.status(201).json({ message: 'Toutes les données requises ne sont pas fournies' });
