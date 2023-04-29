@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { AiFillGithub, AiFillGitlab } from "react-icons/ai";
 import { FaBitbucket } from "react-icons/fa";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDocker } from '@fortawesome/free-brands-svg-icons';
 
 const SetupApplication = ({ config }) => {
     const [selectedPlatform, setSelectedPlatform] = useState("");
@@ -13,12 +15,12 @@ const SetupApplication = ({ config }) => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         const formData = new FormData();
-            formData.append("selectedPlatform", selectedPlatform);
-            formData.append("appId", appId);
-            formData.append("privateKey", privateKey);
-            formData.append("baseUrl", baseUrl);
-            formData.append("username", username);
-            formData.append("password", password);
+        formData.append("selectedPlatform", selectedPlatform);
+        formData.append("appId", appId);
+        formData.append("privateKey", privateKey);
+        formData.append("baseUrl", baseUrl);
+        formData.append("username", username);
+        formData.append("password", password);
 
         fetch(
             `https://${config.api.host}:${config.api.port}/add_integ`,
@@ -146,6 +148,32 @@ const SetupApplication = ({ config }) => {
         </div>
     );
 
+    const dockerForm = (
+        <div className="form">
+            <label htmlFor="username">Nom d'utilisateur</label>
+            <input
+                type="text"
+                id="username"
+                name="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                autoComplete="off"
+            />
+
+            <label htmlFor="password">Access Tokens</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                autoComplete="off"
+            />
+        </div>
+    );
+
     return (
         <div className="addInteg">
             <div className="platform-select">
@@ -153,21 +181,28 @@ const SetupApplication = ({ config }) => {
                     className={`platform-btn ${selectedPlatform === "github" ? "active" : ""
                         }`}
                     onClick={() => setSelectedPlatform("github")}>
-                    <AiFillGithub />
+                    <AiFillGithub title="github" />
                 </button>
                 <button
                     className={`platform-btn ${selectedPlatform === "gitlab" ? "active" : ""
                         }`}
                     onClick={() => setSelectedPlatform("gitlab")}
                 >
-                    <AiFillGitlab />
+                    <AiFillGitlab title="gitlab" />
                 </button>
                 <button
                     className={`platform-btn ${selectedPlatform === "bitbucket" ? "active" : ""
                         }`}
                     onClick={() => setSelectedPlatform("bitbucket")}
                 >
-                    <FaBitbucket />
+                    <FaBitbucket title="bitbucket" />
+                </button>
+                <button
+                    className={`platform-btn ${selectedPlatform === "docker" ? "active" : ""
+                        }`}
+                    onClick={() => setSelectedPlatform("docker")}
+                >
+                    <FontAwesomeIcon icon={faDocker} title="docker" />
                 </button>
             </div>
 
@@ -175,6 +210,7 @@ const SetupApplication = ({ config }) => {
                 {selectedPlatform === "github" && githubForm}
                 {selectedPlatform === "gitlab" && gitlabForm}
                 {selectedPlatform === "bitbucket" && bitbucketForm}
+                {selectedPlatform === "docker" && dockerForm}
                 {selectedPlatform && <button type="submit">Valider</button>}
             </form>
         </div >
