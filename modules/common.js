@@ -11,6 +11,13 @@ const path = require('path');
 const net = require('net');
 const os = require('os');
 
+function bufferToString(buffer) {
+    if(buffer == null){return null;}
+    const buffers = Buffer.from(buffer);
+    const str = buffers.toString();
+    return str;
+}
+
 var globalPath = path.join(__dirname, '../config/global.json');
 if (fs.existsSync(globalPath) == true) {
     var global = require(globalPath);
@@ -255,6 +262,7 @@ function isHostPortUsed(hostPort, portsConfig) {
 }
 
 module.exports = {
+    bufferToString,
     copyDir,
     copyFile,
     datePlus24h,
