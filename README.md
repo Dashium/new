@@ -13,7 +13,7 @@
 # 🚧Requirement
 
 - Ubuntu 20.0
-- Docker
+- Docker version 23.0.5, build bc4487a
 - NodeJS
 - NPM
 - Git
